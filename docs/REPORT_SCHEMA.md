@@ -10,12 +10,12 @@ A report identifies tool_version, rule_revision, exact snapshot_sha256 and entry
 - edges records each consumer, requested dependency, selected path and ordered search trace.
 - symbol_scope records startup lookup order; it differs from mapping order.
 - version_checks records named-provider requirements independently of symbol references.
-- symbol_checks records actual relocation-referenced names, requested versions, selected providers/definition versions, lookup policy, reference offsets/types and startup versus lazy phase.
+- symbol_checks records actual relocation-referenced names, requested versions, selected providers/definition versions, lookup policy, reference offsets/types and startup versus lazy phase. COPY and ordinary references to one symbol produce separate records. COPY uses copy-source-excluding-executable and adds optional decimal-string copy_destination_size/copy_source_size evidence; missing source size means no source was selected. Older schema-2 reports without these additive fields still decode.
 - findings contains id, code, status, subject, optional requirement/version/provider, dependency chain, explanation, suggested action and reference offsets.
 
-Offsets are decimal strings so JavaScript consumers do not lose ELF64 precision. Optional fields are omitted, never JSON null. read_report validates schema/status and decodes the typed report; it does not authenticate the saved report or re-run analysis.
+Offsets and sizes are decimal strings so JavaScript consumers do not lose ELF64 precision. Optional fields are omitted, never JSON null. read_report validates schema/status and rejects duplicate finding IDs before decoding is accepted; it does not authenticate the saved report or re-run analysis.
 
-Finding IDs hash code, raw subject, requirement and requested version. They intentionally exclude the selected provider and snapshot digest so an unchanged unmet requirement can be classified as existing across snapshots. Symbol-free unsupported relocations include kind/offset in their requirement identity.
+Finding IDs hash code, raw subject, requirement and requested version. They intentionally exclude the selected provider and snapshot digest so an unchanged unmet requirement can be classified as existing across snapshots. Symbol-free unsupported relocations include kind/offset in their requirement identity. Multiple diagnostics for one identity merge their offsets and explanations. If their providers differ, the merged finding omits its provider; individual symbol_checks retain each selection. This keeps explain and diff unambiguous.
 
 | Code | Meaning |
 | --- | --- |

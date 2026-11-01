@@ -33,6 +33,7 @@ jobs:
           python3 tools/oracle/probe_paths.py
           python3 tools/corpus/build_roots.py
           python3 tools/corpus/build_version_fallback.py
+          python3 tools/corpus/build_copy.py
       - name: Check, build and test native and JS
         run: |
           moon update
@@ -43,6 +44,9 @@ jobs:
           python3 tools/verify_cli.py --js _build/js/debug/build/cmd/main/main.js --native _build/native/debug/build/cmd/main/main.exe
           python3 tools/corpus/verify.py --js _build/js/debug/build/cmd/main/main.js --native _build/native/debug/build/cmd/main/main.exe
           python3 tools/corpus/self_host.py --js _build/js/debug/build/cmd/main/main.js --native _build/native/debug/build/cmd/main/main.exe
+          python3 tools/corpus/verify_copy.py --js _build/js/debug/build/cmd/main/main.js --native _build/native/debug/build/cmd/main/main.exe
+          python3 tools/corpus/measure.py --js _build/js/debug/build/cmd/main/main.js --native _build/native/debug/build/cmd/main/main.exe
+          python3 tools/verify_copy_mutations.py
           python3 tools/verify_consumer.py
       - name: Verify public interfaces and first-party formatting
         run: |

@@ -114,6 +114,8 @@ pub fn Report::exit_code(self : Report) -> Int32 {
 ///|
 fn finish(report : Report) -> Report {
   let mut level = 0
+  let indices : Map[String, Int32] = Map([])
+  let findings : Array[Finding] = []
   for finding in report.findings {
     let value = match finding.status {
       "input_error" => 3
@@ -123,9 +125,53 @@ fn finish(report : Report) -> Report {
     if value > level {
       level = value
     }
+    // Different relocation classes can diagnose the same requirement. Merge in
+    // one indexed pass, preserving evidence without quadratic insertion scans.
+    match indices.get(finding.id) {
+      None => {
+        indices[finding.id] = findings.length()
+        findings.push(finding)
+      }
+      Some(i) => {
+        let previous = findings[i]
+        let offsets = previous.reference_offsets.copy()
+        let seen_offsets : Map[String, Bool] = Map([])
+        for offset in offsets {
+          seen_offsets[offset] = true
+        }
+        for offset in finding.reference_offsets {
+          if seen_offsets.get(offset) is None {
+            offsets.push(offset)
+            seen_offsets[offset] = true
+          }
+        }
+        findings[i] = {
+          ..previous,
+          explanation: if previous.explanation == finding.explanation {
+            previous.explanation
+          } else {
+            previous.explanation + "\n" + finding.explanation
+          },
+          suggested_action: if previous.suggested_action ==
+            finding.suggested_action {
+            previous.suggested_action
+          } else {
+            previous.suggested_action + "\n" + finding.suggested_action
+          },
+          provider: if previous.provider.map(p => p.hex) ==
+            finding.provider.map(p => p.hex) {
+            previous.provider
+          } else {
+            None
+          },
+          reference_offsets: offsets,
+        }
+      }
+    }
   }
   {
     ..report,
+    findings,
     status: match level {
       0 => "pass_static"
       1 => "inconclusive"
@@ -152,8 +198,9 @@ fn issue(
   let version_hex = version.map(v => @hex.encode(v[:])).unwrap_or("")
   let requirement_hex = requirement.map(v => @hex.encode(v[:])).unwrap_or("")
   let key = "\{code}|\{@hex.encode(subject[:])}|\{requirement_hex}|\{version_hex}"
+  let id = @snapshot.sha256(@utf8.encode(key))
   report.findings.push({
-    id: @snapshot.sha256(@utf8.encode(key)),
+    id,
     code,
     status,
     subject: name(subject),
@@ -196,6 +243,8 @@ pub(all) struct SymbolCheck {
   phase : String
   reference_offsets : Array[String]
   relocation_types : Array[Int32]
+  copy_destination_size : String?
+  copy_source_size : String?
 } derive(ToJson, @json.FromJson)
 
 ///|

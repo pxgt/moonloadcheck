@@ -256,16 +256,22 @@ fn check_linkage(
         }
         continue
       }
-      match grouped.get(reference.symbol_index) {
+      // COPY uses a different lookup scope from ordinary references to the same
+      // symbol (including GLOB_DAT references in a native MoonBit executable).
+      let copy_kind = if node.object.machine == 62 { 5 } else { 1024 }
+      let key = reference.symbol_index * 2 +
+        (if reference.relocation == copy_kind { 1 } else { 0 })
+      match grouped.get(key) {
         Some(list) => list.push(reference)
         None => {
-          grouped[reference.symbol_index] = [reference]
-          reference_order.push(reference.symbol_index)
+          grouped[key] = [reference]
+          reference_order.push(key)
         }
       }
     }
-    for index in reference_order {
-      let refs = grouped[index]
+    for key in reference_order {
+      let index = key / 2
+      let refs = grouped[key]
       let symbol = linkage.symbols[index]
       let desired = versions[consumer].get(symbol.version_index)
       let offsets = refs.map(reference => reference.offset.to_string())
@@ -293,13 +299,29 @@ fn check_linkage(
       let mut unknown = !kinds.all(kind => {
           supported_reference(node.object.machine, kind)
         }) ||
-        copy ||
+        (
+          copy &&
+          (
+            consumer != 0 ||
+            symbol.kind != 1 ||
+            symbol.section == 0 ||
+            symbol.section >= 0xff00 ||
+            symbol.visibility != 0 ||
+            (symbol.binding != 1 && symbol.binding != 2) ||
+            symbol.size == 0 ||
+            refs.length() != 1 ||
+            refs[0].table != "RELA" ||
+            refs[0].offset != symbol.value
+          )
+        ) ||
         symbol.binding == 10 ||
         symbol.visibility == 3 ||
         linkage.symbolic
       let mut selected = None
       let mut rejected_version_table = None
-      if symbol.section != 0 && (symbol.binding == 0 || symbol.visibility != 0) {
+      if !copy &&
+        symbol.section != 0 &&
+        (symbol.binding == 0 || symbol.visibility != 0) {
         selected = Some((consumer, index))
       } else {
         let candidates = definitions.get(symbol.name).unwrap_or([])
@@ -390,6 +412,19 @@ fn check_linkage(
         ) {
         unknown = true
       }
+      let mut size_mismatch = false
+      if copy && selected is Some((provider, selected_index)) {
+        let source = linkages[provider].symbols[selected_index]
+        if source.kind != 1 ||
+          source.section >= 0xff00 ||
+          linkages[provider].symbolic {
+          unknown = true
+        }
+        size_mismatch = source.size != symbol.size
+        if size_mismatch {
+          unknown = true
+        }
+      }
       let status = if unknown {
         "unknown"
       } else if rejected_version_table is Some(_) {
@@ -411,7 +446,9 @@ fn check_linkage(
             .map(v => name(v.name))
           None => None
         },
-        lookup_policy: if symbol.section != 0 &&
+        lookup_policy: if copy {
+          "copy-source-excluding-executable"
+        } else if symbol.section != 0 &&
           (symbol.binding == 0 || symbol.visibility != 0) {
           "local-definition"
         } else if linkage.symbolic {
@@ -424,6 +461,16 @@ fn check_linkage(
         phase,
         reference_offsets: offsets,
         relocation_types: kinds,
+        copy_destination_size: if copy {
+          Some(symbol.size.to_string())
+        } else {
+          None
+        },
+        copy_source_size: if copy {
+          selected.map(pair => linkages[pair.0].symbols[pair.1].size.to_string())
+        } else {
+          None
+        },
       })
       if status != "pass" {
         issue(
@@ -437,8 +484,10 @@ fn check_linkage(
           node.path,
           Some(symbol.name),
           dependency_chain,
-          if unknown {
-            "This reference uses COPY, GNU_UNIQUE, protected/SYMBOLIC binding or an unmodeled relocation combination."
+          if size_mismatch {
+            "COPY source and destination sizes differ. The loader may copy only the smaller size and continue; application data compatibility is not established."
+          } else if unknown {
+            "This reference uses GNU_UNIQUE, protected/SYMBOLIC binding or a relocation combination outside the validated model."
           } else if rejected_version_table is Some(_) {
             "glibc rejects this versioned lookup against the named provider because that provider has no VERSYM table."
           } else {

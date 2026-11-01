@@ -42,18 +42,23 @@ def verify(native, js=None):
             result = subprocess.run(command + ["check", "--snapshot", str(folder / "snapshot"), "--entry", "/opt/moonloadcheck",
                 "--scope", "compatibility", "--format", "json"], capture_output=True, text=True, timeout=60)
             report = json.loads(result.stdout)
-            # Actual execution succeeds, but the declared model excludes COPY.
-            # Preserve that coverage gap instead of turning this into a false pass.
-            if result.returncode != 2 or report["status"] != "inconclusive":
+            if result.returncode != 0 or report["status"] != "pass_static":
                 raise AssertionError((suite, report.get("findings", report)))
-            assert {f["requirement"]["display"] for f in report["findings"]} == copy_symbols
-            assert all(f["code"] == "MLC008" and f["status"] == "unknown" for f in report["findings"])
+            copies = [c for c in report["symbol_checks"] if c["lookup_policy"] == "copy-source-excluding-executable"]
+            assert {c["symbol"]["display"] for c in copies} == copy_symbols
+            assert all(c["provider"]["display"] == "/runtime/libc.so.6" and c["copy_source_size"] == c["copy_destination_size"] == "8" for c in copies)
+            # stdout/stderr also have ordinary references in the same executable.
+            # They bind to the executable's copy, not the COPY initialization source.
+            for symbol in ["stdout", "stderr"]:
+                assert any(c["symbol"]["display"] == symbol and c["consumer"]["display"] == "/opt/moonloadcheck"
+                    and c["provider"]["display"] == "/opt/moonloadcheck" and c["lookup_policy"] == "startup-global-scope"
+                    for c in report["symbol_checks"])
             reports.append(report)
         assert all(report == reports[0] for report in reports)
         outcomes.append(dict(suite=suite, architecture="amd64", loader_exit=actual.returncode, analysis_status=reports[0]["status"],
             copy_symbols=sorted(copy_symbols), program_sha256=hashlib.sha256(native.read_bytes()).hexdigest(), loader_sha256=profile["loader_sha256"]))
     (ROOT / "fixtures/generated/self-host/oracle.json").write_text(json.dumps(outcomes, indent=2) + "\n")
-    print(f"Self-host: {len(outcomes)} normal CLI executions; analyzer preserves verified COPY coverage gaps")
+    print(f"Self-host: {len(outcomes)} normal CLI executions and static passes with separate COPY/ordinary bindings")
 
 
 if __name__ == "__main__":

@@ -185,6 +185,13 @@ pub fn read_report(json : String) -> Report raise {
   ) else {
     raise ReportError("invalid report status")
   }
+  let ids : Map[String, Bool] = Map([])
+  for finding in report.findings {
+    guard ids.get(finding.id) is None else {
+      raise ReportError("duplicate finding id")
+    }
+    ids[finding.id] = true
+  }
   report
 }
 

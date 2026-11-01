@@ -14,6 +14,7 @@ python3 tools/oracle/build_symbol_fixtures.py
 python3 tools/oracle/probe_paths.py
 python3 tools/corpus/build_roots.py
 python3 tools/corpus/build_version_fallback.py
+python3 tools/corpus/build_copy.py
 ```
 
 The bootstrap downloads two hash-pinned Ubuntu packages into the ignored
@@ -77,6 +78,9 @@ moon test --target js,native
 python3 tools/verify_cli.py --js _build/js/debug/build/cmd/main/main.js --native _build/native/debug/build/cmd/main/main.exe
 python3 tools/corpus/verify.py --js _build/js/debug/build/cmd/main/main.js --native _build/native/debug/build/cmd/main/main.exe
 python3 tools/corpus/self_host.py --js _build/js/debug/build/cmd/main/main.js --native _build/native/debug/build/cmd/main/main.exe
+python3 tools/corpus/verify_copy.py --js _build/js/debug/build/cmd/main/main.js --native _build/native/debug/build/cmd/main/main.exe
+python3 tools/corpus/measure.py --js _build/js/debug/build/cmd/main/main.js --native _build/native/debug/build/cmd/main/main.exe
+python3 tools/verify_copy_mutations.py
 python3 tools/verify_consumer.py
 python3 tools/check_vendor.py
 ```

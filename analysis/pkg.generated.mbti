@@ -129,6 +129,8 @@ pub(all) struct SymbolCheck {
   phase : String
   reference_offsets : Array[String]
   relocation_types : Array[Int32]
+  copy_destination_size : String?
+  copy_source_size : String?
 } derive(ToJson, @json.FromJson)
 pub fn SymbolCheck::from_json(Json, @json.JsonPath) -> Self raise @json.JsonDecodeError
 pub fn SymbolCheck::to_json(Self) -> Json

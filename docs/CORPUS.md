@@ -81,6 +81,7 @@ project-owned chroots. Then run:
 ```sh
 python3 tools/corpus/build_roots.py
 python3 tools/corpus/build_version_fallback.py
+python3 tools/corpus/build_copy.py
 moon check --target js,native --deny-warn
 moon build --target js,native
 moon test --target js,native
@@ -98,9 +99,9 @@ and JS reports; --compare-dir accepts a saved report directory from another host
 The self-host recipe additionally deploys the just-built MoonBit native/FFI CLI
 into both x86-64 runtime roots, verifies its input-error command executes normally
 (exit 3). readelf independently confirms COPY relocations for stdout, stderr and
-__environ; the current analyzer must preserve exactly these unknown findings and
-return inconclusive (exit 2), even though execution works. This is a recorded
-coverage gap, not two additional static-pass cases.
+__environ. These previously produced unknown findings; the subsequent
+[COPY validation](COPY.md) now checks their separate source/ordinary bindings and
+equal sizes, and requires pass_static in both runtime roots.
 The standalone consumer uses a temporary Moon workspace outside this checkout
 and imports only the public facade. This validates a source dependency, not an
 installed Mooncakes release.
@@ -113,8 +114,8 @@ it does not update apt sources. Normal tests must use the checked-in lock.
 
 The corpus supports controlled startup conclusions. It does not establish
 complete application functionality, kernel/CPU compatibility, full distro
-support or type/layout ABI compatibility. COPY/GNU_UNIQUE/protected/SYMBOLIC
-combinations, more malformed-input and stress cases, quantitative performance
+support or type/layout ABI compatibility. Additional COPY and GNU_UNIQUE/protected/SYMBOLIC
+combinations, more malformed-input and stress cases, worst-case performance
 budgets, and the full planned acceptance matrix remain open. AArch64 self-hosting
 of the MoonBit CLI has not been validated. No Mooncakes release or registration
 is implied by these tests.

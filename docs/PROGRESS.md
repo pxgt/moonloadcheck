@@ -97,3 +97,19 @@ Commands, exact inputs, matrix and remaining limitations are recorded in
 established; the complete T19–T22 acceptance, stress/memory budgets, special
 relocations and API/report freeze remain open. No Mooncakes publication or
 contest registration has occurred.
+
+## 2026-11-01 COPY support and acceptance evidence audit
+
+- Added 40 independently executed cases under the locked Jammy/Noble runtimes: 38 COPY cases plus two AArch64 PIE/GOT controls. Cases cover plain/versioned/weak sources, provider order, missing/wrong-version sources, both directions of size change and protected visibility.
+- Implemented ordinary object COPY lookup excluding the executable. Ordinary references to the same symbol retain their separate lookup scope. Same-sized sources pass; unresolved strong sources fail; unresolved weak sources pass. Size mismatches and unvalidated protected/SYMBOLIC/GNU_UNIQUE combinations retain unknown.
+- Native MoonBit self-host checks now execute and pass static analysis in both x86-64 roots. COPY sources are libc's eight-byte objects; ordinary stdout/stderr references bind to the executable's copies.
+- Added optional COPY source/destination sizes to schema 2 and checked backward decoding without the new fields. Multiple reference diagnostics merge offsets/explanations under one finding ID; saved duplicate-ID reports are rejected. Contract tests retain known failures alongside resource-limit uncertainty.
+- Both wrong-rule experiments (COPY binding to the executable, and ignoring size differences) are caught by assertion failures in a disposable source copy after an unmodified passing control.
+- Added process time/RSS measurement of four commands, three repetitions per backend, with 60-second and 512-MiB regression ceilings. Local native measurements on WSL2 x86-64 observed 0.18–2.24-second median command times and 6,048–28,896 KiB peak RSS. These are observations for the fixed corpus, not worst-case input guarantees. CI measures both backends independently.
+- Local JS/native each pass 47 tests. Each backend passes 85 existing, 24 real-program and 40 COPY CLI checks, with identical saved JSON across Windows JS/Linux native. Third-party source hashes and pinned compiler formatting/interfaces remain verified.
+- Published an [evidence map](ACCEPTANCE_STATUS.md) for every one of the 73 internal quality cases, distinguishing covered, partial and open scenarios. This exposes outstanding requirements instead of treating the raw test count as completion.
+
+See [COPY.md](COPY.md) for rules, references, recipes and limits. Remaining work
+includes the explicitly listed ELF/path/graph gaps, the five original C12 fault
+classes, end-to-end resource exhaustion and broader unusual binding combinations.
+API freeze, Mooncakes publication and contest submission remain pending.

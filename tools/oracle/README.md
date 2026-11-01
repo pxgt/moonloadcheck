@@ -28,12 +28,11 @@ loader results, not claims that MoonLoadCheck already diagnoses each case.
 The parser experiments can then be checked with:
 
 ```sh
-python3 tools/prepare_dependencies.py
 moon test --target js
 moon test --target native
 moon run --target js cmd/probe -- --file fixtures/generated/x86_64/app
 ```
 
-The manifest bridge is currently needed for a clean checkout under the tested
-toolchains. Release dependency installation remains a separate acceptance
-condition. The M0 experiments do not implement a deployment verdict.
+The parser is preserved as a hash-locked internal third-party dependency, so a
+clean checkout does not need a registry-manifest migration. The M0 experiments
+do not implement a deployment verdict.

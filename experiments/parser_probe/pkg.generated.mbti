@@ -2,11 +2,11 @@
 package "Xpeng/moonloadcheck/experiments/parser_probe"
 
 import {
-  "moonbit-community/elf",
+  "Xpeng/moonloadcheck/internal/elf_vendor",
 }
 
 // Values
-pub fn observe(Bytes) -> Observation raise @elf.ParseError
+pub fn observe(Bytes) -> Observation raise @elf_vendor.ParseError
 
 // Errors
 

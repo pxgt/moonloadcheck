@@ -1,5 +1,5 @@
 import {
-  "moonbit-community/elf",
+  "Xpeng/moonloadcheck/internal/elf_vendor" @elf,
 }
 
 import {

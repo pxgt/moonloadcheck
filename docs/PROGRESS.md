@@ -20,7 +20,9 @@ The initial scaffold is not an implementation or an acceptance result. Subsequen
 - A bounded segment adapter experiment recovers needed libraries, referenced/hashed symbol span and version requirements on both architectures, using upstream header/segment/string readers.
 - The upstream low-level ParseAt implementations are not exposed to consumers. The adapter therefore supplies small checked runtime-table readers instead of copying an entire ELF parser.
 - An empty AArch64 GNU hash omits trailing undefined symbols. Relocation references are needed to cover the requested symbols. The experiment explicitly marks whether its symbol extent is exact.
-- The published ELF manifest requires local migration. `tools/prepare_dependencies.py` records the temporary M0 bridge; clean release installation is still unresolved.
+- The published ELF manifest required local migration in the initial experiment. The temporary bridge was tested in a separate clean directory and then replaced with a hash-locked internal parser dependency, preserving upstream source and license without source modifications.
 - Windows native tests require unavailable MSVC tools. Linux native validation is available in WSL; no global compiler installation was performed.
 
-M0 remains in progress: verify clean-checkout setup and cache metadata before freezing the implementation scope.
+- Decoded all 428 records of the host glibc cache and matched them against read-only `ldconfig -p` output. Flags and original order are retained. This host cache had no nonzero hwcap entries; hardware-capability ranking remains outside the verified result.
+
+M0 is ready for a clean-checkout verification. Its outcome permits work on bounded target profiles and the first deployment scenario; it does not establish full environment compatibility or acceptance readiness.

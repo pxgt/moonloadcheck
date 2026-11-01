@@ -3,5 +3,7 @@
 /// Keep main focused; move logic into the library package.
 /// Run with `moon run cmd/main` from the project root.
 fn main {
-  println("MoonLoadCheck: M0 development; no compatibility verdict available yet.")
+  println(
+    "MoonLoadCheck: M0 development; no compatibility verdict available yet.",
+  )
 }

@@ -27,5 +27,4 @@ description = "Offline Linux binary deployment compatibility analysis"
 
 import {
   "moonbitlang/x@0.5.5",
-  "moonbit-community/elf@0.0.1",
-}
+  }

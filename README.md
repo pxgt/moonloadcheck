@@ -8,11 +8,11 @@ The first release targets ELF64 little-endian x86-64 and AArch64 under documente
 
 The intended outputs are a reusable Mooncakes library, a CLI, deterministic JSON diagnostics, and reproducible examples. A successful static check will describe its checked scope; it will not guarantee application behavior or full C++ ABI compatibility.
 
-Development starts by validating `moonbit-community/elf`, sectionless ELF inputs, GNU symbol versions, environment-cache metadata, and independent loader comparisons. See [development evidence](docs/PROGRESS.md) and [references](THIRD_PARTY.md).
+M0 has exercised sectionless ELF inputs, GNU symbol versions and independent loader comparisons on x86-64/AArch64. The parser from `moonbit-community/elf@0.0.1` is preserved as a hash-locked internal dependency to avoid its obsolete published manifest. See [development evidence](docs/PROGRESS.md), [reproduction commands](tools/oracle/README.md) and [references](THIRD_PARTY.md).
 
 ## Development
 
-Initial toolchain: MoonBit `0.1.20261012` / compiler `0.10.15`. Commands will be documented alongside working features. No Mooncakes release has been published.
+Tested toolchains: Windows JS `0.1.20261012` / compiler `0.10.15`, Linux native `0.1.20261016` / compiler `0.10.16`. No Mooncakes release has been published.
 
 ## License
 

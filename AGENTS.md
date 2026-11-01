@@ -2,6 +2,11 @@
 
 This is a [MoonBit](https://docs.moonbitlang.com) project.
 
+The files in `internal/elf_vendor` are hash-locked third-party source. Preserve
+their bytes and notices; do not apply whole-project formatting to that directory.
+Format first-party files explicitly and verify `UPSTREAM.json` hashes. This
+specific preservation rule takes precedence over the generic formatting step below.
+
 You can browse and install extra skills here:
 <https://github.com/moonbitlang/skills>
 

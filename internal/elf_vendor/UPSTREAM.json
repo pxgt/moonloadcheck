@@ -1,0 +1,29 @@
+{
+  "module": "moonbit-community/elf",
+  "version": "0.0.1",
+  "archive": "https://download.mooncakes.io/user/moonbit-community/elf/0.0.1.zip",
+  "sha256": "82a9ff515aeb10bd38043c0951790a280b49334781ef7c266f18f9a6655f8fb1",
+  "license": "Apache-2.0",
+  "source_changes": "none",
+  "configuration_changes": "package renamed to internal/elf_vendor; test-only dependency omitted; upstream deprecation warnings scoped to this package",
+  "files": {
+    "parse.mbt": "813ef1b656c8d24c7fb39e88b3b483ed75c8d636daeb9a93e4a698c2a53a2803",
+    "string_table.mbt": "c6ad48825eca7eb7c0a1cb53a6fb253e76fecf4f44356c7a3a72212f6d04912c",
+    "gnu_symver.mbt": "a38223ca947959e5397c7db52c94b63521aa22af8c3493198e9a4a030772d9f2",
+    "segment.mbt": "b5a7f6bae86d2e776e41e609da7eadb58f6426b1e25c5e0379384eafaf971030",
+    "endian.mbt": "940fcc676a64d3f2cdad0ccc0bccc124246c84fb1c34e14ef2382ea819fbce4b",
+    "compression.mbt": "d2866816c48240c4dde5103dd5e6b7c6d19ed6333d1d7ef159bfbe5076c78a3e",
+    "section.mbt": "52c37561273022d43c2ca98535cb1aa1c0b981fe60b17c4b3ad91cba8bf40ca7",
+    "note.mbt": "b7ad03e530cfb69cb812e40af66ba18fcb68b8d1efaea8fd9d7ee50bea61b33f",
+    "dynamic.mbt": "1d9cef69e1514f333384461772b78a6d49bdefd4b8721a2230f4ef8dfab9d2df",
+    "file.mbt": "e17b0d22ba63829a4307b112f7e9eeed35eb551553eff56636278b3a62149d90",
+    "abi.mbt": "7b744569a0c6614661294ff7c0a66e52b1376aebf6e8b8a88755260fd6f5b9be",
+    "symbol.mbt": "0d985d5d19cd4c1b66dee218abd597f24327dbfdb109bb8409fee92365d1b0d5",
+    "relocation.mbt": "0f3ab2d0c6b3f0e9da12d1c5ebef4377352a1ac489c8fb24201ea1957eb7f841",
+    "to_str.mbt": "be486cd902c705690bb0acec66c54dd248f167b6e523dfe2d0a1f93e102a993b",
+    "hash.mbt": "e4e68ca47177607521ba3fad510aadada00a78a66c593662ec0dbcaeb4fa9317",
+    "elf_bytes.mbt": "43ea2eb8d5c0c7e3515d892897aa73db200d3903ca8bc36f26db544f350f3158",
+    "error.mbt": "f0fda5fd8ec33f624e251cdfbe621cc21290d885c5fef65ef7cf73e6ddef26df",
+    "LICENSE": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+  }
+}

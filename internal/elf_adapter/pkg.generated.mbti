@@ -1,0 +1,17 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "Xpeng/moonloadcheck/internal/elf_adapter"
+
+import {
+  "Xpeng/moonloadcheck/model",
+}
+
+// Values
+pub fn read(Bytes) -> @model.ElfObject raise @model.ElfError
+
+// Errors
+
+// Types and methods
+
+// Type aliases
+
+// Traits

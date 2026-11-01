@@ -1,0 +1,30 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "Xpeng/moonloadcheck/model"
+
+// Values
+
+// Errors
+pub(all) suberror ElfError {
+  Malformed(String)
+  Unsupported(String)
+  ResourceLimit(String)
+}
+
+// Types and methods
+pub(all) struct ElfObject {
+  machine : Int
+  object_type : Int
+  interpreter : Bytes?
+  needed : Array[Bytes]
+  soname : Bytes?
+  rpath : Bytes?
+  runpath : Bytes?
+  no_default_lib : Bool
+  unsupported : Array[String]
+} derive(Eq)
+pub fn ElfObject::equal(Self, Self) -> Bool
+pub fn ElfObject::not_equal(Self, Self) -> Bool
+
+// Type aliases
+
+// Traits

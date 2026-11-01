@@ -1,0 +1,8 @@
+import {
+  "Xpeng/moonloadcheck/model",
+  "Xpeng/moonloadcheck/internal/elf_vendor" @elf,
+}
+
+import {
+  "moonbitlang/x/fs",
+} for "test"

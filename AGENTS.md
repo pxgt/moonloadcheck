@@ -7,6 +7,11 @@ their bytes and notices; do not apply whole-project formatting to that directory
 Format first-party files explicitly and verify `UPSTREAM.json` hashes. This
 specific preservation rule takes precedence over the generic formatting step below.
 
+Use the hash-pinned compiler installed by `tools/bootstrap_moon.py` when running
+`moon info` and checking in generated interfaces. Older compilers render Int/UInt
+aliases differently from the CI compiler's Int32/UInt32 spelling. Generated
+`.mbti` files may be regenerated; the locked upstream `.mbt` sources may not.
+
 You can browse and install extra skills here:
 <https://github.com/moonbitlang/skills>
 

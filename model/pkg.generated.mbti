@@ -12,8 +12,8 @@ pub(all) suberror ElfError {
 
 // Types and methods
 pub(all) struct ElfObject {
-  machine : Int
-  object_type : Int
+  machine : Int32
+  object_type : Int32
   interpreter : Bytes?
   needed : Array[Bytes]
   soname : Bytes?

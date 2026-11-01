@@ -12,10 +12,10 @@ pub fn observe(Bytes) -> Observation raise @elf_vendor.ParseError
 
 // Types and methods
 pub(all) struct Observation {
-  machine : Int
+  machine : Int32
   has_sections : Bool
-  dynamic_entries : Int
-  dynamic_symbols : Int?
+  dynamic_entries : Int32
+  dynamic_symbols : Int32?
   version_requirements : Array[String]
 } derive(ToJson)
 pub fn Observation::to_json(Self) -> Json

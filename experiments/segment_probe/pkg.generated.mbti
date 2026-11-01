@@ -12,7 +12,7 @@ pub(all) suberror ReadError {
 
 // Types and methods
 pub(all) struct SegmentFacts {
-  machine : Int
+  machine : Int32
   needed : Array[Bytes]
   symbol_names : Array[Bytes]
   symbol_extent_exact : Bool

@@ -47,12 +47,12 @@ pub(all) struct LoadedObject {
   path : ByteName
   file_id : String
   sha256 : String
-  machine : Int
+  machine : Int32
 } derive(ToJson)
 pub fn LoadedObject::to_json(Self) -> Json
 
 pub(all) struct Report {
-  schema_version : Int
+  schema_version : Int32
   tool_version : String
   rule_revision : String
   snapshot_sha256 : String
@@ -64,7 +64,7 @@ pub(all) struct Report {
   edges : Array[DependencyEdge]
   findings : Array[Finding]
 } derive(ToJson)
-pub fn Report::exit_code(Self) -> Int
+pub fn Report::exit_code(Self) -> Int32
 pub fn Report::to_json(Self) -> Json
 
 // Type aliases

@@ -37,10 +37,10 @@ pub struct FileSystem {
   entries : Map[Bytes, Entry]
 }
 pub fn FileSystem::new(Array[(Bytes, Entry)]) -> Self raise PathError
-pub fn FileSystem::resolve(Self, Bytes, cwd? : Bytes, max_links? : Int, max_steps? : Int) -> Resolved raise PathError
+pub fn FileSystem::resolve(Self, Bytes, cwd? : Bytes, max_links? : Int32, max_steps? : Int32) -> Resolved raise PathError
 
 pub(all) struct Manifest {
-  schema_version : Int
+  schema_version : Int32
   profile : Profile
   entries : Array[ManifestEntry]
 } derive(ToJson, @json.FromJson)
@@ -60,7 +60,7 @@ pub fn ManifestEntry::to_json(Self) -> Json
 pub(all) struct Profile {
   rule_revision : String
   loader_family : String
-  machine : Int
+  machine : Int32
   loader_path_hex : String
   loader_sha256 : String
   cwd_hex : String
@@ -78,7 +78,7 @@ pub fn Profile::to_json(Self) -> Json
 pub(all) struct Resolved {
   path : Bytes
   entry : Entry
-  symlinks : Int
+  symlinks : Int32
 }
 
 pub struct Snapshot {

@@ -1,0 +1,40 @@
+name: Dependency analysis
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Install reference compilers
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu
+      - name: Install hash-pinned MoonBit and reference loader tools
+        run: |
+          python3 tools/bootstrap_moon.py
+          echo "$GITHUB_WORKSPACE/.tools/moon-0.10.16/bin" >> "$GITHUB_PATH"
+          python3 tools/oracle/bootstrap_reference.py
+      - name: Build fixtures and compare real loaders
+        run: |
+          python3 tools/oracle/build_fixtures.py
+          python3 tools/oracle/build_u1_snapshots.py
+          python3 tools/oracle/probe_paths.py
+      - name: Check, build and test native and JS
+        run: |
+          moon check --target js,native --deny-warn
+          moon build --target js,native
+          moon test --target js,native
+          python3 tools/check_vendor.py
+          python3 tools/verify_cli.py --js _build/js/debug/build/cmd/main/main.js --native _build/native/debug/build/cmd/main/main.exe
+      - name: Verify public interfaces and first-party formatting
+        run: |
+          moon info
+          moon fmt --check . analysis snapshot model internal/elf_adapter experiments/parser_probe experiments/segment_probe cmd/main cmd/probe
+          git diff --exit-code

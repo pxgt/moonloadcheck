@@ -73,7 +73,7 @@ runs the unchanged tests, then introduces two wrong rules separately: allowing
 COPY to bind the executable, and ignoring differing sizes. Both must cause an
 assertion failure; compilation errors or missing inputs do not count. Original
 working sources are never edited by the mutation experiment. The five broader
-fault classes in the planned C12 acceptance item remain to be completed.
+fault classes in C12 are now checked by the separate [boundary suite](BOUNDARIES.md).
 
 ```sh
 python3 tools/corpus/build_copy.py

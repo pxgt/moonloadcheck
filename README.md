@@ -53,7 +53,7 @@ The [real-program corpus](docs/CORPUS.md) reproduces a concrete migration failur
 
 ## Library and evidence
 
-The public facade offers read_elf, read_linkage, load_snapshot, check_dependencies, check_compatibility, compare and read_report. Public data types live in model, snapshot and analysis; internal parser types do not leak through the facade. See the [compiler-checked library example](README.mbt.md), [generated API](pkg.generated.mbti), [report schema](docs/REPORT_SCHEMA.md), [COPY validation and resource baseline](docs/COPY.md), [73-case acceptance evidence map](docs/ACCEPTANCE_STATUS.md) and [development evidence](docs/PROGRESS.md).
+The public facade offers read_elf, read_linkage, load_snapshot, check_dependencies, check_compatibility, compare and read_report. Public data types live in model, snapshot and analysis; internal parser types do not leak through the facade. See the [compiler-checked library example](README.mbt.md), [generated API](pkg.generated.mbti), [report schema](docs/REPORT_SCHEMA.md), [COPY validation and resource baseline](docs/COPY.md), [path/input boundaries and fault detection](docs/BOUNDARIES.md), [73-case acceptance evidence map](docs/ACCEPTANCE_STATUS.md) and [development evidence](docs/PROGRESS.md).
 
 The ELF parser from moonbit-community/elf 0.0.1 is preserved as a hash-locked dependency with its license. New runtime-table readers and deployment analysis are separate original implementation; this is a new project. See [references and provenance](THIRD_PARTY.md).
 

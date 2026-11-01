@@ -98,3 +98,22 @@ test "blob names cannot escape the content store" {
   }
   assert_false(called)
 }
+
+///|
+test "unreadable blobs retain their digest without host-specific callback errors" {
+  let source = manifest([file("2f61", "one", b"expected")])
+  try
+    @snapshot.load(source.to_json().stringify(), _ => {
+      fail("host-specific read error")
+    })
+  catch {
+    @snapshot.SnapshotError::InvalidSnapshot(message) =>
+      assert_eq(
+        message,
+        "cannot read snapshot blob: " + @snapshot.sha256(b"expected"),
+      )
+    _ => fail("wrong callback error category")
+  } noraise {
+    _ => fail("missing blob accepted")
+  }
+}

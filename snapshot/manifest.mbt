@@ -167,7 +167,9 @@ pub fn load(
         let bytes = match blobs.get(digest) {
           Some(bytes) => bytes
           None => {
-            let bytes = read_blob(digest)
+            let bytes = read_blob(digest) catch {
+              _ => raise InvalidSnapshot("cannot read snapshot blob: " + digest)
+            }
             guard bytes.length() <= 134217728 &&
               bytes.length() <= 268435456 - total else {
               raise SnapshotLimit(

@@ -14,11 +14,11 @@ record yet. Results are reproduced by the CI workflow; limits remain in
 | E03 | Covered | Runtime/linkage readers compare ordinary and stripped fixtures. |
 | E04 | Covered | Runtime/linkage readers use sectionless fixtures on both architectures. |
 | E05 | Partial | [Symbol][symbols] and [hash-order][fallback] cases cover GNU/SysV/both; explicit final-entry boundary cases need expansion. |
-| E06 | Partial | [Malformed metadata][malformed] and truncated objects; more separate table truncation positions remain. |
+| E06 | Partial | [Input boundaries][inputs] cover dynamic/string truncation and bad version addresses; more version-table truncation positions remain. |
 | E07 | Partial | Bad version offsets/symbol indices and [budgets][budgets]; exhaustive range/overflow and allocation stress remain. |
-| E08 | Partial | Invalid chains are rejected; explicit cyclic-chain and unterminated-name cases remain. |
+| E08 | Covered | Input boundaries reject unterminated names and non-advancing/self-loop version chains on both architectures. |
 | E09 | Partial | [Path bytes][paths] are tested; non-UTF-8 dynamic symbol names need a dedicated fixture. |
-| E10 | Open | Reader rejects unsupported classes/types; a complete ET_REL/ELF32/big-endian/non-ELF test table remains. |
+| E10 | Covered | Readelf-verified ET_REL/ELF32/big-endian objects return Unsupported; non-ELF/truncated headers return Malformed. |
 | E11 | Partial | [U2][linkage] uses actual references and used/unused exports; isolated unreferenced undefined dynsym entry remains. |
 | E12 | Partial | Real corpus exercises relative relocations; targeted unknown and symbol-free relocation mutations remain. |
 | P01 | Covered | CLI verifiers compare exact saved reports across Windows JS/Linux native. |
@@ -26,26 +26,26 @@ record yet. Results are reproduced by the CI workflow; limits remain in
 | P03 | Covered | Broken links, cycles and hop limits in path tests. |
 | P04 | Covered | Link expansion before dotdot, with Linux oracle. |
 | P05 | Covered | Case distinctions and raw non-UTF-8 path bytes in path tests. |
-| P06 | Partial | [Manifest tests][manifest] reject tampering; add a dedicated missing-blob CLI case. |
-| P07 | Partial | Manifest tests separate equal content/hardlink identities; more runtime alias/reuse combinations remain. |
-| P08 | Partial | Snapshot-only reads and chroot corpus; deliberate host-library fallback fault injection remains. |
+| P06 | Covered | Manifest tests reject tampering; missing-blob CLI case and callback-error digest diagnostics are checked across hosts. |
+| P07 | Covered | [Graph cases][pathgraph] distinguish equal-byte files from hardlinked aliases using actual constructor counts. |
+| P08 | Covered | Real host-only decoy cannot repair the captured target; deliberate host-fallback mutation is caught. |
 | P09 | Partial | [Dependency][dependencies]/token tests distinguish unsupported/absent facts; full empty-versus-unknown field table remains. |
-| P10 | Partial | Declared cwd and relative paths in path tests; explicit empty search elements in real loader tests remain. |
+| P10 | Covered | Declared cwd/relative paths in unit tests; real empty library-path element selects cwd library. |
 | R01 | Covered | U1 dependency closure, parent edges and real execution. |
-| R02 | Partial | U1 diagnoses indirect missing library with chain; expand direct-versus-indirect missing cases. |
+| R02 | Covered | U1 indirect missing-library chain plus direct-missing path/graph execution and edge checks. |
 | R03 | Covered | Missing interpreter and wrong-machine dependency tests. |
-| R04 | Open | Dedicated slash-containing DT_NEEDED fixture remains. |
+| R04 | Covered | Absolute and relative slash-containing DT_NEEDED bypass directory search in both fixed environments. |
 | R05 | Covered | U1 inherited RPATH versus direct-only RUNPATH, both fixes. |
-| R06 | Partial | Search order implemented; competing RPATH/environment/RUNPATH provider matrix remains. |
+| R06 | Covered | Competing RPATH/library-path/RUNPATH providers return distinguishable values; selected paths match. |
 | R07 | Partial | DSO load-path/symlink ORIGIN tested; more main-versus-DSO competition cases remain. |
 | R08 | Partial | [Tokens][tokens] measure LIB/PLATFORM and missing facts; all braced spellings need explicit cases. |
 | R09 | Covered | [Cache tests][cache] verify candidate order, disabled cache and stale first match. |
 | R10 | Covered | NODEFLIB cache/default filtering compared with both architecture loaders. |
-| R11 | Partial | Foreign architecture, directory and PIE candidates compared; corrupt candidate loader behavior needs dedicated evidence. |
-| R12 | Partial | Alias/SONAME reuse is implemented; adversarial duplicate SONAME order cases remain. |
-| R13 | Open | Dedicated dependency cycle/diamond graph with loader comparison remains. |
+| R11 | Covered | Foreign architecture, directory/PIE and short corrupt first candidates compared; corrupt evidence stops search. |
+| R12 | Covered | Different path aliases with identical bytes/SONAME map separately unless file identity is shared; constructor counts verify it. |
+| R13 | Covered | Cycle retains its back edge and terminates; diamond maps its leaf once, both checked against actual execution. |
 | R14 | Partial | Conditional cache records retain unknown; more real hwcap/OS-condition cases remain. |
-| R15 | Partial | Profile guard covers preload/audit/secure execution; explicit test for each excluded mode remains. |
+| R15 | Covered | [Acceptance contracts][contracts] check secure, preload, audit, hwcaps, loader-family and rule-revision exclusions. |
 | S01 | Covered | U2 referenced strong exports, absent definitions, offsets and scope. |
 | S02 | Covered | Weak-reference U2 cases and weak-missing COPY execution. |
 | S03 | Covered | Missing version nodes and wrong-version exports, including COPY. |
@@ -64,28 +64,28 @@ record yet. Results are reproduced by the CI workflow; limits remain in
 | D01 | Covered | [Impact tests][impact] identify removed used export. |
 | D02 | Covered | Stable U3 consumer passes after removal of an unused export. |
 | D03 | Covered | [Corpus downgrade][corpus] reports newly introduced version requirements with unchanged applications. |
-| D04 | Open | Dedicated before/after path/cache provider change case remains. |
+| D04 | Covered | Only search-order changes select a different versioned provider; unchanged application acquires explained failures. |
 | D05 | Covered | Impact tests classify unchanged failure as existing. |
-| D06 | Partial | Unknown-before/fail-after retains indeterminate; add explicit unknown-to-pass case. |
+| D06 | Covered | Both unknown-to-fail and unknown-to-pass retain indeterminate attribution. |
 | D07 | Covered | Reverse U3 comparison records resolved failure. |
 | D08 | Covered | U3 two-consumer and real three-consumer downgrade examples. |
 | D09 | Covered | Application-change digest and indeterminate baseline tests. |
-| C01 | Open | Explicit shuffled namespace enumeration/report equivalence remains. |
+| C01 | Covered | Reversed namespace order yields identical semantic reports; only exact raw manifest digest changes. |
 | C02 | Covered | Repeated exact reports in U1 tests and process resource baseline. |
 | C03 | Covered | CLI verifier exercises all four exit categories. |
 | C04 | Covered | CLI reports parsed through pipes, including >64 KiB output regression. |
 | C05 | Covered | Multi-consumer U3 and real downgrade preserve unaffected consumers. |
 | C06 | Covered | Offline explain, unsupported schema, old additive-field compatibility and duplicate-ID rejection. |
-| C07 | Partial | Parser name/count budgets and [report merge contract][reports]; end-to-end exhaustion after an earlier failure remains. |
-| C08 | Partial | Complete before/after recomputation and manifest identity tests; explicit changed-rule cache sequence remains. |
+| C07 | Covered | Parser budgets plus [real 16,384-step exhaustion][limits] retain earlier failure and explicit unknown; large CLI JSON stays complete. |
+| C08 | Covered | Repeated original/changed-rule/original snapshot checks retain stable results; full comparisons recompute both views. |
 | C09 | Open | Standalone local-source consumer passes; published Mooncakes version validation awaits release. |
 | C10 | Covered | JS/native suites plus exact Windows/Linux snapshot report comparison. |
 | C11 | Partial | Clean CI reconstructs recipes; separate human-facing README walkthrough remains. |
-| C12 | Partial | Two wrong COPY rules are detected by assertion failures; the five originally planned fault classes remain. |
+| C12 | Covered | All five planned faults trigger dedicated assertions after a passing control; two COPY faults remain separately checked. |
 
-Priorities after this increment: finish the named input/path/graph gaps, exercise
-the five C12 fault classes, then run end-to-end limit stress and review API/report
-freeze. C09 belongs to the authorized release stage and cannot be replaced by a
+Priorities after this increment: finish the remaining parser/symbol cases and
+broader unusual bindings, expand stress beyond the dependency-step cap, and review
+API/report freeze. C09 belongs to the authorized release stage and cannot be replaced by a
 source-workspace test. Completion of this map is not completion of all its rows.
 
 [runtime]: ../internal/elf_adapter/runtime_test.mbt
@@ -104,3 +104,7 @@ source-workspace test. Completion of this map is not completion of all its rows.
 [corpus]: ../analysis/corpus_test.mbt
 [copy]: ../analysis/copy_test.mbt
 [reports]: ../analysis/report_wbtest.mbt
+[inputs]: ../internal/elf_adapter/input_wbtest.mbt
+[pathgraph]: ../analysis/paths_test.mbt
+[contracts]: ../analysis/acceptance_test.mbt
+[limits]: ../analysis/limits_test.mbt

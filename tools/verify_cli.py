@@ -100,6 +100,10 @@ def verify(js=None, native=None, compare_dir=None):
 
     source = ROOT / "fixtures/generated/u1/x86_64/fixed/snapshot"
     check(source, 3, "missing-entry", "/absent")
+    missing_blob = Path(tempfile.mkdtemp(prefix="missing-blob-", dir=artifacts))
+    (missing_blob / "blobs").mkdir()
+    shutil.copy2(source / "manifest.json", missing_blob / "manifest.json")
+    check(missing_blob, 3, "missing-blob")
     folder = Path(tempfile.mkdtemp(prefix="negative-", dir=artifacts))
     shutil.copytree(source, folder, dirs_exist_ok=True)
     manifest = json.loads((folder / "manifest.json").read_text())

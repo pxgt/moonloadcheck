@@ -113,3 +113,21 @@ See [COPY.md](COPY.md) for rules, references, recipes and limits. Remaining work
 includes the explicitly listed ELF/path/graph gaps, the five original C12 fault
 classes, end-to-end resource exhaustion and broader unusual binding combinations.
 API freeze, Mooncakes publication and contest submission remain pending.
+
+## 2026-11-01 Path, input and resource boundaries
+
+- Added 56 independent loader executions: 14 path/graph cases across both locked runtimes and architectures. Return values distinguish RPATH/library-path/RUNPATH precedence; constructor counts distinguish hardlinked aliases from independent equal-byte files. Cycles terminate, diamonds share a leaf, and an actual host-only library cannot repair a missing target dependency.
+- Added a search-order-only upgrade comparison with an unchanged application. The selected provider loses its required version, producing an introduced failure without an export-name removal.
+- Built readelf-verified ELF32, big-endian and relocatable objects that return Unsupported. Targeted malformed inputs cover truncated headers/dynamic strings, missing terminators, non-advancing version chains and unmapped version addresses. These inputs are never executed.
+- Reached the unchanged 16,384 dependency/search-step limit with a small, non-executed ELF containing 17,001 DT_NEEDED records. Both known missing-library failure and resource-limit uncertainty survive in the report; final status remains fail.
+- Five planned wrong-rule experiments now fail dedicated assertions after an unmodified passing control: inherited RUNPATH, ignored GNU versions, actual host fallback, unknown converted to pass, and flat export-removal comparison. The two earlier COPY mutations remain separate checks.
+- Added semantic determinism under namespace reordering, excluded-mode and repeated changed-profile contracts. Exact raw manifest hashes intentionally differ after reserialization. Missing content callbacks now become InvalidSnapshot errors naming the validated digest, producing stable diagnostics without platform-specific exception text; the public signatures remain unchanged.
+- Windows JS and pinned Linux native each pass 64 MoonBit tests and 207 CLI checks (86 existing + 24 corpus + 40 COPY + 57 path/limit). Saved JSON reports match exactly across the two hosts for identical snapshots. Vendor hashes, first-party formatting and unchanged public signatures are verified.
+
+Recipes and precise boundaries are in [BOUNDARIES.md](BOUNDARIES.md). The full
+reference recipe now contains 220 loader outcomes (164 earlier + 56 new), plus
+two successful self-host executions and the separate seven filesystem cases.
+Remaining work includes the partial ELF/symbol rows, broader unusual binding
+combinations, stress beyond the dependency-step cap, API/report review and a
+fresh user-facing walkthrough. This increment does not complete all M3 or
+authorize release/registration.

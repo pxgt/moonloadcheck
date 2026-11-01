@@ -5,6 +5,10 @@ accepts manifest text and a blob-reading callback, so it does not depend on the
 analysis host's filesystem semantics. The collector is a small Linux Python
 adapter; all content verification, ELF parsing and dependency decisions use MoonBit.
 
+A blob callback that raises is wrapped as InvalidSnapshot with the validated
+digest, rather than propagating host-specific read-error text. Successful reads
+still undergo the normal size and SHA-256 checks.
+
 The manifest contains `schema_version: 1`, `profile` and `entries`. Profile
 fields are required except optional `lib_token_hex` and `platform_token_hex`;
 see the public `snapshot.Profile` type and the

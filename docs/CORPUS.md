@@ -82,6 +82,9 @@ project-owned chroots. Then run:
 python3 tools/corpus/build_roots.py
 python3 tools/corpus/build_version_fallback.py
 python3 tools/corpus/build_copy.py
+python3 tools/corpus/build_paths.py
+python3 tools/corpus/build_inputs.py
+python3 tools/corpus/build_limits.py
 moon check --target js,native --deny-warn
 moon build --target js,native
 moon test --target js,native

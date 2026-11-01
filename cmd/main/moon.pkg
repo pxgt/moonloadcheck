@@ -1,0 +1,5 @@
+// import {
+//   "Xpeng/moonloadcheck" @lib,
+// }
+
+pkgtype(kind: "executable")

@@ -196,6 +196,7 @@ fn read_runtime(data : Bytes) -> @model.ElfObject raise {
     rpath: string_tag(tags, 15, strings),
     runpath: string_tag(tags, 29, strings),
     no_default_lib: (flags & 0x800) != 0,
+    pie: (flags & 0x08000000) != 0,
     unsupported,
   }
 }

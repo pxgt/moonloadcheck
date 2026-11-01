@@ -62,7 +62,7 @@ def capture(root: Path, profile: dict, out: Path):
                 stored.add(digest)
         else:
             raise ValueError("special filesystem entries are not supported")
-        entries.append(entry)
+        entries.append({key: value for key, value in entry.items() if value is not None})
         if entry["kind"] == "directory":
             for name in sorted(os.listdir(host)):
                 visit(os.path.join(host, name), (target.rstrip(b"/") + b"/" + name))

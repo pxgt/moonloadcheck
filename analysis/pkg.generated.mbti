@@ -1,0 +1,72 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "Xpeng/moonloadcheck/analysis"
+
+import {
+  "Xpeng/moonloadcheck/snapshot",
+}
+
+// Values
+pub fn check_dependencies(@snapshot.Snapshot, Bytes) -> Report
+
+// Errors
+
+// Types and methods
+pub(all) struct ByteName {
+  display : String
+  hex : String
+} derive(ToJson)
+pub fn ByteName::to_json(Self) -> Json
+
+pub(all) struct Candidate {
+  source : String
+  path : ByteName
+  outcome : String
+} derive(ToJson)
+pub fn Candidate::to_json(Self) -> Json
+
+pub(all) struct DependencyEdge {
+  consumer : ByteName
+  needed : ByteName
+  selected : ByteName?
+  trace : Array[Candidate]
+} derive(ToJson)
+pub fn DependencyEdge::to_json(Self) -> Json
+
+pub(all) struct Finding {
+  code : String
+  status : String
+  subject : ByteName
+  requirement : ByteName?
+  dependency_chain : Array[ByteName]
+  explanation : String
+  suggested_action : String
+} derive(ToJson)
+pub fn Finding::to_json(Self) -> Json
+
+pub(all) struct LoadedObject {
+  path : ByteName
+  file_id : String
+  sha256 : String
+  machine : Int
+} derive(ToJson)
+pub fn LoadedObject::to_json(Self) -> Json
+
+pub(all) struct Report {
+  schema_version : Int
+  tool_version : String
+  rule_revision : String
+  snapshot_sha256 : String
+  entry : ByteName
+  checked_scope : Array[String]
+  not_checked : Array[String]
+  status : String
+  objects : Array[LoadedObject]
+  edges : Array[DependencyEdge]
+  findings : Array[Finding]
+} derive(ToJson)
+pub fn Report::exit_code(Self) -> Int
+pub fn Report::to_json(Self) -> Json
+
+// Type aliases
+
+// Traits

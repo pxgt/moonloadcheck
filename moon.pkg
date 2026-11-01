@@ -1,3 +1,6 @@
 import {
   "Xpeng/moonloadcheck/snapshot",
+  "Xpeng/moonloadcheck/analysis",
+  "Xpeng/moonloadcheck/model",
+  "Xpeng/moonloadcheck/internal/elf_adapter" @elf,
 }

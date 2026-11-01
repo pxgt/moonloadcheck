@@ -1,5 +1,10 @@
-// import {
-//   "Xpeng/moonloadcheck" @lib,
-// }
+import {
+  "Xpeng/moonloadcheck/analysis",
+  "Xpeng/moonloadcheck/snapshot",
+  "moonbitlang/core/env",
+  "moonbitlang/core/encoding/utf8",
+  "moonbitlang/x/fs",
+  "moonbitlang/x/sys",
+}
 
 pkgtype(kind: "executable")

@@ -2,22 +2,43 @@
 package "Xpeng/moonloadcheck"
 
 import {
+  "Xpeng/moonloadcheck/analysis",
+  "Xpeng/moonloadcheck/model",
   "Xpeng/moonloadcheck/snapshot",
 }
 
 // Values
+pub fn check_dependencies(@snapshot.Snapshot, Bytes) -> @analysis.Report
+
+pub fn load_snapshot(String, (String) -> Bytes raise) -> @snapshot.Snapshot raise
+
+pub fn read_elf(Bytes) -> @model.ElfObject raise @model.ElfError
 
 // Errors
 
 // Types and methods
 
 // Type aliases
+pub using @model {type ElfError}
+
+pub using @model {type ElfObject}
+
 pub using @snapshot {type Entry}
 
 pub using @snapshot {type FileSystem}
 
+pub using @snapshot {type Manifest}
+
+pub using @snapshot {type ManifestEntry}
+
 pub using @snapshot {type PathError}
 
+pub using @snapshot {type Profile}
+
+pub using @analysis {type Report}
+
 pub using @snapshot {type Resolved}
+
+pub using @snapshot {type Snapshot}
 
 // Traits

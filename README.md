@@ -2,7 +2,7 @@
 
 MoonLoadCheck is a MoonBit project for offline Linux binary deployment analysis. It will explain dependency selection, check symbol/version requirements against a target environment, and identify consumers affected by shared-library upgrades.
 
-**Status: M0 feasibility verified; M1 deployment analysis in progress. No compatibility verdict is implemented yet.** This is a new project; existing ELF libraries are dependencies and references, not claimed as new work.
+**Status: M1 has a working dependency-analysis CLI and portable library. Symbol/version compatibility and upgrade impact remain under development.** This is a new project; existing ELF libraries are dependencies and references, not claimed as new work.
 
 The first release targets ELF64 little-endian x86-64 and AArch64 under documented glibc loading conditions. Its three acceptance scenarios are application relocation, deployment to a different runtime environment, and library-upgrade impact analysis.
 
@@ -12,7 +12,25 @@ M0 has exercised sectionless ELF inputs, GNU symbol versions and independent loa
 
 ## Development
 
-Tested toolchains: Windows JS `0.1.20261012` / compiler `0.10.15`, Linux native `0.1.20261016` / compiler `0.10.16`. The first public API is the [target namespace library example](README.mbt.md). No Mooncakes release has been published.
+The current workflow reads a captured target root, verifies content hashes, checks the interpreter and architecture, and explains the dependency search in a controlled glibc profile. It never executes analyzed files. The real-loader tests execute only fixtures built from our own C sources.
+
+For example, an executable's RUNPATH locates `libmiddle.so.1` but does not apply to that library's indirect dependency `libleaf.so.1`. The report shows the consumer chain and every attempted path. Adding an appropriate RUNPATH to the middle library fixes the reproduced case on x86-64 and AArch64.
+
+After [building the reference fixtures and snapshots](tools/oracle/README.md), run:
+
+```sh
+moon run cmd/main --target js -- check --snapshot fixtures/generated/u1/x86_64/runpath/snapshot --entry /opt/relocated-demo/app --scope dependencies --format text
+# Expected exit 1: the indirect dependency is missing from the search path.
+
+moon run cmd/main --target js -- check --snapshot fixtures/generated/u1/x86_64/fixed/snapshot --entry /opt/relocated-demo/app --scope dependencies --format json
+# Expected exit 0: the declared dependency checks pass.
+```
+
+`--scope dependencies` is required. `pass_static` applies only to the reported checks; symbol versions, symbol resolution, relocations, CPU requirements, permissions and application behavior have not been checked. Unsupported loading configurations produce `inconclusive`, not an empty passing graph. See the [supported profile](docs/SUPPORTED_PROFILE.md) and [snapshot schema](docs/SNAPSHOT_SCHEMA.md).
+
+Public library entry points are `read_elf`, `load_snapshot`, and `check_dependencies`. The [namespace example](README.mbt.md) is checked by the compiler; [generated API](pkg.generated.mbti) lists the current signatures. No Mooncakes release has been published.
+
+Windows JS development uses moon `0.1.20261012` / compiler `0.10.15`. The isolated CI archive is pinned by SHA-256 and contains moon `0.1.20261020` / compiler `0.10.16+b1a0e846e`; it does not upgrade the user's existing installation.
 
 ## License
 

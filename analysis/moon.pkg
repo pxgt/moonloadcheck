@@ -1,0 +1,12 @@
+import {
+  "Xpeng/moonloadcheck/model",
+  "Xpeng/moonloadcheck/snapshot",
+  "Xpeng/moonloadcheck/internal/elf_adapter" @elf,
+  "moonbitlang/core/encoding/hex",
+  "moonbitlang/core/encoding/utf8",
+}
+
+import {
+  "moonbitlang/x/fs",
+  "moonbitlang/core/json",
+} for "test"

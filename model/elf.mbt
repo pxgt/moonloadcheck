@@ -16,6 +16,7 @@ pub(all) struct ElfObject {
   rpath : Bytes?
   runpath : Bytes?
   no_default_lib : Bool
+  pie : Bool
   unsupported : Array[String]
 } derive(Eq)
 

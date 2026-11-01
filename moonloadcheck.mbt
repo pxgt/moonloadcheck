@@ -11,10 +11,15 @@ pub using @snapshot {
 }
 
 ///|
-pub using @model {type ElfObject, type ElfError}
+pub using @model {type ElfObject, type ElfError, type Linkage}
 
 ///|
-pub using @analysis {type Report}
+pub using @analysis {
+  type Report,
+  type Finding,
+  type ImpactReport,
+  type ReportError,
+}
 
 ///|
 pub fn read_elf(data : Bytes) -> ElfObject raise ElfError {
@@ -32,4 +37,28 @@ pub fn load_snapshot(
 ///|
 pub fn check_dependencies(snapshot : Snapshot, entry : Bytes) -> Report {
   @analysis.check_dependencies(snapshot, entry)
+}
+
+///|
+pub fn read_linkage(data : Bytes) -> Linkage raise ElfError {
+  @elf.read_linkage(data)
+}
+
+///|
+pub fn check_compatibility(snapshot : Snapshot, entry : Bytes) -> Report {
+  @analysis.check_compatibility(snapshot, entry)
+}
+
+///|
+pub fn compare(
+  before : Snapshot,
+  after : Snapshot,
+  entries : Array[Bytes],
+) -> ImpactReport raise {
+  @analysis.compare(before, after, entries)
+}
+
+///|
+pub fn read_report(json : String) -> Report raise {
+  @analysis.read_report(json)
 }

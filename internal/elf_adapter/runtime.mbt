@@ -65,7 +65,15 @@ fn string_tag(
 }
 
 ///|
-fn read_runtime(data : Bytes) -> @model.ElfObject raise {
+priv struct Frame {
+  elf : @elf.ElfBytes
+  tags : Map[UInt64, UInt64]
+  strings : @elf.StringTable
+  object : @model.ElfObject
+}
+
+///|
+fn read_frame(data : Bytes) -> Frame raise {
   guard data.length() <= 134217728 else {
     raise @model.ElfError::ResourceLimit("ELF exceeds 128 MiB")
   }
@@ -139,12 +147,11 @@ fn read_runtime(data : Bytes) -> @model.ElfObject raise {
           if key == 1 {
             needed_offsets.push(value)
           } else {
-            if key == 5 ||
-              key == 10 ||
-              key == 14 ||
-              key == 15 ||
-              key == 29 ||
-              key == 0x6ffffffb {
+            if [
+                4UL, 5, 6, 7, 8, 9, 10, 11, 14, 15, 16, 17, 18, 19, 20, 23, 24, 29,
+                30, 0x6ffffef5, 0x6ffffff0, 0x6ffffffb, 0x6ffffffc, 0x6ffffffd, 0x6ffffffe,
+                0x6fffffff,
+              ].contains(key) {
               guard tags.get(key) is None else {
                 raise @model.ElfError::Malformed(
                   "duplicate singleton dynamic tag",
@@ -192,7 +199,7 @@ fn read_runtime(data : Bytes) -> @model.ElfObject raise {
   if (flags & (0xffffffffffffffff ^ 0x08000881)) != 0 {
     unsupported.push("unmodeled DT_FLAGS_1 behavior")
   }
-  {
+  let object : @model.ElfObject = {
     machine: elf.ehdr.e_machine.to_int(),
     object_type: kind,
     interpreter,
@@ -204,13 +211,14 @@ fn read_runtime(data : Bytes) -> @model.ElfObject raise {
     pie: (flags & 0x08000000) != 0,
     unsupported,
   }
+  { elf, tags, strings, object, }
 }
 
 ///|
 /// Program headers and dynamic segments are authoritative, including on stripped
 /// and sectionless objects. No executable code from the input is run.
 pub fn read(data : Bytes) -> @model.ElfObject raise @model.ElfError {
-  read_runtime(data) catch {
+  read_frame(data).object catch {
     @model.ElfError::Malformed(message) =>
       raise @model.ElfError::Malformed(message)
     @model.ElfError::Unsupported(message) =>

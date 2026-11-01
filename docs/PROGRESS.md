@@ -58,3 +58,22 @@ for commit `12638e0`: check/build/test on native and JS, 26 tests per backend,
 interfaces and first-party formatting. CI setup revealed and fixed missing
 toolchain executable bits, an uninitialized package registry and compiler-specific
 Int/Int32 interface spelling. Generated interfaces now use the pinned compiler.
+
+## 2026-11-01 Controlled compatibility and consumer impact
+
+- Added cache 1.1 selection for the v2 profile: exact architecture flags, ordered one-path selection, stale entries and NODEFLIB filtering. Ten independent chroot outcomes match across both architectures; matching hwcap/OS-version conditions remain unknown.
+- Added explicitly measured LIB/PLATFORM tokens, with one successful real-loader case per architecture and negative tests for missing target facts.
+- Added production Verneed/Verdef/Versym, GNU/SysV lookup metadata and relocation-reference readers. Sectionless inputs work; corrupt chain offsets, revisions, symbol indices and bloom filters are rejected.
+- Version-node checks are independent of symbol checks. Tests distinguish weak nodes from weak symbols, unused version-node needs, missing versioned exports and named providers lacking VERSYM.
+- Added breadth-first startup lookup scope, requested/selected version evidence and actual relocation offsets. Sixteen loader outcomes cover weak/strong order, hidden definitions, main interposition, oldest/default/nondefault versions and SysV-only hashing.
+- U2 contributes 24 loader outcomes using our versioned test library. U3 contributes 8 outcomes: two unchanged consumers before/after an export removal, including the unaffected consumer.
+- check now accepts dependencies or compatibility scope. diff recomputes both complete views for 1..64 explicit consumers, preserving introduced/existing/resolved/indeterminate classifications and application-change evidence. explain reads a saved schema-2 report without a snapshot.
+- The current suite contains 39 MoonBit tests after adding the public facade example. All 39 pass on Windows JS and pinned Linux native.
+- Eighty-five CLI checks passed on each backend, with identical same-snapshot JSON across Windows JS and Linux native. All four exit categories, offline explain, comparison directions and malformed input/report requests are covered.
+- The full recipe now records 92 loader outcomes (18 M0 + 14 U1 + 10 cache + 24 U2 + 8 U3 + 2 tokens + 16 symbols), plus the separate seven filesystem-path outcomes.
+
+The controlled U2/U3 implementation is available; the complete S/E/R matrices,
+protected/SYMBOLIC/COPY/GNU_UNIQUE combinations, two full distribution baselines,
+real application corpora, stress/performance checks and release acceptance remain
+unfinished. Unsupported combinations retain unknown findings. No Mooncakes
+publication or contest registration has occurred.

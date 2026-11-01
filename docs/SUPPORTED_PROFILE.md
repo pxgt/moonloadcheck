@@ -1,75 +1,41 @@
-# Current dependency model
+# Supported deployment model
 
-This document describes implemented M1 behavior, not the complete planned product.
+This describes implemented behavior, not all planned acceptance requirements.
 
-`glibc-2.35-controlled-v1` models one ordinary startup loading scope for ELF64
-little-endian x86-64 or AArch64. Inputs must explicitly declare a glibc loader
-path and digest, cwd, library path and default directories. Cache use is disabled,
-hardware-capability directory selection is absent, secure execution is false,
-and preload/audit lists are empty. This is a controlled deployment profile; it
-must not be assigned to an arbitrary captured host without verifying those facts.
+## Target facts and dependency search
 
-Implemented checks:
+Both glibc-2.35-controlled-v1 and glibc-2.35-controlled-v2 model one ordinary startup scope for ELF64 little-endian x86-64 or AArch64. Inputs declare the loader path/digest, cwd, library path and default directories. Hardware-capability directory selection is absent, secure execution is false and preload/audit lists are empty. Do not assign this profile to an arbitrary host without verifying those facts.
 
-- An indexed interpreter matches the declared digest; interpreter absence and
-  architecture mismatch have separate findings.
-- Ordered DT_NEEDED closure, name/SONAME reuse and file-identity reuse. Original
-  declaration order is retained and cycles do not recurse indefinitely.
-- Direct dependency paths, inherited RPATH, explicit library path, direct-only
-  RUNPATH and declared defaults; DF_1_NODEFLIB suppresses default directories.
-- ORIGIN is expanded on the object that declares the path. A DSO's load pathname
-  determines its ORIGIN while its resolved file identity remains separate.
-- Missing candidates and wrong-machine candidates do not terminate ordinary
-  name search. A directory or executable occupying a library candidate stops
-  that dependency search. Malformed ELF evidence is input_error.
-- Every edge retains its consumer, requested name, selected object and ordered
-  candidate trace. Linux names are compared as bytes, not display strings.
+Dependency checks cover the interpreter, architecture, ordered DT_NEEDED closure, alias/SONAME reuse, file identity, direct paths, inherited RPATH, library path, direct-only RUNPATH and defaults. ORIGIN uses the declaring object's load pathname. Missing/wrong-machine candidates continue search; directory and executable candidates stop that dependency search. Corrupt ELF evidence is input_error. Every edge records ordered candidate evidence.
 
-The current independent U1 corpus has seven cases on each architecture: broken
-indirect RUNPATH, inherited RPATH, fixed RUNPATH, wrong-machine first candidate,
-directory first candidate, PIE first candidate, and symlink-dependent ORIGIN.
-Both native x86-64 and AArch64 under QEMU execute our fixtures with explicit
-loader options. The snapshot has the same application/library layout relocated
-to a target namespace; JSON results are host independent.
+LIB and PLATFORM require explicit lib_token_hex/platform_token_hex values. Missing values are unknown when those tokens are needed. Our fixtures measure them using the actual target loader's --list-diagnostics. The analyzer never substitutes its host's architecture or directory names.
 
-The rule model follows the [Linux loader documentation](https://man7.org/linux/man-pages/man8/ld.so.8.html)
-and checks subtle behavior against [glibc 2.35's loader](https://github.com/bminor/glibc/blob/release/2.35/master/elf/dl-load.c).
-Those sources are references; no glibc implementation source is copied here.
+Version 1 requires disabled cache use. Version 2 additionally accepts cache_mode=glibc-cache-v1 for little-endian glibc cache 1.1 (including a compatible old/new wrapper). Lookup retains record order, architecture flags and numeric name comparison. A selected stale path does not trigger a search of the next cache record; search proceeds to defaults. NODEFLIB filters a selected cache path in a default directory and suppresses defaults. A matching record needing nonzero OS-version/hwcap conditions produces unknown. Cache tests use disposable project-owned chroots and do not change the host cache.
+
+These decisions are tested against [glibc dependency loading](https://github.com/bminor/glibc/blob/release/2.35/master/elf/dl-load.c) and [cache selection](https://github.com/bminor/glibc/blob/release/2.35/master/elf/dl-cache.c). No implementation code from glibc is copied.
+
+## Symbol and version scope
+
+The compatibility scope adds bounded readers for dynamic symbols, GNU/SysV hashes, REL/RELA/JMPREL, Verneed, Verdef and Versym. Runtime program headers are authoritative; section headers are unnecessary. Hash membership is checked, including bucket/chain bounds and GNU bloom bits. Dynamic relocation references determine which symbols require lookup; an unused dynsym entry alone is not a required reference.
+
+Version-node validation and symbol lookup are separate. Version indices are local to an object; names and hashes are matched across objects. Missing strong version nodes fail even without a corresponding symbol call. Weak version-node requirements and weak symbol references are independent. A provider without VERDEF can pass the node check, while a named provider without VERSYM can still fail a versioned symbol lookup.
+
+The startup global lookup scope is breadth-first and is recorded separately from mapping order. Lookup respects visible definitions, first-match weak definitions, main-program interposition, versioned requests, oldest-version compatibility and the tested default/nondefault cases. Each symbol result records its consumer, requested and selected version, selected provider, lookup policy, offsets and relocation types. Lazy PLT references are checked but are labeled startup-or-first-call.
+
+The reference rules are [glibc version validation](https://github.com/bminor/glibc/blob/release/2.35/master/elf/dl-version.c) and [symbol lookup](https://github.com/bminor/glibc/blob/release/2.35/master/elf/dl-lookup.c). Independent fixtures cover both architectures, three hash configurations, version mismatch, used/unused removed exports, weak requirements, hidden definitions, main interposition and dependency-order changes.
 
 ## Coverage gaps
 
-Nonempty cache/preload/audit, secure execution, other loader families or rule
-revisions produce inconclusive. Dynamic audit/filter/auxiliary loading and
-unmodeled DF_1 flags also retain explicit unknown findings. Only ORIGIN tokens
-are currently expanded; LIB, PLATFORM and unknown tokens are inconclusive.
-Exceptional search-group behavior after ELOOP/ENOTDIR remains inconclusive.
-Static executables and standalone shared-object entry modes are not modeled.
-OS ABI identifiers outside System V/GNU or nonzero ABI revisions remain
-inconclusive until independently verified, even when the machine number matches.
+Other loader families, unknown rule revisions, preload/audit, secure execution, cache hardware conditions, filter/auxiliary loading and unmodeled DF_1 behavior remain inconclusive. Exceptional path-search behavior after ELOOP/ENOTDIR is also inconclusive. Static executables and standalone DSO entry modes are not modeled. OS ABI identifiers outside System V/GNU and nonzero ABI revisions are not verified.
 
-The loader is not fully emulated. Relocations, symbol resolution, GNU symbol
-versions, kernel ABI and hardware feature notes, permissions/ACLs, runtime
-dlopen, application behavior and upgrade impact are outside this dependency
-result. AArch64 libraries in the reference profile are cross-toolchain runtime
-files, not evidence that a general AArch64 distribution image has been validated.
+COPY, GNU_UNIQUE and protected/DT_SYMBOLIC reference combinations produce explicit unknown findings pending broader independent validation. Known symbol-free relative/TLS/IRELATIVE relocations require no external symbol lookup; unknown kinds stay unknown. Symbol existence does not validate relocation values, TLS layout or IFUNC execution. Architecture-specific reference behavior follows [x86-64](https://github.com/bminor/glibc/blob/release/2.35/master/sysdeps/x86_64/dl-machine.h) and [AArch64](https://github.com/bminor/glibc/blob/release/2.35/master/sysdeps/aarch64/dl-machine.h) loader references.
 
-Two complete distribution environments, cache selection, the broader planned
-test matrix, and U2/U3 remain acceptance work. The earlier glibc 2.39 smoke test
-does not make it a supported production profile.
+CPU/kernel feature requirements, permissions/ACLs, runtime dlopen, application behavior and C/C++ type/layout ABI remain outside the result. AArch64 tests run under pinned QEMU with cross-toolchain runtime files. They do not establish compatibility with an arbitrary distribution image. The earlier glibc 2.39 smoke test is not a supported second production environment.
 
-## Results and limits
+## Results and bounds
 
-`pass_static` / exit 0 means the declared checks found no problem; `fail` / 1
-contains a proven mismatch; `inconclusive` / 2 contains a coverage gap; and
-`input_error` / 3 rejects invalid evidence. Priority is input_error, fail,
-inconclusive, pass_static; lower-priority findings remain in the report.
+pass_static / exit 0 means no problem in the declared checks; fail / 1 proves a mismatch; inconclusive / 2 retains a coverage gap; input_error / 3 rejects invalid evidence. Priority is input_error, fail, inconclusive, pass_static. Lower-priority findings remain visible.
 
-Limits currently include 128 MiB per ELF/blob, 256 MiB unique snapshot content,
-4 MiB manifest, 20,000 namespace entries, 4,096 program headers, 65,536 dynamic
-entries, 2,048 loaded objects and 16,384 combined dependency/search steps.
-Paths have a 1 MiB bound and a resolution budget; reaching an analysis limit
-must not produce pass_static. Snapshot size violations are rejected before
-analysis. The content callback should also bound reads before allocating data.
+Limits include 128 MiB per ELF/blob, 256 MiB unique snapshot content, 4 MiB manifest, 20,000 namespace entries, 4,096 program headers, 65,536 dynamic entries, 2,048 loaded objects and 16,384 dependency/search steps. A cache is bounded to 16 MiB / 100,000 records. Dynamic tables are bounded to 100,000 symbols and 500,000 relocation records per object; a scope has a 200,000-symbol / 1,000,000-reference budget and a 1,000,000-step lookup budget. A comparison accepts 1..64 distinct explicit consumers. Limit failures cannot return pass_static.
 
-The CLI's entry argument uses UTF-8; byte-valued entry paths remain available
-through the MoonBit API. Text paths are JSON-quoted to escape control characters.
+These are implementation caps, not completed stress/performance acceptance. CLI file reads happen before decoded-size checks; callers handling untrusted very large files should bound the read callback before allocation. CLI entry arguments use UTF-8; the API supports byte-valued paths. Text paths are JSON-quoted.

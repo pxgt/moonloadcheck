@@ -1,6 +1,8 @@
 /* SPDX-License-Identifier: Apache-2.0 */
 #ifndef ENTRY
 #define ENTRY api
+#endif
+#ifndef EXPECTED
 #define EXPECTED 7
 #endif
 extern int ENTRY(void);

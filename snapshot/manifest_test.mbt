@@ -17,6 +17,8 @@ fn manifest(entries : Array[@snapshot.ManifestEntry]) -> @snapshot.Manifest {
       secure_execution: false,
       preload: [],
       audit: [],
+      lib_token_hex: None,
+      platform_token_hex: None,
     },
   }
 }

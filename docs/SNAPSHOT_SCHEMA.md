@@ -6,9 +6,16 @@ analysis host's filesystem semantics. The collector is a small Linux Python
 adapter; all content verification, ELF parsing and dependency decisions use MoonBit.
 
 The manifest contains `schema_version: 1`, `profile` and `entries`. Profile
-fields are all required; see the public `snapshot.Profile` type and the
+fields are required except optional `lib_token_hex` and `platform_token_hex`;
+see the public `snapshot.Profile` type and the
 [supported model](SUPPORTED_PROFILE.md). The collector accepts an explicit
 profile, never inherits LD_* variables, and never executes target programs.
+
+The optional token values encode the target loader's measured LIB/PLATFORM
+substitutions as raw bytes. Omit a value when unknown; use is then inconclusive.
+They are not guessed from the analysis host. The v2 controlled profile can use
+`cache_mode: "glibc-cache-v1"` to read the indexed `/etc/ld.so.cache`; missing
+cache means a known empty cache. The v1 profile retains disabled cache use.
 
 Paths and symlink targets use canonical lowercase hex encodings of raw filename
 bytes. Entry kinds are:

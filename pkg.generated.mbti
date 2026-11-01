@@ -8,11 +8,19 @@ import {
 }
 
 // Values
+pub fn check_compatibility(@snapshot.Snapshot, Bytes) -> @analysis.Report
+
 pub fn check_dependencies(@snapshot.Snapshot, Bytes) -> @analysis.Report
+
+pub fn compare(@snapshot.Snapshot, @snapshot.Snapshot, Array[Bytes]) -> @analysis.ImpactReport raise
 
 pub fn load_snapshot(String, (String) -> Bytes raise) -> @snapshot.Snapshot raise
 
 pub fn read_elf(Bytes) -> @model.ElfObject raise @model.ElfError
+
+pub fn read_linkage(Bytes) -> @model.Linkage raise @model.ElfError
+
+pub fn read_report(String) -> @analysis.Report raise
 
 // Errors
 
@@ -27,6 +35,12 @@ pub using @snapshot {type Entry}
 
 pub using @snapshot {type FileSystem}
 
+pub using @analysis {type Finding}
+
+pub using @analysis {type ImpactReport}
+
+pub using @model {type Linkage}
+
 pub using @snapshot {type Manifest}
 
 pub using @snapshot {type ManifestEntry}
@@ -36,6 +50,8 @@ pub using @snapshot {type PathError}
 pub using @snapshot {type Profile}
 
 pub using @analysis {type Report}
+
+pub using @analysis {type ReportError}
 
 pub using @snapshot {type Resolved}
 

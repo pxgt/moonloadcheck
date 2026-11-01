@@ -107,10 +107,11 @@ fn search_paths(
   index : Int32,
   profile : @snapshot.Profile,
   needed : Bytes,
+  cache : CacheState,
 ) -> Array[(String, Bytes)] raise {
   let node = nodes[index]
   let cwd = @hex.decode(profile.cwd_hex[:])
-  let expanded = expand(needed, node.origin)
+  let expanded = expand(needed, node.origin, profile)
   if contains(expanded, b'/') {
     return [("DT_NEEDED path", absolute(expanded, cwd))]
   }
@@ -120,7 +121,7 @@ fn search_paths(
     while current is Some(i) {
       let ancestor = nodes[i]
       if ancestor.object.runpath is None && ancestor.object.rpath is Some(rpath) {
-        for dir in path_list(rpath, ancestor.origin) {
+        for dir in path_list(rpath, ancestor.origin, profile) {
           directories.push(("RPATH", dir))
         }
       }
@@ -129,17 +130,12 @@ fn search_paths(
   }
   for hex in profile.library_path_hex {
     directories.push(
-      ("library_path", expand(@hex.decode(hex[:]), nodes[0].origin)),
+      ("library_path", expand(@hex.decode(hex[:]), nodes[0].origin, profile)),
     )
   }
   if node.object.runpath is Some(runpath) {
-    for dir in path_list(runpath, node.origin) {
+    for dir in path_list(runpath, node.origin, profile) {
       directories.push(("RUNPATH", dir))
-    }
-  }
-  if !node.object.no_default_lib {
-    for hex in profile.default_dirs_hex {
-      directories.push(("default", @hex.decode(hex[:])))
     }
   }
   let candidates = []
@@ -154,6 +150,17 @@ fn search_paths(
     }
     candidates.push((source, absolute(path, cwd)))
   }
+  if cache_candidate(cache, profile, expanded, node.object.no_default_lib)
+    is Some(candidate) {
+    candidates.push(candidate)
+  }
+  if !node.object.no_default_lib {
+    for hex in profile.default_dirs_hex {
+      candidates.push(
+        ("default", concat(concat(@hex.decode(hex[:]), b"/"), expanded)),
+      )
+    }
+  }
   candidates
 }
 
@@ -162,6 +169,7 @@ fn run(
   snapshot : @snapshot.Snapshot,
   entry : Bytes,
   report : Report,
+  nodes : Array[Node],
 ) -> Unit raise {
   let profile = snapshot.profile()
   let resolved = snapshot.resolve(entry)
@@ -183,7 +191,6 @@ fn run(
     )
     return
   }
-  let nodes = []
   ignore(
     register(
       snapshot,
@@ -196,9 +203,16 @@ fn run(
       entry,
     ),
   )
-  if profile.rule_revision != "glibc-2.35-controlled-v1" ||
+  if (
+      profile.rule_revision != "glibc-2.35-controlled-v1" &&
+      profile.rule_revision != "glibc-2.35-controlled-v2"
+    ) ||
     profile.loader_family != "glibc" ||
-    profile.cache_mode != "disabled" ||
+    (
+      profile.cache_mode != "disabled" &&
+      !(profile.rule_revision == "glibc-2.35-controlled-v2" &&
+      profile.cache_mode == "glibc-cache-v1")
+    ) ||
     profile.hwcaps_policy != "none" ||
     profile.secure_execution ||
     !profile.preload.is_empty() ||
@@ -304,6 +318,7 @@ fn run(
       }
     }
   }
+  let cache = read_cache(snapshot)
   let mut index = 0
   let mut steps = 0
   while index < nodes.length() {
@@ -340,7 +355,7 @@ fn run(
       }
       let trace = []
       let mut selected = None
-      let expanded = expand(needed, node.origin) catch {
+      let expanded = expand(needed, node.origin, profile) catch {
         UnmodeledPath(message) => {
           issue(
             report,
@@ -374,7 +389,7 @@ fn run(
       }
       let mut uncertain = false
       if selected is None {
-        let candidates = search_paths(nodes, index, profile, needed) catch {
+        let candidates = search_paths(nodes, index, profile, needed, cache) catch {
           error => {
             issue(
               report,
@@ -396,6 +411,25 @@ fn run(
           }
         }
         for (source, path) in candidates {
+          if source == "cache_nodeflib" {
+            trace.push({ source, path: name(path), outcome: "filtered", })
+            continue
+          }
+          if source == "cache_unknown" {
+            trace.push({ source, path: name(path), outcome: "unknown", })
+            issue(
+              report,
+              "MLC007",
+              "unknown",
+              node.path,
+              Some(needed),
+              dependency_chain,
+              "Cache selection requires unsupported format, hardware or OS-version evidence.",
+              "Capture supported cache conditions before selecting a provider.",
+            )
+            uncertain = true
+            break
+          }
           steps += 1
           if steps > 16384 {
             issue(
@@ -542,14 +576,14 @@ fn run(
 }
 
 ///|
-/// Checks dependency closure only. Symbols, versions, relocations, CPU features,
-/// file permissions and application behavior are explicitly outside this result.
-pub fn check_dependencies(
+/// Shared driver; compatibility additionally checks versions and symbol lookup.
+fn check_with_scope(
   snapshot : @snapshot.Snapshot,
   entry : Bytes,
+  compatibility : Bool,
 ) -> Report {
   let report : Report = {
-    schema_version: 1,
+    schema_version: 2,
     tool_version: "0.1.0-dev",
     rule_revision: snapshot.profile().rule_revision,
     snapshot_sha256: snapshot.manifest_digest(),
@@ -563,8 +597,19 @@ pub fn check_dependencies(
     objects: [],
     edges: [],
     findings: [],
+    version_checks: [],
+    symbol_checks: [],
+    symbol_scope: [],
   }
-  run(snapshot, entry, report) catch {
+  let nodes = []
+  try {
+    run(snapshot, entry, report, nodes)
+    if compatibility {
+      report.checked_scope.push("version-requirements")
+      report.checked_scope.push("symbol-resolution")
+      check_linkage(snapshot, nodes, report)
+    }
+  } catch {
     @model.ElfError::Malformed(message) =>
       issue(
         report,
@@ -610,5 +655,32 @@ pub fn check_dependencies(
         "Check the entry and snapshot.",
       )
   }
+  let report = if compatibility {
+    {
+      ..report,
+      not_checked: [
+        "relocation-values", "IFUNC resolver results", "TLS layout", "CPU features",
+        "file permissions", "application behavior", "type ABI",
+      ],
+    }
+  } else {
+    report
+  }
   finish(report)
+}
+
+///|
+pub fn check_dependencies(
+  snapshot : @snapshot.Snapshot,
+  entry : Bytes,
+) -> Report {
+  check_with_scope(snapshot, entry, false)
+}
+
+///|
+pub fn check_compatibility(
+  snapshot : @snapshot.Snapshot,
+  entry : Bytes,
+) -> Report {
+  check_with_scope(snapshot, entry, true)
 }

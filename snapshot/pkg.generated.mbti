@@ -71,6 +71,8 @@ pub(all) struct Profile {
   secure_execution : Bool
   preload : Array[String]
   audit : Array[String]
+  lib_token_hex : String?
+  platform_token_hex : String?
 } derive(ToJson, @json.FromJson)
 pub fn Profile::from_json(Json, @json.JsonPath) -> Self raise @json.JsonDecodeError
 pub fn Profile::to_json(Self) -> Json

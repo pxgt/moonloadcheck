@@ -1,62 +1,116 @@
 ///|
-fn main {
-  let args = @env.args()
-  let start = args.length() - 9
-  if start < 0 ||
-    args[start] != "check" ||
-    args[start + 1] != "--snapshot" ||
-    args[start + 3] != "--entry" ||
-    args[start + 5] != "--scope" ||
-    args[start + 6] != "dependencies" ||
-    args[start + 7] != "--format" ||
-    (args[start + 8] != "json" && args[start + 8] != "text") {
+fn load(folder : String) -> @snapshot.Snapshot raise {
+  @snapshot.load(@fs.read_file_to_string(folder + "/manifest.json"), digest => {
+    @fs.read_file_to_bytes(folder + "/blobs/" + digest)
+  })
+}
+
+///|
+fn show(report : @analysis.Report) -> Unit {
+  println("\{report.status}: \{report.checked_scope.join(", ")}")
+  println("Not checked: \{report.not_checked.join(", ")}")
+  for finding in report.findings {
     println(
-      "usage: moonloadcheck check --snapshot <directory> --entry <target-path> --scope dependencies --format <json|text>",
+      "\{finding.code} [\{finding.status}] \{Json::string(finding.subject.display).stringify()}: \{finding.explanation}",
     )
-    @sys.exit(3)
+    println("  finding: \{finding.id}")
+    if !finding.dependency_chain.is_empty() {
+      println(
+        "  chain: \{finding.dependency_chain.map(item => Json::string(item.display).stringify()).join(" -> ")}",
+      )
+    }
+    println("  action: \{finding.suggested_action}")
   }
-  try {
-    let folder = args[start + 2]
-    let snapshot = @snapshot.load(
-      @fs.read_file_to_string(folder + "/manifest.json"),
-      digest => @fs.read_file_to_bytes(folder + "/blobs/" + digest),
+  for edge in report.edges {
+    println(
+      "\{Json::string(edge.consumer.display).stringify()} needs \{Json::string(edge.needed.display).stringify()}",
     )
-    let report = @analysis.check_dependencies(
-      snapshot,
-      @utf8.encode(args[start + 4]),
+    for candidate in edge.trace {
+      println(
+        "  \{candidate.source}: \{Json::string(candidate.path.display).stringify()} [\{candidate.outcome}]",
+      )
+    }
+  }
+}
+
+///|
+fn dispatch(args : Array[String]) -> Int32 raise {
+  let start = args.length() - 9
+  if start >= 0 &&
+    args[start] == "check" &&
+    args[start + 1] == "--snapshot" &&
+    args[start + 3] == "--entry" &&
+    args[start + 5] == "--scope" &&
+    ["dependencies", "compatibility"].contains(args[start + 6]) &&
+    args[start + 7] == "--format" &&
+    ["json", "text"].contains(args[start + 8]) {
+    let snapshot = load(args[start + 2])
+    let entry = @utf8.encode(args[start + 4])
+    let report = if args[start + 6] == "dependencies" {
+      @analysis.check_dependencies(snapshot, entry)
+    } else {
+      @analysis.check_compatibility(snapshot, entry)
+    }
+    if args[start + 8] == "json" {
+      println(report.to_json().stringify())
+    } else {
+      show(report)
+    }
+    return report.exit_code()
+  }
+  if start >= 0 &&
+    args[start] == "diff" &&
+    args[start + 1] == "--before" &&
+    args[start + 3] == "--after" &&
+    args[start + 5] == "--entries" &&
+    args[start + 7] == "--format" &&
+    ["json", "text"].contains(args[start + 8]) {
+    let input = @fs.read_file_to_string(args[start + 6])
+    guard input.length() <= 1048576 else {
+      raise @analysis.ReportError("entries file exceeds 1 MiB")
+    }
+    let entries : Array[String] = @json.from_json(@json.parse(input[:]))
+    let report = @analysis.compare(
+      load(args[start + 2]),
+      load(args[start + 4]),
+      entries.map(entry => @utf8.encode(entry)),
     )
     if args[start + 8] == "json" {
       println(report.to_json().stringify())
     } else {
-      println("\{report.status}: interpreter, machine, dependency resolution")
-      println("Not checked: \{report.not_checked.join(", ")}")
-      for finding in report.findings {
+      println("\{report.status}: explicit-consumer compatibility comparison")
+      for entry in report.entries {
         println(
-          "\{finding.code} [\{finding.status}] \{Json::string(finding.subject.display).stringify()}: \{finding.explanation}",
+          "\{Json::string(entry.entry.display).stringify()}: \{entry.before.status} -> \{entry.after.status}; application_changed=\{entry.application_changed}",
         )
-        if !finding.dependency_chain.is_empty() {
-          println(
-            "  chain: \{finding.dependency_chain.map(item => Json::string(item.display).stringify()).join(" -> ")}",
-          )
+        for change in entry.changes {
+          println("  \{change.classification}: \{change.finding_id}")
         }
-        println("  action: \{finding.suggested_action}")
-      }
-      for edge in report.edges {
-        println(
-          "\{Json::string(edge.consumer.display).stringify()} needs \{Json::string(edge.needed.display).stringify()}",
-        )
-        for candidate in edge.trace {
-          println(
-            "  \{candidate.source}: \{Json::string(candidate.path.display).stringify()} [\{candidate.outcome}]",
-          )
-        }
+        show(entry.after)
       }
     }
-    @sys.exit(report.exit_code())
-  } catch {
+    return report.exit_code()
+  }
+  let start = args.length() - 5
+  if start >= 0 &&
+    args[start] == "explain" &&
+    args[start + 1] == "--report" &&
+    args[start + 3] == "--finding" {
+    let report = @analysis.read_report(@fs.read_file_to_string(args[start + 2]))
+    println(report.explain(args[start + 4]).to_json().stringify())
+    return 0
+  }
+  raise @analysis.ReportError(
+    "usage: moonloadcheck check --snapshot DIR --entry PATH --scope dependencies|compatibility --format json|text; diff --before DIR --after DIR --entries JSON_FILE --format json|text; explain --report JSON_FILE --finding ID",
+  )
+}
+
+///|
+fn main {
+  @sys.exit(dispatch(@env.args())) catch {
     error => {
       let result : Json = {
-        "schema_version": 1,
+        "schema_version": 2,
         "status": "input_error",
         "message": "\{error}",
       }

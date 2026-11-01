@@ -6,6 +6,12 @@ On Linux with Python 3, GCC, binutils and an AArch64 cross compiler:
 python3 tools/oracle/bootstrap_reference.py
 python3 tools/oracle/build_fixtures.py
 python3 tools/oracle/build_u1_snapshots.py
+python3 tools/oracle/build_cache_fixtures.py
+python3 tools/oracle/build_u2_snapshots.py
+python3 tools/oracle/build_u3_snapshots.py
+python3 tools/oracle/build_token_fixtures.py
+python3 tools/oracle/build_symbol_fixtures.py
+python3 tools/oracle/probe_paths.py
 ```
 
 The bootstrap downloads two hash-pinned Ubuntu packages into the ignored
@@ -42,6 +48,20 @@ The M1 U1 builder captures portable snapshots and checks seven additional
 loading outcomes on each architecture. It covers relocation failure and two
 fixes, wrong architecture, directory/PIE candidates and symlink ORIGIN behavior.
 These cases are checked by the dependency analyzer tests.
+
+Additional production suites now exercise 10 cache outcomes, 24 U2 version/symbol
+outcomes, 8 U3 consumer/view outcomes, 2 measured-token outcomes and 16 symbol
+scope/version outcomes. Together with M0's 18 and U1's 14, that is 92 real-loader
+outcomes. U2 uses our DEMO_1/DEMO_2 libraries under glibc 2.35; it does not replace
+the planned two-distribution validation. U3 checks both consumers before and
+after the library change. Symbols cover weak/strong order, visibility, main
+interposition, versions and SysV-only hashing.
+
+The cache builder needs root or passwordless sudo for disposable chroots under
+fixtures/generated/cache. CI supplies sudo. It copies the static QEMU helper
+into each AArch64 root only for execution and removes that helper afterward;
+the helper is not part of the captured deployment. No global linker cache is
+changed. Other oracle builders call the explicitly selected loader directly.
 
 For the pinned Linux compiler, install only inside this checkout:
 

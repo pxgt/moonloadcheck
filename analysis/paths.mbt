@@ -59,7 +59,11 @@ fn token_character(c : Byte) -> Bool {
 
 ///|
 /// Token recognition is greedy: $ORIGIN_suffix is not $ORIGIN + _suffix.
-fn expand(value : Bytes, origin : Bytes) -> Bytes raise UnmodeledPath {
+fn expand(
+  value : Bytes,
+  origin : Bytes,
+  profile : @snapshot.Profile,
+) -> Bytes raise UnmodeledPath {
   guard value.length() <= 1048576 else {
     raise UnmodeledPath("path exceeds 1 MiB")
   }
@@ -72,6 +76,7 @@ fn expand(value : Bytes, origin : Bytes) -> Bytes raise UnmodeledPath {
       continue
     }
     let start = i
+    let mut token_name = b""
     i += 1
     if i < value.length() && value[i] == b'{' {
       i += 1
@@ -79,19 +84,33 @@ fn expand(value : Bytes, origin : Bytes) -> Bytes raise UnmodeledPath {
       while i < value.length() && value[i] != b'}' {
         i += 1
       }
-      guard i < value.length() && value[token:i] == b"ORIGIN"[:] else {
-        raise UnmodeledPath("only ORIGIN expansion is modeled")
+      guard i < value.length() else {
+        raise UnmodeledPath("unterminated dynamic token")
       }
+      token_name = value[token:i].to_owned()
       i += 1
     } else {
       while i < value.length() && token_character(value[i]) {
         i += 1
       }
-      guard value[start + 1:i] == b"ORIGIN"[:] else {
-        raise UnmodeledPath("only ORIGIN expansion is modeled")
-      }
+      token_name = value[start + 1:i].to_owned()
     }
-    for byte in origin {
+    let replacement = if token_name == b"ORIGIN" {
+      origin
+    } else {
+      let hex = if token_name == b"LIB" {
+        profile.lib_token_hex
+      } else if token_name == b"PLATFORM" {
+        profile.platform_token_hex
+      } else {
+        None
+      }
+      guard hex is Some(hex) else {
+        raise UnmodeledPath("dynamic token lacks explicit target evidence")
+      }
+      try! @hex.decode(hex[:])
+    }
+    for byte in replacement {
       result.push(byte)
     }
     guard result.length() <= 1048576 else {
@@ -102,7 +121,11 @@ fn expand(value : Bytes, origin : Bytes) -> Bytes raise UnmodeledPath {
 }
 
 ///|
-fn path_list(value : Bytes, origin : Bytes) -> Array[Bytes] raise UnmodeledPath {
+fn path_list(
+  value : Bytes,
+  origin : Bytes,
+  profile : @snapshot.Profile,
+) -> Array[Bytes] raise UnmodeledPath {
   if value.is_empty() {
     return []
   }
@@ -110,7 +133,7 @@ fn path_list(value : Bytes, origin : Bytes) -> Array[Bytes] raise UnmodeledPath 
   let mut start = 0
   for i = 0; i <= value.length(); i = i + 1 {
     if i == value.length() || value[i] == b':' || value[i] == b';' {
-      paths.push(expand(value[start:i].to_owned(), origin))
+      paths.push(expand(value[start:i].to_owned(), origin, profile))
       guard paths.length() <= 1024 else {
         raise UnmodeledPath("search list exceeds 1024 entries")
       }

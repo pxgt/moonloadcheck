@@ -1,0 +1,26 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "Xpeng/moonloadcheck/internal/cache"
+
+// Values
+pub fn decode(Bytes) -> Array[Record] raise CacheError
+
+pub fn select(Array[Record], Bytes, Int32) -> Bytes? raise CacheError
+
+// Errors
+pub(all) suberror CacheError {
+  Invalid(String)
+  Unsupported(String)
+}
+
+// Types and methods
+pub(all) struct Record {
+  name : Bytes
+  path : Bytes
+  flags : UInt64
+  osversion : UInt64
+  hwcap : UInt64
+}
+
+// Type aliases
+
+// Traits

@@ -6,7 +6,7 @@ pub(all) suberror SnapshotError {
 }
 
 ///|
-/// The first profile deliberately describes an explicit, cache-disabled run.
+/// Target facts for an explicit controlled loading profile.
 /// Paths are lowercase hexadecimal encodings of Linux filename bytes.
 pub(all) struct Profile {
   rule_revision : String
@@ -22,6 +22,8 @@ pub(all) struct Profile {
   secure_execution : Bool
   preload : Array[String]
   audit : Array[String]
+  lib_token_hex : String?
+  platform_token_hex : String?
 } derive(ToJson, @json.FromJson)
 
 ///|
@@ -106,6 +108,12 @@ pub fn load(
     raise SnapshotLimit("more than 20000 entries")
   }
   let profile = manifest.profile
+  for token in [profile.lib_token_hex, profile.platform_token_hex] {
+    if token is Some(hex) {
+      let bytes = decode_hex(hex)
+      ignore(parts(bytes))
+    }
+  }
   guard profile.machine == 62 || profile.machine == 183 else {
     raise InvalidSnapshot("unsupported profile architecture")
   }

@@ -3,6 +3,7 @@ import {
   "Xpeng/moonloadcheck/snapshot",
   "moonbitlang/core/env",
   "moonbitlang/core/encoding/utf8",
+  "moonbitlang/core/json",
   "moonbitlang/x/fs",
   "moonbitlang/x/sys",
 }

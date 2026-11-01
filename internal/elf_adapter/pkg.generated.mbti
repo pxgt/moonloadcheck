@@ -8,6 +8,8 @@ import {
 // Values
 pub fn read(Bytes) -> @model.ElfObject raise @model.ElfError
 
+pub fn read_linkage(Bytes) -> @model.Linkage raise @model.ElfError
+
 // Errors
 
 // Types and methods

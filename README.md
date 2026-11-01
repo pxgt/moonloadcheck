@@ -1,37 +1,62 @@
 # MoonLoadCheck
 
-MoonLoadCheck is a MoonBit project for offline Linux binary deployment analysis. It will explain dependency selection, check symbol/version requirements against a target environment, and identify consumers affected by shared-library upgrades.
+MoonLoadCheck is a MoonBit library and CLI for offline Linux binary deployment analysis. It explains dependency selection, checks symbol/version requirements against a captured target, and identifies explicit consumers affected by shared-library changes.
 
-**Status: M1 has a working dependency-analysis CLI and portable library. Symbol/version compatibility and upgrade impact remain under development.** This is a new project; existing ELF libraries are dependencies and references, not claimed as new work.
+**Status: U1 dependency checks, U2 symbol/version checks and U3 consumer comparisons work under the controlled glibc profile. This is a development version, not a general Linux compatibility certificate.** Two full distribution environments, real application corpora and the broader acceptance matrix remain in progress. No Mooncakes package has been published.
 
-The first release targets ELF64 little-endian x86-64 and AArch64 under documented glibc loading conditions. Its three acceptance scenarios are application relocation, deployment to a different runtime environment, and library-upgrade impact analysis.
+The initial target is ELF64 little-endian x86-64 and AArch64. Analysis verifies snapshot content and never executes analyzed files or falls back to host libraries. The independent loader tests execute only programs built from this repository's C sources.
 
-The intended outputs are a reusable Mooncakes library, a CLI, deterministic JSON diagnostics, and reproducible examples. A successful static check will describe its checked scope; it will not guarantee application behavior or full C++ ABI compatibility.
+## Try the three workflows
 
-M0 has exercised sectionless ELF inputs, GNU symbol versions and independent loader comparisons on x86-64/AArch64. The parser from `moonbit-community/elf@0.0.1` is preserved as a hash-locked internal dependency to avoid its obsolete published manifest. See [development evidence](docs/PROGRESS.md), [reproduction commands](tools/oracle/README.md) and [references](THIRD_PARTY.md).
+First follow the [reference setup and fixture recipes](tools/oracle/README.md). They generate portable snapshots; binary fixtures are not checked into Git. Use a recent MoonBit toolchain and Node for JS, or the pinned Linux compiler and a C toolchain for native.
 
-## Development
-
-The current workflow reads a captured target root, verifies content hashes, checks the interpreter and architecture, and explains the dependency search in a controlled glibc profile. It never executes analyzed files. The real-loader tests execute only fixtures built from our own C sources.
-
-For example, an executable's RUNPATH locates `libmiddle.so.1` but does not apply to that library's indirect dependency `libleaf.so.1`. The report shows the consumer chain and every attempted path. Adding an appropriate RUNPATH to the middle library fixes the reproduced case on x86-64 and AArch64.
-
-After [building the reference fixtures and snapshots](tools/oracle/README.md), run:
+**U1: relocate an application.** RUNPATH on an executable does not propagate to a library's indirect dependency. Inspect the search chain, then compare the corrected layout:
 
 ```sh
 moon run cmd/main --target js -- check --snapshot fixtures/generated/u1/x86_64/runpath/snapshot --entry /opt/relocated-demo/app --scope dependencies --format text
-# Expected exit 1: the indirect dependency is missing from the search path.
-
+# Exit 1: missing indirect dependency.
 moon run cmd/main --target js -- check --snapshot fixtures/generated/u1/x86_64/fixed/snapshot --entry /opt/relocated-demo/app --scope dependencies --format json
-# Expected exit 0: the declared dependency checks pass.
+# Exit 0.
 ```
 
-`--scope dependencies` is required. `pass_static` applies only to the reported checks; symbol versions, symbol resolution, relocations, CPU requirements, permissions and application behavior have not been checked. Unsupported loading configurations produce `inconclusive`, not an empty passing graph. See the [supported profile](docs/SUPPORTED_PROFILE.md) and [snapshot schema](docs/SNAPSHOT_SCHEMA.md).
+**U2: deploy the same program against a different library baseline.** The first environment supplies DEMO_2; the second supplies only DEMO_1. These are our test library's versions, not invented GLIBC versions.
 
-Public library entry points are `read_elf`, `load_snapshot`, and `check_dependencies`. The [namespace example](README.mbt.md) is checked by the compiler; [generated API](pkg.generated.mbti) lists the current signatures. No Mooncakes release has been published.
+```sh
+moon run cmd/main --target js -- check --snapshot fixtures/generated/u2/x86_64/new-environment/snapshot --entry /opt/demo/app --scope compatibility --format json
+# Exit 0.
+moon run cmd/main --target js -- check --snapshot fixtures/generated/u2/x86_64/old-environment/snapshot --entry /opt/demo/app --scope compatibility --format json
+# Exit 1: required version/symbol unavailable.
+```
 
-Windows JS development uses moon `0.1.20261012` / compiler `0.10.15`. The isolated CI archive is pinned by SHA-256 and contains moon `0.1.20261020` / compiler `0.10.16+b1a0e846e`; it does not upgrade the user's existing installation.
+**U3: change a library shared by two consumers.** Removing the api export breaks app; stable-app uses the unchanged stable export and passes. Both complete views are recomputed, including dependency selection.
+
+```sh
+moon run cmd/main --target js -- diff --before fixtures/generated/u3/x86_64/before/snapshot --after fixtures/generated/u3/x86_64/after/snapshot --entries fixtures/generated/u3/entries.json --format text
+# Exit 1, introduced failure only for /opt/demo/app.
+# Swap --before and --after to demonstrate a resolved failure, exit 0.
+```
+
+All examples also have AArch64 snapshots. CLI options currently use the fixed order shown. Exit codes are 0 pass_static, 1 fail, 2 inconclusive, 3 input_error. The [supported profile](docs/SUPPORTED_PROFILE.md) defines exactly what a pass covers.
+
+Save a JSON check report to explain a finding later, without the snapshot:
+
+```sh
+moon build --target js
+node _build/js/debug/build/cmd/main/main.js check --snapshot fixtures/generated/u2/x86_64/used-export-removed/snapshot --entry /opt/demo/app --scope compatibility --format json > report.json
+# Replace ID with a findings[].id from report.json.
+node _build/js/debug/build/cmd/main/main.js explain --report report.json --finding ID
+```
+
+For a real staged deployment, supply an explicit target profile to the [Linux snapshot collector](docs/SNAPSHOT_SCHEMA.md). Target LIB/PLATFORM values, loader digest, search paths and cache policy must come from that target.
+
+## Library and evidence
+
+The public facade offers read_elf, read_linkage, load_snapshot, check_dependencies, check_compatibility, compare and read_report. Public data types live in model, snapshot and analysis; internal parser types do not leak through the facade. See the [compiler-checked library example](README.mbt.md), [generated API](pkg.generated.mbti), [report schema](docs/REPORT_SCHEMA.md) and [development evidence](docs/PROGRESS.md).
+
+The ELF parser from moonbit-community/elf 0.0.1 is preserved as a hash-locked dependency with its license. New runtime-table readers and deployment analysis are separate original implementation; this is a new project. See [references and provenance](THIRD_PARTY.md).
+
+Windows JS development uses compiler 0.10.15. CI and Linux native use the isolated, hash-pinned archive containing moon 0.1.20261020 / compiler 0.10.16+b1a0e846e. It does not upgrade other projects' toolchains.
 
 ## License
 
-Apache-2.0. Test sources created here use the same license unless explicitly stated otherwise. Third-party binaries will be generated or obtained from recorded recipes rather than silently bundled.
+Apache-2.0. Reference binaries are generated or obtained through recorded recipes and are not silently redistributed.

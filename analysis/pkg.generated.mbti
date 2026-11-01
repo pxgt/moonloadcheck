@@ -3,36 +3,58 @@ package "Xpeng/moonloadcheck/analysis"
 
 import {
   "Xpeng/moonloadcheck/snapshot",
+  "moonbitlang/core/json",
 }
 
 // Values
+pub fn check_compatibility(@snapshot.Snapshot, Bytes) -> Report
+
 pub fn check_dependencies(@snapshot.Snapshot, Bytes) -> Report
 
+pub fn compare(@snapshot.Snapshot, @snapshot.Snapshot, Array[Bytes]) -> ImpactReport raise
+
+pub fn read_report(String) -> Report raise
+
 // Errors
+pub(all) suberror ReportError {
+  ReportError(String)
+}
 
 // Types and methods
 pub(all) struct ByteName {
   display : String
   hex : String
-} derive(ToJson)
+} derive(ToJson, @json.FromJson)
+pub fn ByteName::from_json(Json, @json.JsonPath) -> Self raise @json.JsonDecodeError
 pub fn ByteName::to_json(Self) -> Json
 
 pub(all) struct Candidate {
   source : String
   path : ByteName
   outcome : String
-} derive(ToJson)
+} derive(ToJson, @json.FromJson)
+pub fn Candidate::from_json(Json, @json.JsonPath) -> Self raise @json.JsonDecodeError
 pub fn Candidate::to_json(Self) -> Json
+
+pub(all) struct Change {
+  classification : String
+  finding_id : String
+  before : Finding?
+  after : Finding?
+} derive(ToJson)
+pub fn Change::to_json(Self) -> Json
 
 pub(all) struct DependencyEdge {
   consumer : ByteName
   needed : ByteName
   selected : ByteName?
   trace : Array[Candidate]
-} derive(ToJson)
+} derive(ToJson, @json.FromJson)
+pub fn DependencyEdge::from_json(Json, @json.JsonPath) -> Self raise @json.JsonDecodeError
 pub fn DependencyEdge::to_json(Self) -> Json
 
 pub(all) struct Finding {
+  id : String
   code : String
   status : String
   subject : ByteName
@@ -40,15 +62,38 @@ pub(all) struct Finding {
   dependency_chain : Array[ByteName]
   explanation : String
   suggested_action : String
-} derive(ToJson)
+  version : ByteName?
+  provider : ByteName?
+  reference_offsets : Array[String]
+} derive(ToJson, @json.FromJson)
+pub fn Finding::from_json(Json, @json.JsonPath) -> Self raise @json.JsonDecodeError
 pub fn Finding::to_json(Self) -> Json
+
+pub(all) struct ImpactEntry {
+  entry : ByteName
+  application_changed : Bool
+  snapshot_changed : Bool
+  before : Report
+  after : Report
+  changes : Array[Change]
+} derive(ToJson)
+pub fn ImpactEntry::to_json(Self) -> Json
+
+pub(all) struct ImpactReport {
+  schema_version : Int32
+  status : String
+  entries : Array[ImpactEntry]
+} derive(ToJson)
+pub fn ImpactReport::exit_code(Self) -> Int32
+pub fn ImpactReport::to_json(Self) -> Json
 
 pub(all) struct LoadedObject {
   path : ByteName
   file_id : String
   sha256 : String
   machine : Int32
-} derive(ToJson)
+} derive(ToJson, @json.FromJson)
+pub fn LoadedObject::from_json(Json, @json.JsonPath) -> Self raise @json.JsonDecodeError
 pub fn LoadedObject::to_json(Self) -> Json
 
 pub(all) struct Report {
@@ -63,9 +108,41 @@ pub(all) struct Report {
   objects : Array[LoadedObject]
   edges : Array[DependencyEdge]
   findings : Array[Finding]
-} derive(ToJson)
+  version_checks : Array[VersionCheck]
+  symbol_checks : Array[SymbolCheck]
+  symbol_scope : Array[ByteName]
+} derive(ToJson, @json.FromJson)
 pub fn Report::exit_code(Self) -> Int32
+pub fn Report::explain(Self, String) -> Finding raise ReportError
+pub fn Report::from_json(Json, @json.JsonPath) -> Self raise @json.JsonDecodeError
 pub fn Report::to_json(Self) -> Json
+
+pub(all) struct SymbolCheck {
+  consumer : ByteName
+  symbol : ByteName
+  version : ByteName?
+  provider : ByteName?
+  definition_version : ByteName?
+  lookup_policy : String
+  weak : Bool
+  status : String
+  phase : String
+  reference_offsets : Array[String]
+  relocation_types : Array[Int32]
+} derive(ToJson, @json.FromJson)
+pub fn SymbolCheck::from_json(Json, @json.JsonPath) -> Self raise @json.JsonDecodeError
+pub fn SymbolCheck::to_json(Self) -> Json
+
+pub(all) struct VersionCheck {
+  consumer : ByteName
+  provider : ByteName?
+  version : ByteName
+  weak : Bool
+  status : String
+  explanation : String
+} derive(ToJson, @json.FromJson)
+pub fn VersionCheck::from_json(Json, @json.JsonPath) -> Self raise @json.JsonDecodeError
+pub fn VersionCheck::to_json(Self) -> Json
 
 // Type aliases
 

@@ -12,6 +12,8 @@ python3 tools/oracle/build_u3_snapshots.py
 python3 tools/oracle/build_token_fixtures.py
 python3 tools/oracle/build_symbol_fixtures.py
 python3 tools/oracle/probe_paths.py
+python3 tools/corpus/build_roots.py
+python3 tools/corpus/build_version_fallback.py
 ```
 
 The bootstrap downloads two hash-pinned Ubuntu packages into the ignored
@@ -53,7 +55,7 @@ Additional production suites now exercise 10 cache outcomes, 24 U2 version/symbo
 outcomes, 8 U3 consumer/view outcomes, 2 measured-token outcomes and 16 symbol
 scope/version outcomes. Together with M0's 18 and U1's 14, that is 92 real-loader
 outcomes. U2 uses our DEMO_1/DEMO_2 libraries under glibc 2.35; it does not replace
-the planned two-distribution validation. U3 checks both consumers before and
+the separate [pinned runtime corpus](../../docs/CORPUS.md). U3 checks both consumers before and
 after the library change. Symbols cover weak/strong order, visibility, main
 interposition, versions and SysV-only hashing.
 
@@ -73,6 +75,9 @@ moon check --target js,native --deny-warn
 moon build --target js,native
 moon test --target js,native
 python3 tools/verify_cli.py --js _build/js/debug/build/cmd/main/main.js --native _build/native/debug/build/cmd/main/main.exe
+python3 tools/corpus/verify.py --js _build/js/debug/build/cmd/main/main.js --native _build/native/debug/build/cmd/main/main.exe
+python3 tools/corpus/self_host.py --js _build/js/debug/build/cmd/main/main.js --native _build/native/debug/build/cmd/main/main.exe
+python3 tools/verify_consumer.py
 python3 tools/check_vendor.py
 ```
 

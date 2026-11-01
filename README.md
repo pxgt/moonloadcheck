@@ -2,9 +2,9 @@
 
 MoonLoadCheck is a MoonBit library and CLI for offline Linux binary deployment analysis. It explains dependency selection, checks symbol/version requirements against a captured target, and identifies explicit consumers affected by shared-library changes.
 
-**Status: U1 dependency checks, U2 symbol/version checks and U3 consumer comparisons work under the controlled glibc profile. This is a development version, not a general Linux compatibility certificate.** Two full distribution environments, real application corpora and the broader acceptance matrix remain in progress. No Mooncakes package has been published.
+**Status: U1 dependency checks, U2 symbol/version checks and U3 consumer comparisons work under controlled glibc profiles.** Real hello, jq and zstd binaries are checked against pinned Ubuntu Jammy and Noble runtime roots on x86-64 and AArch64. This is a development version, not a general Linux compatibility certificate. The broader acceptance matrix and stress testing remain in progress. No Mooncakes package has been published.
 
-The initial target is ELF64 little-endian x86-64 and AArch64. Analysis verifies snapshot content and never executes analyzed files or falls back to host libraries. The independent loader tests execute only programs built from this repository's C sources.
+The initial target is ELF64 little-endian x86-64 and AArch64. Analysis verifies snapshot content and never executes analyzed files or falls back to host libraries. Independent reference tests execute our own fixtures and hash-verified Ubuntu packages in disposable project-owned roots.
 
 ## Try the three workflows
 
@@ -48,6 +48,8 @@ node _build/js/debug/build/cmd/main/main.js explain --report report.json --findi
 ```
 
 For a real staged deployment, supply an explicit target profile to the [Linux snapshot collector](docs/SNAPSHOT_SCHEMA.md). Target LIB/PLATFORM values, loader digest, search paths and cache policy must come from that target.
+
+The [real-program corpus](docs/CORPUS.md) reproduces a concrete migration failure: Noble's hello and jq fail on the Jammy runtime with GLIBC_2.38 requirements; jq also needs jq_set_stderr_cb from a newer libjq. The unchanged zstd executable passes this migration. The same matrix checks both successful deployments and failures against actual loader executions.
 
 ## Library and evidence
 

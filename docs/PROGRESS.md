@@ -73,8 +73,27 @@ Int/Int32 interface spelling. Generated interfaces now use the pinned compiler.
 - The full recipe now records 92 loader outcomes (18 M0 + 14 U1 + 10 cache + 24 U2 + 8 U3 + 2 tokens + 16 symbols), plus the separate seven filesystem-path outcomes.
 - The clean Linux CI reproduced all 92 loader outcomes and passed 39 tests per backend, then exposed truncated JS diff output in a pipe. The CLI now sets Node's exitCode and lets pending stdout writes finish instead of calling process.exit immediately. The CLI verifier explicitly keeps diff output above 64 KiB so this regression remains exercised.
 
-The controlled U2/U3 implementation is available; the complete S/E/R matrices,
+At that milestone, the controlled U2/U3 implementation was available; the complete S/E/R matrices,
 protected/SYMBOLIC/COPY/GNU_UNIQUE combinations, two full distribution baselines,
 real application corpora, stress/performance checks and release acceptance remain
 unfinished. Unsupported combinations retain unknown findings. No Mooncakes
 publication or contest registration has occurred.
+
+## 2026-11-01 Pinned real-program corpus and lookup correction
+
+- Froze 44 official Ubuntu release-pocket packages after checking InRelease signatures and package-index hashes. CI downloads each exact .deb by its recorded hash; no package installation or maintainer scripts are involved.
+- Added Jammy libc6 2.35-0ubuntu3 and Noble libc6 2.39-0ubuntu8 startup runtime roots for amd64 and arm64. These are complete startup dependencies for the selected programs, not full OS images.
+- Tested GNU hello, jq and zstd from both releases against both runtimes: 24 actual deployment outcomes, with identical executable hashes across the two target views. Four Noble-to-Jammy hello/jq cases fail with GLIBC_2.38 requirements; 20 cases pass, including zstd on the older runtime. Analysis additionally locates the missing jq_set_stderr_cb export.
+- The real downgrade comparison keeps all three executables unchanged and identifies hello/jq as affected while zstd is unaffected.
+- Added eight independent hash-order cases across both loaders and architectures. They exposed a SysV ordering bug: dynsym index order is not necessarily bucket-chain order. The parser now records Linkage.lookup_order, and lookup follows it. Each case checks actual execution and the selected definition version.
+- The new Noble profile names the exact Ubuntu package revision. Inspection of a moving glibc 2.39 maintenance branch initially suggested different fallback semantics; the original release source and the pinned loader agree on the implemented behavior. No generic claim for all 2.39 patch levels is made.
+- Added explicit ResourceLimit results for configured table-count limits, a 64 KiB dynamic-name limit, an 8 MiB aggregate name budget with repeated-offset storage sharing, and a bounded version-definition auxiliary walk. Regressions distinguish limit rejection from malformed input.
+- The project's own MoonBit native/FFI CLI executes normally in both x86-64 roots. readelf confirms COPY relocations for stdout, stderr and __environ; analysis correctly retains these three unknown findings. These are coverage-gap cases, not static passes.
+- A standalone module outside the repository compiles and tests the public facade through a temporary Moon workspace with warnings denied. It verifies local source consumption, not a published Mooncakes package.
+- Local Windows JS and pinned Linux native pass 43 MoonBit tests each. The CLI suites cover 85 existing and 24 real-program cases per backend; same-snapshot JSON is compared across the two hosts. Recipes now produce 124 loader outcomes (92 previous + 24 corpus + 8 hash order), plus two normal self-host executions with explicit coverage gaps and the seven earlier filesystem outcomes.
+
+Commands, exact inputs, matrix and remaining limitations are recorded in
+[CORPUS.md](CORPUS.md) and the CI workflow. T18's fixed real-program corpus is
+established; the complete T19–T22 acceptance, stress/memory budgets, special
+relocations and API/report freeze remain open. No Mooncakes publication or
+contest registration has occurred.

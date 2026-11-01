@@ -42,6 +42,7 @@ pub(all) struct Reference {
 pub(all) struct Linkage {
   object : ElfObject
   symbols : Array[DynamicSymbol]
+  lookup_order : Array[Int32]
   references : Array[Reference]
   version_needs : Array[VersionNeed]
   version_defs : Array[VersionDef]

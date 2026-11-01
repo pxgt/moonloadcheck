@@ -26,6 +26,16 @@ fn bounded(value : UInt64, limit : Int32) -> Int32 raise @model.ElfError {
 }
 
 ///|
+fn limited(value : UInt64, limit : Int32) -> Int32 raise @model.ElfError {
+  guard value <= limit.to_uint64() else {
+    raise @model.ElfError::ResourceLimit(
+      "dynamic table count exceeds analysis budget",
+    )
+  }
+  value.reinterpret_as_int64().to_int()
+}
+
+///|
 fn file_range(
   elf : @elf.ElfBytes,
   address : UInt64,
@@ -56,11 +66,11 @@ fn string_tag(
   tags : Map[UInt64, UInt64],
   key : UInt64,
   strings : @elf.StringTable,
+  budget : StringBudget,
 ) -> Bytes? raise {
   match tags.get(key) {
     None => None
-    Some(offset) =>
-      Some(strings.get_raw(bounded(offset, strings.data.length())).to_owned())
+    Some(offset) => Some(read_name(strings, budget, offset))
   }
 }
 
@@ -70,6 +80,32 @@ priv struct Frame {
   tags : Map[UInt64, UInt64]
   strings : @elf.StringTable
   object : @model.ElfObject
+  names : StringBudget
+}
+
+///|
+priv struct StringBudget {
+  cache : Map[UInt64, Bytes]
+  mut bytes : Int32
+}
+
+///|
+fn read_name(
+  strings : @elf.StringTable,
+  budget : StringBudget,
+  offset : UInt64,
+) -> Bytes raise {
+  if budget.cache.get(offset) is Some(value) {
+    return value
+  }
+  let view = strings.get_raw(bounded(offset, strings.data.length()))
+  guard view.length() <= 65536 && budget.bytes + view.length() <= 8388608 else {
+    raise @model.ElfError::ResourceLimit("dynamic names exceed string budget")
+  }
+  budget.bytes += view.length()
+  let value = view.to_owned()
+  budget.cache[offset] = value
+  value
 }
 
 ///|
@@ -185,10 +221,9 @@ fn read_frame(data : Bytes) -> Frame raise {
     _ => raise @model.ElfError::Malformed("dynamic string table missing")
   }
   let needed = []
+  let names = { cache: Map([]), bytes: 0, }
   for offset in needed_offsets {
-    let name = strings
-      .get_raw(bounded(offset, strings.data.length()))
-      .to_owned()
+    let name = read_name(strings, names, offset)
     guard !name.is_empty() else {
       raise @model.ElfError::Malformed("empty DT_NEEDED")
     }
@@ -204,14 +239,14 @@ fn read_frame(data : Bytes) -> Frame raise {
     object_type: kind,
     interpreter,
     needed,
-    soname: string_tag(tags, 14, strings),
-    rpath: string_tag(tags, 15, strings),
-    runpath: string_tag(tags, 29, strings),
+    soname: string_tag(tags, 14, strings, names),
+    rpath: string_tag(tags, 15, strings, names),
+    runpath: string_tag(tags, 29, strings, names),
     no_default_lib: (flags & 0x800) != 0,
     pie: (flags & 0x08000000) != 0,
     unsupported,
   }
-  { elf, tags, strings, object, }
+  { elf, tags, strings, object, names, }
 }
 
 ///|

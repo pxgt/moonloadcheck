@@ -145,7 +145,7 @@ fn check_linkage(
   let definitions : Map[Bytes, Array[(Int32, Int32)]] = Map([])
   for provider in scope {
     let linkage = linkages[provider]
-    for index = 0; index < linkage.symbols.length(); index = index + 1 {
+    for index in linkage.lookup_order {
       let symbol = linkage.symbols[index]
       if exported(symbol) {
         match definitions.get(symbol.name) {

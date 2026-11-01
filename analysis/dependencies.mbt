@@ -205,7 +205,8 @@ fn run(
   )
   if (
       profile.rule_revision != "glibc-2.35-controlled-v1" &&
-      profile.rule_revision != "glibc-2.35-controlled-v2"
+      profile.rule_revision != "glibc-2.35-controlled-v2" &&
+      profile.rule_revision != "ubuntu-noble-2.39-0ubuntu8-v1"
     ) ||
     profile.loader_family != "glibc" ||
     (

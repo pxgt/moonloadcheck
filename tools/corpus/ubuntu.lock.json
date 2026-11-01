@@ -1,0 +1,563 @@
+{
+  "schema_version": 1,
+  "purpose": "Historical release-pocket regression roots; not deployment recommendations",
+  "signature_keyring": "Ubuntu archive keys verified by gpgv",
+  "contexts": [
+    {
+      "suite": "jammy",
+      "architecture": "amd64",
+      "release_url": "https://archive.ubuntu.com/ubuntu/dists/jammy/InRelease",
+      "inrelease_sha256": "c14060cd8c6d625874dfcb9523a35a395bf4865c28b6b6a82569ef326fe92dc6",
+      "indexes": [
+        {
+          "url": "https://archive.ubuntu.com/ubuntu/dists/jammy/main/binary-amd64/Packages.xz",
+          "sha256": "37cb57f1554cbfa71c5a29ee9ffee18a9a8c1782bb0568e0874b7ff4ce8f9c11"
+        },
+        {
+          "url": "https://archive.ubuntu.com/ubuntu/dists/jammy/universe/binary-amd64/Packages.xz",
+          "sha256": "d29cb24c93fec5f43255706bce7eb46d4779952039d8c68ac1bb14a6f3655ce2"
+        }
+      ],
+      "packages": [
+        {
+          "name": "hello",
+          "version": "2.10-2ubuntu4",
+          "architecture": "amd64",
+          "source": "hello",
+          "url": "https://archive.ubuntu.com/ubuntu/pool/main/h/hello/hello_2.10-2ubuntu4_amd64.deb",
+          "sha256": "750335248ccc68d07397e2b843d94fd1a164ddeca23892ca8398b5d528cd89eb",
+          "size": 26600,
+          "depends": "libc6 (>= 2.34)",
+          "metadata": "https://packages.ubuntu.com/jammy/hello"
+        },
+        {
+          "name": "jq",
+          "version": "1.6-2.1ubuntu3",
+          "architecture": "amd64",
+          "source": "jq",
+          "url": "https://archive.ubuntu.com/ubuntu/pool/main/j/jq/jq_1.6-2.1ubuntu3_amd64.deb",
+          "sha256": "d7dd9f0441f1aea2e30e067e5fabbff96d4960b5d348de2c48fab90f37720224",
+          "size": 52506,
+          "depends": "libjq1 (= 1.6-2.1ubuntu3), libc6 (>= 2.34)",
+          "metadata": "https://packages.ubuntu.com/jammy/jq"
+        },
+        {
+          "name": "libc6",
+          "version": "2.35-0ubuntu3",
+          "architecture": "amd64",
+          "source": "glibc",
+          "url": "https://archive.ubuntu.com/ubuntu/pool/main/g/glibc/libc6_2.35-0ubuntu3_amd64.deb",
+          "sha256": "ea9a27e0ebdd0cfc9c750d94f8074f3a35d1f97dcc77ae04c370fb498a6b6db2",
+          "size": 3235142,
+          "depends": "libgcc-s1, libcrypt1 (>= 1:4.4.10-10ubuntu4)",
+          "metadata": "https://packages.ubuntu.com/jammy/libc6"
+        },
+        {
+          "name": "libgcc-s1",
+          "version": "12-20220319-1ubuntu1",
+          "architecture": "amd64",
+          "source": "gcc-12",
+          "url": "https://archive.ubuntu.com/ubuntu/pool/main/g/gcc-12/libgcc-s1_12-20220319-1ubuntu1_amd64.deb",
+          "sha256": "c9a93721431be07557c810d7e1b24c3b3c51f398334ded104362a68a415b9e61",
+          "size": 54224,
+          "depends": "gcc-12-base (= 12-20220319-1ubuntu1), libc6 (>= 2.35)",
+          "metadata": "https://packages.ubuntu.com/jammy/libgcc-s1"
+        },
+        {
+          "name": "libjq1",
+          "version": "1.6-2.1ubuntu3",
+          "architecture": "amd64",
+          "source": "jq",
+          "url": "https://archive.ubuntu.com/ubuntu/pool/main/j/jq/libjq1_1.6-2.1ubuntu3_amd64.deb",
+          "sha256": "4f43564b322b4314217d853deac93250f6b6dc2144c4f72d47bb2a6ffee55476",
+          "size": 132658,
+          "depends": "libc6 (>= 2.35), libonig5 (>= 6.8.1)",
+          "metadata": "https://packages.ubuntu.com/jammy/libjq1"
+        },
+        {
+          "name": "liblz4-1",
+          "version": "1.9.3-2build2",
+          "architecture": "amd64",
+          "source": "lz4",
+          "url": "https://archive.ubuntu.com/ubuntu/pool/main/l/lz4/liblz4-1_1.9.3-2build2_amd64.deb",
+          "sha256": "ac9b54d0feb840345060c74fb687675c5e1eb2b195effafae38c5f9991041e98",
+          "size": 56930,
+          "depends": "libc6 (>= 2.14)",
+          "metadata": "https://packages.ubuntu.com/jammy/liblz4-1"
+        },
+        {
+          "name": "liblzma5",
+          "version": "5.2.5-2ubuntu1",
+          "architecture": "amd64",
+          "source": "xz-utils",
+          "url": "https://archive.ubuntu.com/ubuntu/pool/main/x/xz-utils/liblzma5_5.2.5-2ubuntu1_amd64.deb",
+          "sha256": "8f1c46e7d3f5102a5e4fdca7c949728a343ba71c2a7c124118df2c13d4c444f7",
+          "size": 99544,
+          "depends": "libc6 (>= 2.34)",
+          "metadata": "https://packages.ubuntu.com/jammy/liblzma5"
+        },
+        {
+          "name": "libonig5",
+          "version": "6.9.7.1-2build1",
+          "architecture": "amd64",
+          "source": "libonig",
+          "url": "https://archive.ubuntu.com/ubuntu/pool/main/libo/libonig/libonig5_6.9.7.1-2build1_amd64.deb",
+          "sha256": "b02dbaa37b4ec7ad303cc8655b03a2a158299ce56fede9849e3bda501831f413",
+          "size": 171890,
+          "depends": "libc6 (>= 2.14)",
+          "metadata": "https://packages.ubuntu.com/jammy/libonig5"
+        },
+        {
+          "name": "libstdc++6",
+          "version": "12-20220319-1ubuntu1",
+          "architecture": "amd64",
+          "source": "gcc-12",
+          "url": "https://archive.ubuntu.com/ubuntu/pool/main/g/gcc-12/libstdc++6_12-20220319-1ubuntu1_amd64.deb",
+          "sha256": "035cfe195ddf3a091abbc0c323285772ccbdbb2fb75279e44a0915748b4e5726",
+          "size": 698528,
+          "depends": "gcc-12-base (= 12-20220319-1ubuntu1), libc6 (>= 2.34), libgcc-s1 (>= 4.2)",
+          "metadata": "https://packages.ubuntu.com/jammy/libstdc++6"
+        },
+        {
+          "name": "zlib1g",
+          "version": "1:1.2.11.dfsg-2ubuntu9",
+          "architecture": "amd64",
+          "source": "zlib",
+          "url": "https://archive.ubuntu.com/ubuntu/pool/main/z/zlib/zlib1g_1.2.11.dfsg-2ubuntu9_amd64.deb",
+          "sha256": "52449467942cc943d651fd16867014e9339f3657935fc09b75b3347aa5a78066",
+          "size": 58236,
+          "depends": "libc6 (>= 2.14)",
+          "metadata": "https://packages.ubuntu.com/jammy/zlib1g"
+        },
+        {
+          "name": "zstd",
+          "version": "1.4.8+dfsg-3build1",
+          "architecture": "amd64",
+          "source": "libzstd",
+          "url": "https://archive.ubuntu.com/ubuntu/pool/main/libz/libzstd/zstd_1.4.8+dfsg-3build1_amd64.deb",
+          "sha256": "ed24d3ce81f08cce91010b65202301c3193ae22b0e08f50b8829929ff56b0b2a",
+          "size": 602632,
+          "depends": "libc6 (>= 2.34), libgcc-s1 (>= 3.3.1), liblz4-1 (>= 0.0~r127), liblzma5 (>= 5.1.1alpha+20120614), libstdc++6 (>= 12), zlib1g (>= 1:1.1.4)",
+          "metadata": "https://packages.ubuntu.com/jammy/zstd"
+        }
+      ]
+    },
+    {
+      "suite": "jammy",
+      "architecture": "arm64",
+      "release_url": "https://ports.ubuntu.com/ubuntu-ports/dists/jammy/InRelease",
+      "inrelease_sha256": "c14060cd8c6d625874dfcb9523a35a395bf4865c28b6b6a82569ef326fe92dc6",
+      "indexes": [
+        {
+          "url": "https://ports.ubuntu.com/ubuntu-ports/dists/jammy/main/binary-arm64/Packages.xz",
+          "sha256": "b80d1f097198f4a2d80f84db0252263d902051a695040acbc085f033048bc9bb"
+        },
+        {
+          "url": "https://ports.ubuntu.com/ubuntu-ports/dists/jammy/universe/binary-arm64/Packages.xz",
+          "sha256": "23c1928b7ec0f6a3e396f48f43b6995bdd01a71dd843a6cc89aada0bdaba485d"
+        }
+      ],
+      "packages": [
+        {
+          "name": "hello",
+          "version": "2.10-2ubuntu4",
+          "architecture": "arm64",
+          "source": "hello",
+          "url": "https://ports.ubuntu.com/ubuntu-ports/pool/main/h/hello/hello_2.10-2ubuntu4_arm64.deb",
+          "sha256": "7c3dbaabdd0f8dcd9292e17affca923cf72716d0ce23ac6e7c61fb258fb13b96",
+          "size": 25686,
+          "depends": "libc6 (>= 2.34)",
+          "metadata": "https://packages.ubuntu.com/jammy/hello"
+        },
+        {
+          "name": "jq",
+          "version": "1.6-2.1ubuntu3",
+          "architecture": "arm64",
+          "source": "jq",
+          "url": "https://ports.ubuntu.com/ubuntu-ports/pool/main/j/jq/jq_1.6-2.1ubuntu3_arm64.deb",
+          "sha256": "b4ddfc492b92f20012d09acf861a20bfa583441066a2a7090d824252d95009ee",
+          "size": 52062,
+          "depends": "libjq1 (= 1.6-2.1ubuntu3), libc6 (>= 2.34)",
+          "metadata": "https://packages.ubuntu.com/jammy/jq"
+        },
+        {
+          "name": "libc6",
+          "version": "2.35-0ubuntu3",
+          "architecture": "arm64",
+          "source": "glibc",
+          "url": "https://ports.ubuntu.com/ubuntu-ports/pool/main/g/glibc/libc6_2.35-0ubuntu3_arm64.deb",
+          "sha256": "b1206b51690a810efc701e1d311e0ac5fd9a9f0f8e216585362512d805d261af",
+          "size": 2706802,
+          "depends": "libgcc-s1, libcrypt1 (>= 1:4.4.10-10ubuntu4)",
+          "metadata": "https://packages.ubuntu.com/jammy/libc6"
+        },
+        {
+          "name": "libgcc-s1",
+          "version": "12-20220319-1ubuntu1",
+          "architecture": "arm64",
+          "source": "gcc-12",
+          "url": "https://ports.ubuntu.com/ubuntu-ports/pool/main/g/gcc-12/libgcc-s1_12-20220319-1ubuntu1_arm64.deb",
+          "sha256": "b6e9a39b0ef3302053734e3a5e52ef12151566bb42d625feab7a502b3071c13b",
+          "size": 39710,
+          "depends": "gcc-12-base (= 12-20220319-1ubuntu1), libc6 (>= 2.35)",
+          "metadata": "https://packages.ubuntu.com/jammy/libgcc-s1"
+        },
+        {
+          "name": "libjq1",
+          "version": "1.6-2.1ubuntu3",
+          "architecture": "arm64",
+          "source": "jq",
+          "url": "https://ports.ubuntu.com/ubuntu-ports/pool/main/j/jq/libjq1_1.6-2.1ubuntu3_arm64.deb",
+          "sha256": "7261cb9cc59e98b84f78ea3412adb93a1c853813b4723687923ec6c0fd74ff4d",
+          "size": 125096,
+          "depends": "libc6 (>= 2.35), libonig5 (>= 6.8.1)",
+          "metadata": "https://packages.ubuntu.com/jammy/libjq1"
+        },
+        {
+          "name": "liblz4-1",
+          "version": "1.9.3-2build2",
+          "architecture": "arm64",
+          "source": "lz4",
+          "url": "https://ports.ubuntu.com/ubuntu-ports/pool/main/l/lz4/liblz4-1_1.9.3-2build2_arm64.deb",
+          "sha256": "3e2274893e0963c758f0d18ba80d033736909373247a7deb211e9ff590a09133",
+          "size": 57640,
+          "depends": "libc6 (>= 2.17)",
+          "metadata": "https://packages.ubuntu.com/jammy/liblz4-1"
+        },
+        {
+          "name": "liblzma5",
+          "version": "5.2.5-2ubuntu1",
+          "architecture": "arm64",
+          "source": "xz-utils",
+          "url": "https://ports.ubuntu.com/ubuntu-ports/pool/main/x/xz-utils/liblzma5_5.2.5-2ubuntu1_arm64.deb",
+          "sha256": "21f64a20db61954e19ecdd2641d9aace2617b2bf3d55267184e2405d4bd65fdb",
+          "size": 98254,
+          "depends": "libc6 (>= 2.34)",
+          "metadata": "https://packages.ubuntu.com/jammy/liblzma5"
+        },
+        {
+          "name": "libonig5",
+          "version": "6.9.7.1-2build1",
+          "architecture": "arm64",
+          "source": "libonig",
+          "url": "https://ports.ubuntu.com/ubuntu-ports/pool/main/libo/libonig/libonig5_6.9.7.1-2build1_arm64.deb",
+          "sha256": "38624d0a72080e17a09d10a95f0336747c5f26d5c809ca5b357c7c138be99a7b",
+          "size": 168700,
+          "depends": "libc6 (>= 2.17)",
+          "metadata": "https://packages.ubuntu.com/jammy/libonig5"
+        },
+        {
+          "name": "libstdc++6",
+          "version": "12-20220319-1ubuntu1",
+          "architecture": "arm64",
+          "source": "gcc-12",
+          "url": "https://ports.ubuntu.com/ubuntu-ports/pool/main/g/gcc-12/libstdc++6_12-20220319-1ubuntu1_arm64.deb",
+          "sha256": "d9903f1cf4e3c0a74e0bd2f7c65e673c104833cfaaab370d3f2114ffd06728f3",
+          "size": 663674,
+          "depends": "gcc-12-base (= 12-20220319-1ubuntu1), libc6 (>= 2.34), libgcc-s1 (>= 4.5)",
+          "metadata": "https://packages.ubuntu.com/jammy/libstdc++6"
+        },
+        {
+          "name": "zlib1g",
+          "version": "1:1.2.11.dfsg-2ubuntu9",
+          "architecture": "arm64",
+          "source": "zlib",
+          "url": "https://ports.ubuntu.com/ubuntu-ports/pool/main/z/zlib/zlib1g_1.2.11.dfsg-2ubuntu9_arm64.deb",
+          "sha256": "597820b01a8b019d04c9f9db2cad80d9d0ed93d39770066bd833e362c526b345",
+          "size": 56848,
+          "depends": "libc6 (>= 2.17)",
+          "metadata": "https://packages.ubuntu.com/jammy/zlib1g"
+        },
+        {
+          "name": "zstd",
+          "version": "1.4.8+dfsg-3build1",
+          "architecture": "arm64",
+          "source": "libzstd",
+          "url": "https://ports.ubuntu.com/ubuntu-ports/pool/main/libz/libzstd/zstd_1.4.8+dfsg-3build1_arm64.deb",
+          "sha256": "5d16cdd5cb104677b301920ed2a309cbd657f04eb34259bb46cc00068ad4fff6",
+          "size": 586526,
+          "depends": "libc6 (>= 2.34), libgcc-s1 (>= 3.3.1), liblz4-1 (>= 0.0~r127), liblzma5 (>= 5.1.1alpha+20120614), libstdc++6 (>= 12), zlib1g (>= 1:1.1.4)",
+          "metadata": "https://packages.ubuntu.com/jammy/zstd"
+        }
+      ]
+    },
+    {
+      "suite": "noble",
+      "architecture": "amd64",
+      "release_url": "https://archive.ubuntu.com/ubuntu/dists/noble/InRelease",
+      "inrelease_sha256": "cdb2f31d809f589719a53c6ad15f255b27569c4059542ada282aaa21b8e164b0",
+      "indexes": [
+        {
+          "url": "https://archive.ubuntu.com/ubuntu/dists/noble/main/binary-amd64/Packages.xz",
+          "sha256": "2a6a199e1031a5c279cb346646d594993f35b1c03dd4a82aaa0323980dd92451"
+        },
+        {
+          "url": "https://archive.ubuntu.com/ubuntu/dists/noble/universe/binary-amd64/Packages.xz",
+          "sha256": "ba9057fa1b91438cc8a1d26808d00c85389fe101d0c1496254df97236405599a"
+        }
+      ],
+      "packages": [
+        {
+          "name": "hello",
+          "version": "2.10-3build1",
+          "architecture": "amd64",
+          "source": "hello",
+          "url": "https://archive.ubuntu.com/ubuntu/pool/main/h/hello/hello_2.10-3build1_amd64.deb",
+          "sha256": "e68cf4365b7aa9c4e2af4af6eee1710d6f967059b7b4af62786e8870d7366333",
+          "size": 26006,
+          "depends": "libc6 (>= 2.38)",
+          "metadata": "https://packages.ubuntu.com/noble/hello"
+        },
+        {
+          "name": "jq",
+          "version": "1.7.1-3build1",
+          "architecture": "amd64",
+          "source": "jq",
+          "url": "https://archive.ubuntu.com/ubuntu/pool/main/j/jq/jq_1.7.1-3build1_amd64.deb",
+          "sha256": "36276dcac711c742776377001886f5a72293391446b5d5e7646541336f2234aa",
+          "size": 65538,
+          "depends": "libc6 (>= 2.38), libjq1 (= 1.7.1-3build1)",
+          "metadata": "https://packages.ubuntu.com/noble/jq"
+        },
+        {
+          "name": "libc6",
+          "version": "2.39-0ubuntu8",
+          "architecture": "amd64",
+          "source": "glibc",
+          "url": "https://archive.ubuntu.com/ubuntu/pool/main/g/glibc/libc6_2.39-0ubuntu8_amd64.deb",
+          "sha256": "af36c7ac770770fe3d3c10e85d6bc538e76e57570ba7db7d397fb9f654783ef3",
+          "size": 3264806,
+          "depends": "libgcc-s1",
+          "metadata": "https://packages.ubuntu.com/noble/libc6"
+        },
+        {
+          "name": "libgcc-s1",
+          "version": "14-20240412-0ubuntu1",
+          "architecture": "amd64",
+          "source": "gcc-14",
+          "url": "https://archive.ubuntu.com/ubuntu/pool/main/g/gcc-14/libgcc-s1_14-20240412-0ubuntu1_amd64.deb",
+          "sha256": "a39efdcaa2245f026dc3254ce14fcff255fc430a17064632b6ba7c5da974a912",
+          "size": 78484,
+          "depends": "gcc-14-base (= 14-20240412-0ubuntu1), libc6 (>= 2.35)",
+          "metadata": "https://packages.ubuntu.com/noble/libgcc-s1"
+        },
+        {
+          "name": "libjq1",
+          "version": "1.7.1-3build1",
+          "architecture": "amd64",
+          "source": "jq",
+          "url": "https://archive.ubuntu.com/ubuntu/pool/main/j/jq/libjq1_1.7.1-3build1_amd64.deb",
+          "sha256": "aaecde9f29e7485de2e6bb12f1d322b6da7bee5a63914c40b599bce517ef3938",
+          "size": 140506,
+          "depends": "libc6 (>= 2.39), libonig5 (>= 6.8.1)",
+          "metadata": "https://packages.ubuntu.com/noble/libjq1"
+        },
+        {
+          "name": "liblz4-1",
+          "version": "1.9.4-1build1",
+          "architecture": "amd64",
+          "source": "lz4",
+          "url": "https://archive.ubuntu.com/ubuntu/pool/main/l/lz4/liblz4-1_1.9.4-1build1_amd64.deb",
+          "sha256": "b9b69dedb126755f063396a6d3a3361066f9661f1c21cf5635cdd5ff6605796a",
+          "size": 62950,
+          "depends": "libc6 (>= 2.14)",
+          "metadata": "https://packages.ubuntu.com/noble/liblz4-1"
+        },
+        {
+          "name": "liblzma5",
+          "version": "5.6.1+really5.4.5-1",
+          "architecture": "amd64",
+          "source": "xz-utils",
+          "url": "https://archive.ubuntu.com/ubuntu/pool/main/x/xz-utils/liblzma5_5.6.1+really5.4.5-1_amd64.deb",
+          "sha256": "28851b3997e4ba74bb3197bd58796bd3041c204c21df85fe0ddafdcaced647f0",
+          "size": 126916,
+          "depends": "libc6 (>= 2.34)",
+          "metadata": "https://packages.ubuntu.com/noble/liblzma5"
+        },
+        {
+          "name": "libonig5",
+          "version": "6.9.9-1build1",
+          "architecture": "amd64",
+          "source": "libonig",
+          "url": "https://archive.ubuntu.com/ubuntu/pool/main/libo/libonig/libonig5_6.9.9-1build1_amd64.deb",
+          "sha256": "605f42287d2bcb6c84f5a02377c7cd777090c5e857259a4030a571989f19dde2",
+          "size": 172336,
+          "depends": "libc6 (>= 2.14)",
+          "metadata": "https://packages.ubuntu.com/noble/libonig5"
+        },
+        {
+          "name": "libstdc++6",
+          "version": "14-20240412-0ubuntu1",
+          "architecture": "amd64",
+          "source": "gcc-14",
+          "url": "https://archive.ubuntu.com/ubuntu/pool/main/g/gcc-14/libstdc++6_14-20240412-0ubuntu1_amd64.deb",
+          "sha256": "4863e880d6ee538e4734c430c5579c1ac933b88a42c25bc9980d0f148c54b21e",
+          "size": 795158,
+          "depends": "gcc-14-base (= 14-20240412-0ubuntu1), libc6 (>= 2.38), libgcc-s1 (>= 4.3)",
+          "metadata": "https://packages.ubuntu.com/noble/libstdc++6"
+        },
+        {
+          "name": "zlib1g",
+          "version": "1:1.3.dfsg-3.1ubuntu2",
+          "architecture": "amd64",
+          "source": "zlib",
+          "url": "https://archive.ubuntu.com/ubuntu/pool/main/z/zlib/zlib1g_1.3.dfsg-3.1ubuntu2_amd64.deb",
+          "sha256": "0b93d16d7498f092fa3070fbbad28cdbc6b3d640f1a7681b96fc37f20d1219f1",
+          "size": 62784,
+          "depends": "libc6 (>= 2.14)",
+          "metadata": "https://packages.ubuntu.com/noble/zlib1g"
+        },
+        {
+          "name": "zstd",
+          "version": "1.5.5+dfsg2-2build1",
+          "architecture": "amd64",
+          "source": "libzstd",
+          "url": "https://archive.ubuntu.com/ubuntu/pool/main/libz/libzstd/zstd_1.5.5+dfsg2-2build1_amd64.deb",
+          "sha256": "bb14385ff3d6df723a686778dc5f87849f720a0add261b5de9bcd4915a490b2a",
+          "size": 644352,
+          "depends": "libc6 (>= 2.34), libgcc-s1 (>= 3.3.1), liblz4-1 (>= 1.8.0), liblzma5 (>= 5.1.1alpha+20120614), libstdc++6 (>= 12), zlib1g (>= 1:1.1.4)",
+          "metadata": "https://packages.ubuntu.com/noble/zstd"
+        }
+      ]
+    },
+    {
+      "suite": "noble",
+      "architecture": "arm64",
+      "release_url": "https://ports.ubuntu.com/ubuntu-ports/dists/noble/InRelease",
+      "inrelease_sha256": "cdb2f31d809f589719a53c6ad15f255b27569c4059542ada282aaa21b8e164b0",
+      "indexes": [
+        {
+          "url": "https://ports.ubuntu.com/ubuntu-ports/dists/noble/main/binary-arm64/Packages.xz",
+          "sha256": "4a1901e6124fb0a111f5dffc8f5c14474f449e2ecfa71f2eaf0b29917edb53f9"
+        },
+        {
+          "url": "https://ports.ubuntu.com/ubuntu-ports/dists/noble/universe/binary-arm64/Packages.xz",
+          "sha256": "6df230cf5cfebcbd59e4e2713b8eed07dc0aaed66fb471ebf046cb70ccb07275"
+        }
+      ],
+      "packages": [
+        {
+          "name": "hello",
+          "version": "2.10-3build1",
+          "architecture": "arm64",
+          "source": "hello",
+          "url": "https://ports.ubuntu.com/ubuntu-ports/pool/main/h/hello/hello_2.10-3build1_arm64.deb",
+          "sha256": "56a75e65cc3fa5ef610ed8718fa5e77cf1a2737272c3bc447d83dc8701e712d7",
+          "size": 25184,
+          "depends": "libc6 (>= 2.38)",
+          "metadata": "https://packages.ubuntu.com/noble/hello"
+        },
+        {
+          "name": "jq",
+          "version": "1.7.1-3build1",
+          "architecture": "arm64",
+          "source": "jq",
+          "url": "https://ports.ubuntu.com/ubuntu-ports/pool/main/j/jq/jq_1.7.1-3build1_arm64.deb",
+          "sha256": "5d41870b5e22674b0919078c101894cbc1b29a9dfb4d0b234d41b9effc9f8ce0",
+          "size": 64630,
+          "depends": "libc6 (>= 2.38), libjq1 (= 1.7.1-3build1)",
+          "metadata": "https://packages.ubuntu.com/noble/jq"
+        },
+        {
+          "name": "libc6",
+          "version": "2.39-0ubuntu8",
+          "architecture": "arm64",
+          "source": "glibc",
+          "url": "https://ports.ubuntu.com/ubuntu-ports/pool/main/g/glibc/libc6_2.39-0ubuntu8_arm64.deb",
+          "sha256": "04d7cb73e608b41713b63ef915577f7f5d75e95b1b33174e82e05687fdb6cfaf",
+          "size": 2774086,
+          "depends": "libgcc-s1",
+          "metadata": "https://packages.ubuntu.com/noble/libc6"
+        },
+        {
+          "name": "libgcc-s1",
+          "version": "14-20240412-0ubuntu1",
+          "architecture": "arm64",
+          "source": "gcc-14",
+          "url": "https://ports.ubuntu.com/ubuntu-ports/pool/main/g/gcc-14/libgcc-s1_14-20240412-0ubuntu1_arm64.deb",
+          "sha256": "bb1c262f2ac9aeb357d3344a06f22f1057306694f6200896775a03ecced08b13",
+          "size": 61720,
+          "depends": "gcc-14-base (= 14-20240412-0ubuntu1), libc6 (>= 2.35)",
+          "metadata": "https://packages.ubuntu.com/noble/libgcc-s1"
+        },
+        {
+          "name": "libjq1",
+          "version": "1.7.1-3build1",
+          "architecture": "arm64",
+          "source": "jq",
+          "url": "https://ports.ubuntu.com/ubuntu-ports/pool/main/j/jq/libjq1_1.7.1-3build1_arm64.deb",
+          "sha256": "95d05fa2db72a77721f571e7f89a4a3144927a844e87395c67de1cf54217b248",
+          "size": 132646,
+          "depends": "libc6 (>= 2.39), libonig5 (>= 6.8.1)",
+          "metadata": "https://packages.ubuntu.com/noble/libjq1"
+        },
+        {
+          "name": "liblz4-1",
+          "version": "1.9.4-1build1",
+          "architecture": "arm64",
+          "source": "lz4",
+          "url": "https://ports.ubuntu.com/ubuntu-ports/pool/main/l/lz4/liblz4-1_1.9.4-1build1_arm64.deb",
+          "sha256": "ca49b1a29c5fc04533248d9bbe1b7fca75e38f6b9e808683a62b569541ef9d98",
+          "size": 64062,
+          "depends": "libc6 (>= 2.17)",
+          "metadata": "https://packages.ubuntu.com/noble/liblz4-1"
+        },
+        {
+          "name": "liblzma5",
+          "version": "5.6.1+really5.4.5-1",
+          "architecture": "arm64",
+          "source": "xz-utils",
+          "url": "https://ports.ubuntu.com/ubuntu-ports/pool/main/x/xz-utils/liblzma5_5.6.1+really5.4.5-1_arm64.deb",
+          "sha256": "649856baf5e43a011c46b0fd3a2a1bad574f4663e0b90c39a3ac609f297d60b7",
+          "size": 125356,
+          "depends": "libc6 (>= 2.34)",
+          "metadata": "https://packages.ubuntu.com/noble/liblzma5"
+        },
+        {
+          "name": "libonig5",
+          "version": "6.9.9-1build1",
+          "architecture": "arm64",
+          "source": "libonig",
+          "url": "https://ports.ubuntu.com/ubuntu-ports/pool/main/libo/libonig/libonig5_6.9.9-1build1_arm64.deb",
+          "sha256": "12044a8919f3aae339652bfcd8b424245d6606a6124ae3ce08682485c12b124f",
+          "size": 171690,
+          "depends": "libc6 (>= 2.17)",
+          "metadata": "https://packages.ubuntu.com/noble/libonig5"
+        },
+        {
+          "name": "libstdc++6",
+          "version": "14-20240412-0ubuntu1",
+          "architecture": "arm64",
+          "source": "gcc-14",
+          "url": "https://ports.ubuntu.com/ubuntu-ports/pool/main/g/gcc-14/libstdc++6_14-20240412-0ubuntu1_arm64.deb",
+          "sha256": "cd9ad360c8eee25e1fd9869303f4782eeaa47723594e85631c3def7ec42c3b08",
+          "size": 747982,
+          "depends": "gcc-14-base (= 14-20240412-0ubuntu1), libc6 (>= 2.38), libgcc-s1 (>= 4.5)",
+          "metadata": "https://packages.ubuntu.com/noble/libstdc++6"
+        },
+        {
+          "name": "zlib1g",
+          "version": "1:1.3.dfsg-3.1ubuntu2",
+          "architecture": "arm64",
+          "source": "zlib",
+          "url": "https://ports.ubuntu.com/ubuntu-ports/pool/main/z/zlib/zlib1g_1.3.dfsg-3.1ubuntu2_arm64.deb",
+          "sha256": "66aaebb68401a88b4f70a5f48e1a516b611fdcaae15208d8aee677c556d2cf01",
+          "size": 61682,
+          "depends": "libc6 (>= 2.17)",
+          "metadata": "https://packages.ubuntu.com/noble/zlib1g"
+        },
+        {
+          "name": "zstd",
+          "version": "1.5.5+dfsg2-2build1",
+          "architecture": "arm64",
+          "source": "libzstd",
+          "url": "https://ports.ubuntu.com/ubuntu-ports/pool/main/libz/libzstd/zstd_1.5.5+dfsg2-2build1_arm64.deb",
+          "sha256": "e054f8bf2c8b3f1d82a1e87352c1cb6f62887aac22a88b55f7dd715567f74bfd",
+          "size": 574810,
+          "depends": "libc6 (>= 2.34), libgcc-s1 (>= 3.3.1), liblz4-1 (>= 1.8.0), liblzma5 (>= 5.1.1alpha+20120614), libstdc++6 (>= 12), zlib1g (>= 1:1.1.4)",
+          "metadata": "https://packages.ubuntu.com/noble/zstd"
+        }
+      ]
+    }
+  ]
+}

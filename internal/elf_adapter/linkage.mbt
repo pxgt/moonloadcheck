@@ -22,7 +22,7 @@ fn at(
 
 ///|
 fn string_at(frame : Frame, offset : UInt64) -> Bytes raise {
-  frame.strings.get_raw(bounded(offset, frame.strings.data.length())).to_owned()
+  read_name(frame.strings, frame.names, offset)
 }
 
 ///|
@@ -35,7 +35,7 @@ fn version_needs(frame : Frame) -> Array[@model.VersionNeed] raise {
     return needs
   }
   let data = frame.elf.data
-  let count = bounded(tag(frame, 0x6fffffff), 32768)
+  let count = limited(tag(frame, 0x6fffffff), 32768)
   let mut relative = 0
   let indices : Map[Int32, Bool] = Map([])
   for i = 0; i < count; i = i + 1 {
@@ -44,7 +44,7 @@ fn version_needs(frame : Frame) -> Array[@model.VersionNeed] raise {
       raise @model.ElfError::Malformed("unsupported VERNEED revision")
     }
     let provider = string_at(frame, uint(data, start + 4, 4))
-    let auxiliaries = bounded(uint(data, start + 2, 2), 32768)
+    let auxiliaries = limited(uint(data, start + 2, 2), 32768)
     let auxiliary = bounded(uint(data, start + 8, 4), data.length())
     guard auxiliary >= 16 && auxiliaries > 0 else {
       raise @model.ElfError::Malformed("invalid VERNEED auxiliary")
@@ -113,8 +113,9 @@ fn version_defs(frame : Frame) -> Array[@model.VersionDef] raise {
     return defs
   }
   let data = frame.elf.data
-  let count = bounded(tag(frame, 0x6ffffffd), 32768)
+  let count = limited(tag(frame, 0x6ffffffd), 32768)
   let mut relative = 0
+  let mut auxiliary_steps = 0
   let indices : Map[Int32, Bool] = Map([])
   for i = 0; i < count; i = i + 1 {
     let start = at(frame, address, relative, 20)
@@ -123,7 +124,11 @@ fn version_defs(frame : Frame) -> Array[@model.VersionDef] raise {
     }
     let flags = bounded(uint(data, start + 2, 2), 65535)
     let index = bounded(uint(data, start + 4, 2), 32767)
-    let auxiliaries = bounded(uint(data, start + 6, 2), 32768)
+    let auxiliaries = limited(uint(data, start + 6, 2), 32768)
+    auxiliary_steps += auxiliaries
+    guard auxiliary_steps <= 65536 else {
+      raise @model.ElfError::ResourceLimit("version auxiliary budget exceeded")
+    }
     let hash = uint(data, start + 8, 4)
     let auxiliary = bounded(uint(data, start + 12, 4), data.length())
     guard auxiliary >= 20 &&
@@ -204,7 +209,7 @@ fn references(frame : Frame) -> Array[@model.Reference] raise {
         }
         let info = uint(data, pos + 8, 8)
         result.push({
-          symbol_index: bounded(info >> 32, 99999),
+          symbol_index: limited(info >> 32, 99999),
           offset: uint(data, pos, 8),
           relocation: bounded(info & 0xffffffff, 2147483647),
           table,
@@ -242,9 +247,9 @@ fn read_linkage_frame(frame : Frame) -> @model.Linkage raise {
   let mut gnu_header = None
   if frame.tags.get(0x6ffffef5) is Some(address) {
     let start = at(frame, address, 0, 16)
-    let buckets = bounded(uint(data, start, 4), 100000)
-    let first = bounded(uint(data, start + 4, 4), 100000)
-    let bloom = bounded(uint(data, start + 8, 4), 100000)
+    let buckets = limited(uint(data, start, 4), 100000)
+    let first = limited(uint(data, start + 4, 4), 100000)
+    let bloom = limited(uint(data, start + 8, 4), 100000)
     let shift = bounded(uint(data, start + 12, 4), 31)
     guard buckets > 0 && bloom > 0 && (bloom & (bloom - 1)) == 0 else {
       raise @model.ElfError::Malformed("GNU hash dimensions")
@@ -283,7 +288,7 @@ fn read_linkage_frame(frame : Frame) -> @model.Linkage raise {
   }
   if frame.tags.get(4) is Some(address) {
     let start = at(frame, address, 0, 8)
-    let nchain = bounded(uint(data, start + 4, 4), 100000)
+    let nchain = limited(uint(data, start + 4, 4), 100000)
     guard nchain >= count else {
       raise @model.ElfError::Malformed("hash tables disagree on symbol extent")
     }
@@ -336,6 +341,7 @@ fn read_linkage_frame(frame : Frame) -> @model.Linkage raise {
       lookupable: false,
     })
   }
+  let lookup_order = []
   if gnu_header is Some((address, start, buckets, bloom, shift, head)) {
     let visited : Map[Int32, Bool] = Map([])
     for bucket = 0; bucket < buckets; bucket = bucket + 1 {
@@ -376,6 +382,7 @@ fn read_linkage_frame(frame : Frame) -> @model.Linkage raise {
           )
         }
         symbols[index] = { ..symbols[index], lookupable: true, }
+        lookup_order.push(index)
         index += 1
         if (stored & 1) == 1 {
           break
@@ -385,7 +392,7 @@ fn read_linkage_frame(frame : Frame) -> @model.Linkage raise {
   } else {
     let address = tag(frame, 4)
     let start = at(frame, address, 0, 8)
-    let buckets = bounded(uint(data, start, 4), 100000)
+    let buckets = limited(uint(data, start, 4), 100000)
     guard buckets > 0 else {
       raise @model.ElfError::Malformed("empty SysV hash buckets")
     }
@@ -404,6 +411,7 @@ fn read_linkage_frame(frame : Frame) -> @model.Linkage raise {
           raise @model.ElfError::Malformed("SysV hash bucket mismatch")
         }
         symbols[index] = { ..symbols[index], lookupable: true, }
+        lookup_order.push(index)
         index = bounded(uint(data, start + 8 + (buckets + index) * 4, 4), count)
       }
     }
@@ -411,6 +419,7 @@ fn read_linkage_frame(frame : Frame) -> @model.Linkage raise {
   {
     object: frame.object,
     symbols,
+    lookup_order,
     references,
     version_needs,
     version_defs,

@@ -27,7 +27,12 @@ def verify(js=None, native=None, compare_dir=None):
                 capture_output=True, text=True, timeout=60)
             if result.returncode != expected:
                 raise AssertionError((label, result.returncode, result.stdout[:8000], result.stderr))
-            report = json.loads(result.stdout)
+            try:
+                report = json.loads(result.stdout)
+            except json.JSONDecodeError as error:
+                raise AssertionError((label, "invalid/truncated JSON", len(result.stdout), command[0])) from error
+            if "-diff-" in label and len(result.stdout) <= 65536:
+                raise AssertionError("diff fixture no longer exercises large piped output")
             if check_status and report["status"] != {0: "pass_static", 1: "fail", 2: "inconclusive", 3: "input_error"}[expected]:
                 raise AssertionError((label, report["status"]))
             reports.append(report)

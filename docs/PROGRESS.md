@@ -71,6 +71,7 @@ Int/Int32 interface spelling. Generated interfaces now use the pinned compiler.
 - The current suite contains 39 MoonBit tests after adding the public facade example. All 39 pass on Windows JS and pinned Linux native.
 - Eighty-five CLI checks passed on each backend, with identical same-snapshot JSON across Windows JS and Linux native. All four exit categories, offline explain, comparison directions and malformed input/report requests are covered.
 - The full recipe now records 92 loader outcomes (18 M0 + 14 U1 + 10 cache + 24 U2 + 8 U3 + 2 tokens + 16 symbols), plus the separate seven filesystem-path outcomes.
+- The clean Linux CI reproduced all 92 loader outcomes and passed 39 tests per backend, then exposed truncated JS diff output in a pipe. The CLI now sets Node's exitCode and lets pending stdout writes finish instead of calling process.exit immediately. The CLI verifier explicitly keeps diff output above 64 KiB so this regression remains exercised.
 
 The controlled U2/U3 implementation is available; the complete S/E/R matrices,
 protected/SYMBOLIC/COPY/GNU_UNIQUE combinations, two full distribution baselines,

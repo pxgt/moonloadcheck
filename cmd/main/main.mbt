@@ -106,8 +106,19 @@ fn dispatch(args : Array[String]) -> Int32 raise {
 }
 
 ///|
+#cfg(target="js")
+extern "js" fn finish_exit(code : Int32) -> Unit =
+  #| (code) => { process.exitCode = code; }
+
+///|
+#cfg(target="native")
+extern "C" fn finish_exit(code : Int32) -> Unit = "exit"
+
+///|
 fn main {
-  @sys.exit(dispatch(@env.args())) catch {
+  // Node's stdout pipe is asynchronous on Linux. Let pending writes drain
+  // instead of calling process.exit immediately after a large JSON report.
+  finish_exit(dispatch(@env.args())) catch {
     error => {
       let result : Json = {
         "schema_version": 2,
@@ -115,7 +126,7 @@ fn main {
         "message": "\{error}",
       }
       println(result.stringify())
-      @sys.exit(3)
+      finish_exit(3)
     }
   }
 }

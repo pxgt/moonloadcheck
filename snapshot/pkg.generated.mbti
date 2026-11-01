@@ -1,7 +1,14 @@
 // Generated using `moon info`, DON'T EDIT IT
 package "Xpeng/moonloadcheck/snapshot"
 
+import {
+  "moonbitlang/core/json",
+}
+
 // Values
+pub fn load(String, (String) -> Bytes raise) -> Snapshot raise
+
+pub fn sha256(Bytes) -> String
 
 // Errors
 pub(all) suberror PathError {
@@ -11,6 +18,12 @@ pub(all) suberror PathError {
   NotDirectory(Bytes)
   TooManyLinks
   TooManySteps
+}
+
+pub(all) suberror SnapshotError {
+  InvalidSnapshot(String)
+  ContentMismatch(String)
+  SnapshotLimit(String)
 }
 
 // Types and methods
@@ -26,11 +39,60 @@ pub struct FileSystem {
 pub fn FileSystem::new(Array[(Bytes, Entry)]) -> Self raise PathError
 pub fn FileSystem::resolve(Self, Bytes, cwd? : Bytes, max_links? : Int, max_steps? : Int) -> Resolved raise PathError
 
+pub(all) struct Manifest {
+  schema_version : Int
+  profile : Profile
+  entries : Array[ManifestEntry]
+} derive(ToJson, @json.FromJson)
+pub fn Manifest::from_json(Json, @json.JsonPath) -> Self raise @json.JsonDecodeError
+pub fn Manifest::to_json(Self) -> Json
+
+pub(all) struct ManifestEntry {
+  path_hex : String
+  kind : String
+  file_id : String?
+  sha256 : String?
+  target_hex : String?
+} derive(ToJson, @json.FromJson)
+pub fn ManifestEntry::from_json(Json, @json.JsonPath) -> Self raise @json.JsonDecodeError
+pub fn ManifestEntry::to_json(Self) -> Json
+
+pub(all) struct Profile {
+  rule_revision : String
+  loader_family : String
+  machine : Int
+  loader_path_hex : String
+  loader_sha256 : String
+  cwd_hex : String
+  default_dirs_hex : Array[String]
+  library_path_hex : Array[String]
+  cache_mode : String
+  hwcaps_policy : String
+  secure_execution : Bool
+  preload : Array[String]
+  audit : Array[String]
+} derive(ToJson, @json.FromJson)
+pub fn Profile::from_json(Json, @json.JsonPath) -> Self raise @json.JsonDecodeError
+pub fn Profile::to_json(Self) -> Json
+
 pub(all) struct Resolved {
   path : Bytes
   entry : Entry
   symlinks : Int
 }
+
+pub struct Snapshot {
+  profile : Profile
+  filesystem : FileSystem
+  contents : Map[String, Bytes]
+  digests : Map[String, String]
+  manifest_digest : String
+}
+pub fn Snapshot::content(Self, String) -> Bytes?
+pub fn Snapshot::digest(Self, String) -> String?
+pub fn Snapshot::manifest_digest(Self) -> String
+pub fn Snapshot::profile(Self) -> Profile
+pub fn Snapshot::resolve(Self, Bytes) -> Resolved raise PathError
 
 // Type aliases
 

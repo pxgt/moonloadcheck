@@ -33,6 +33,14 @@ def install():
         destination = target / subdir
         destination.mkdir(exist_ok=True)
         subprocess.run(["tar", "xzf", str(archive), "--no-same-owner", "-C", str(destination)], check=True)
+    # Official archives rely on the installer's chmod step. DrvFS can mask
+    # missing executable bits, so set them explicitly on real Linux filesystems.
+    for executable in (target / "bin").iterdir():
+        if executable.is_file():
+            executable.chmod(executable.stat().st_mode | 0o111)
+    tcc = target / "bin/internal/tcc"
+    if tcc.is_file():
+        tcc.chmod(tcc.stat().st_mode | 0o111)
     binary = target / "bin/moon"
     env = {**os.environ, "PATH": str(target / "bin") + os.pathsep + os.environ["PATH"]}
     subprocess.run([str(binary), "-C", str(target / "lib/core"), "bundle", "--warn-list", "-a", "--all"], check=True, env=env)

@@ -1,0 +1,8 @@
+import {
+  "Xpeng/moonloadcheck/experiments/parser_probe" @observation,
+  "moonbitlang/core/env",
+  "moonbitlang/x/fs",
+  "moonbitlang/x/sys",
+}
+
+pkgtype(kind: "executable")

@@ -19,8 +19,13 @@ repository = "https://github.com/pxgt/moonloadcheck"
 
 license = "Apache-2.0"
 
-keywords = ["elf", "linux", "dynamic-linking", "compatibility"]
+keywords = [ "elf", "linux", "dynamic-linking", "compatibility" ]
 
 preferred_target = "js"
 
 description = "Offline Linux binary deployment compatibility analysis"
+
+import {
+  "moonbitlang/x@0.5.5",
+  "moonbit-community/elf@0.0.1",
+}

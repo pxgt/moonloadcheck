@@ -1,0 +1,26 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "Xpeng/moonloadcheck/experiments/segment_probe"
+
+// Values
+pub fn read(Bytes) -> SegmentFacts raise
+
+// Errors
+pub(all) suberror ReadError {
+  Malformed(String)
+  Unsupported(String)
+}
+
+// Types and methods
+pub(all) struct SegmentFacts {
+  machine : Int
+  needed : Array[Bytes]
+  symbol_names : Array[Bytes]
+  symbol_extent_exact : Bool
+  required_versions : Array[Bytes]
+} derive(Eq)
+pub fn SegmentFacts::equal(Self, Self) -> Bool
+pub fn SegmentFacts::not_equal(Self, Self) -> Bool
+
+// Type aliases
+
+// Traits

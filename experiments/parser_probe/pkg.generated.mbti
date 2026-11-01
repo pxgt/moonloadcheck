@@ -1,0 +1,25 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "Xpeng/moonloadcheck/experiments/parser_probe"
+
+import {
+  "moonbit-community/elf",
+}
+
+// Values
+pub fn observe(Bytes) -> Observation raise @elf.ParseError
+
+// Errors
+
+// Types and methods
+pub(all) struct Observation {
+  machine : Int
+  has_sections : Bool
+  dynamic_entries : Int
+  dynamic_symbols : Int?
+  version_requirements : Array[String]
+} derive(ToJson)
+pub fn Observation::to_json(Self) -> Json
+
+// Type aliases
+
+// Traits

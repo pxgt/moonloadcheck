@@ -1,0 +1,7 @@
+import {
+  "moonbit-community/elf",
+}
+
+import {
+  "moonbitlang/x/fs",
+} for "test"

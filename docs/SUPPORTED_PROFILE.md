@@ -44,6 +44,8 @@ unmodeled DF_1 flags also retain explicit unknown findings. Only ORIGIN tokens
 are currently expanded; LIB, PLATFORM and unknown tokens are inconclusive.
 Exceptional search-group behavior after ELOOP/ENOTDIR remains inconclusive.
 Static executables and standalone shared-object entry modes are not modeled.
+OS ABI identifiers outside System V/GNU or nonzero ABI revisions remain
+inconclusive until independently verified, even when the machine number matches.
 
 The loader is not fully emulated. Relocations, symbol resolution, GNU symbol
 versions, kernel ABI and hardware feature notes, permissions/ACLs, runtime

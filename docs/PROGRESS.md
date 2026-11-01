@@ -45,6 +45,7 @@ The items pending in the previous entry now have a first implementation:
 - Twenty-five MoonBit tests passed on Windows JS and Linux native. Native validation also passed with an isolated hash-pinned official compiler archive: moon 0.1.20261020, compiler 0.10.16+b1a0e846e.
 - Seventeen CLI cases passed per backend, including all four exit categories, missing entry, unsupported cache configuration and tampered content. Native JSON reports matched the Windows JS reports for identical snapshots.
 - Upstream source hashes remain unchanged. No compiler installation used by another project was changed.
+- A final boundary test rejects unverified OS ABI identifiers/revisions; the current test count is 26 passing on each backend.
 
 The CLI requires `--scope dependencies`. Symbol/version checking, upgrade impact,
 cache selection, wider environment validation and the full acceptance matrix

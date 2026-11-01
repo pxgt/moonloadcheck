@@ -29,3 +29,18 @@ test "truncated objects are rejected as malformed" {
     _ => fail("accepted truncated input")
   }
 }
+
+///|
+test "unverified OS ABI cannot silently enter a Linux compatibility result" {
+  let original = @fs.read_file_to_bytes("fixtures/generated/x86_64/app")
+  for (offset, value) in [(7, b'\xff'), (8, b'\x01')] {
+    let bytes = original.to_array()
+    bytes[offset] = value
+    try @elf_adapter.read(Bytes::from_array(bytes[:])) catch {
+      @model.ElfError::Unsupported(_) => ()
+      _ => fail("wrong error category")
+    } noraise {
+      _ => fail("accepted unverified ABI")
+    }
+  }
+}

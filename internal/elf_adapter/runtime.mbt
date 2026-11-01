@@ -73,6 +73,11 @@ fn read_runtime(data : Bytes) -> @model.ElfObject raise {
   guard elf.ehdr.class == @elf.ELF64 && elf.ehdr.endianness == @elf.Little else {
     raise @model.ElfError::Unsupported("only ELF64 little endian is modeled")
   }
+  guard (elf.ehdr.osabi == 0 || elf.ehdr.osabi == 3) && elf.ehdr.abiversion == 0 else {
+    raise @model.ElfError::Unsupported(
+      "OS ABI or ABI revision is outside the verified Linux profile",
+    )
+  }
   let kind = elf.ehdr.e_type.to_int()
   guard kind == 2 || kind == 3 else {
     raise @model.ElfError::Unsupported("only ET_EXEC and ET_DYN are modeled")

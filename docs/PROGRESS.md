@@ -50,5 +50,11 @@ The items pending in the previous entry now have a first implementation:
 The CLI requires `--scope dependencies`. Symbol/version checking, upgrade impact,
 cache selection, wider environment validation and the full acceptance matrix
 are not complete. This is a reproducible U1 implementation under a controlled
-profile, not completion of all M1/M2/M3 requirements. A pinned CI workflow has
-been prepared; its remote run is recorded separately once verified.
+profile, not completion of all M1/M2/M3 requirements.
+
+[Clean-runner CI passed](https://github.com/pxgt/moonloadcheck/actions/runs/41283233960)
+for commit `12638e0`: check/build/test on native and JS, 26 tests per backend,
+34 CLI checks, 32 loader reference outcomes, preserved vendor hashes, canonical
+interfaces and first-party formatting. CI setup revealed and fixed missing
+toolchain executable bits, an uninitialized package registry and compiler-specific
+Int/Int32 interface spelling. Generated interfaces now use the pinned compiler.

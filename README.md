@@ -2,7 +2,7 @@
 
 MoonLoadCheck is a MoonBit project for offline Linux binary deployment analysis. It will explain dependency selection, check symbol/version requirements against a target environment, and identify consumers affected by shared-library upgrades.
 
-**Status: M0 feasibility work. No compatibility verdict is implemented yet.** This is a new project; existing ELF libraries are dependencies and references, not claimed as new work.
+**Status: M0 feasibility verified; M1 deployment analysis in progress. No compatibility verdict is implemented yet.** This is a new project; existing ELF libraries are dependencies and references, not claimed as new work.
 
 The first release targets ELF64 little-endian x86-64 and AArch64 under documented glibc loading conditions. Its three acceptance scenarios are application relocation, deployment to a different runtime environment, and library-upgrade impact analysis.
 
@@ -12,7 +12,7 @@ M0 has exercised sectionless ELF inputs, GNU symbol versions and independent loa
 
 ## Development
 
-Tested toolchains: Windows JS `0.1.20261012` / compiler `0.10.15`, Linux native `0.1.20261016` / compiler `0.10.16`. No Mooncakes release has been published.
+Tested toolchains: Windows JS `0.1.20261012` / compiler `0.10.15`, Linux native `0.1.20261016` / compiler `0.10.16`. The first public API is the [target namespace library example](README.mbt.md). No Mooncakes release has been published.
 
 ## License
 

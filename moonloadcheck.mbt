@@ -1,3 +1,4 @@
-// Main package file for your library code.
-// Put public APIs and shared helpers here.
-// Keep blocks small and focused for easy refactors.
+///|
+/// Host-independent Linux namespace primitives. Full deployment analysis is
+/// under development; these types do not produce compatibility verdicts.
+pub using @snapshot {type Entry, type FileSystem, type Resolved, type PathError}

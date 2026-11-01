@@ -25,4 +25,11 @@ The initial scaffold is not an implementation or an acceptance result. Subsequen
 
 - Decoded all 428 records of the host glibc cache and matched them against read-only `ldconfig -p` output. Flags and original order are retained. This host cache had no nonzero hwcap entries; hardware-capability ranking remains outside the verified result.
 
-M0 is ready for a clean-checkout verification. Its outcome permits work on bounded target profiles and the first deployment scenario; it does not establish full environment compatibility or acceptance readiness.
+An isolated Git archive with no dependency cache passed `moon check --target js` without a migration step, and all preserved upstream hashes matched. See the [M0 decision](M0_DECISION.md). Full environment compatibility and acceptance readiness are not established.
+
+## 2026-11-01 M1 target namespace
+
+- Added the first public library API for a byte-preserving Linux file namespace.
+- Target-relative/absolute links, dotdot ordering, broken/cyclic links, file identities, case sensitivity and non-UTF8 names have black-box tests.
+- Seven independent Linux filesystem outcomes matched the expected semantics.
+- Snapshot serialization, environment collection, dependency search, production diagnostics and the U1 end-to-end scenario are still pending.

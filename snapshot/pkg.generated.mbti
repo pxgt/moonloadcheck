@@ -1,0 +1,37 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "Xpeng/moonloadcheck/snapshot"
+
+// Values
+
+// Errors
+pub(all) suberror PathError {
+  InvalidPath(Bytes)
+  DuplicatePath(Bytes)
+  MissingPath(Bytes)
+  NotDirectory(Bytes)
+  TooManyLinks
+  TooManySteps
+}
+
+// Types and methods
+pub(all) enum Entry {
+  Directory
+  File(String)
+  Symlink(Bytes)
+}
+
+pub struct FileSystem {
+  entries : Map[Bytes, Entry]
+}
+pub fn FileSystem::new(Array[(Bytes, Entry)]) -> Self raise PathError
+pub fn FileSystem::resolve(Self, Bytes, cwd? : Bytes, max_links? : Int, max_steps? : Int) -> Resolved raise PathError
+
+pub(all) struct Resolved {
+  path : Bytes
+  entry : Entry
+  symlinks : Int
+}
+
+// Type aliases
+
+// Traits

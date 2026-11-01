@@ -28,6 +28,7 @@ jobs:
           python3 tools/oracle/probe_paths.py
       - name: Check, build and test native and JS
         run: |
+          moon update
           moon check --target js,native --deny-warn
           moon build --target js,native
           moon test --target js,native

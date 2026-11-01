@@ -48,6 +48,7 @@ For the pinned Linux compiler, install only inside this checkout:
 ```sh
 python3 tools/bootstrap_moon.py
 export PATH="$PWD/.tools/moon-0.10.16/bin:$PATH"
+moon update
 moon check --target js,native --deny-warn
 moon build --target js,native
 moon test --target js,native

@@ -101,3 +101,39 @@ test "dynamic and string table truncation and unmapped version addresses cannot 
     malformed_linkage(edit_dynamic(library, 0x6ffffffc, 0xfffffffffffffff8))
   }
 }
+
+///|
+test "malformed dynamic metadata reports its file or string-table position" {
+  for arch in ["x86_64", "aarch64"] {
+    let source = @fs.read_file_to_bytes("fixtures/generated/\{arch}/app")
+    let frame = read_frame(source)
+    let segments = frame.elf.segments().unwrap()
+    let phoff = bounded(uint(source[:], 32, 8), source.length())
+    for i in 0..<segments.len() {
+      let segment = segments.get(i)
+      if segment.p_type == @elf.PT_DYNAMIC {
+        for size in [16UL, 17UL] {
+          try read_linkage(edited(source, phoff + i * 56 + 32, size, 8)) catch {
+            @model.ElfError::Malformed(message) =>
+              assert_true(
+                message.contains("file_offset=\{segment.p_offset}"),
+                msg=message,
+              )
+            _ => fail("wrong dynamic truncation error")
+          } noraise {
+            _ => fail("dynamic truncation accepted")
+          }
+        }
+      }
+    }
+    try read_linkage(edit_dynamic(source, 10, 1)) catch {
+      @model.ElfError::Malformed(message) => {
+        assert_true(message.contains("offset="), msg=message)
+        assert_true(message.contains("table_size=1"), msg=message)
+      }
+      _ => fail("wrong string-table error")
+    } noraise {
+      _ => fail("string-table truncation accepted")
+    }
+  }
+}

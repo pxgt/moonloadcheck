@@ -26,6 +26,14 @@ The startup global lookup scope is breadth-first and is recorded separately from
 
 The reference rules are [glibc version validation](https://github.com/bminor/glibc/blob/release/2.35/master/elf/dl-version.c) and [symbol lookup](https://github.com/bminor/glibc/blob/release/2.35/master/elf/dl-lookup.c). Independent fixtures cover both architectures, three hash configurations, version mismatch, used/unused removed exports, weak requirements, hidden definitions, main interposition and dependency-order changes.
 
+Additional [lookup boundary experiments](LINKAGE_BOUNDARIES.md) distinguish raw
+symbol names whose lossy UTF-8 displays are identical, unused strong undefined
+symbols, LOCAL/INTERNAL/HIDDEN candidates and unequal object-local version
+indices. A missing lazy reference remains a static failure even when one
+invocation never calls it. IFUNC definition availability can pass while the
+resolved function returns an incorrect application value; resolver results
+remain explicitly listed in not_checked.
+
 ## Coverage gaps
 
 Other loader families, unknown rule revisions, preload/audit, secure execution, cache hardware conditions, filter/auxiliary loading and unmodeled DF_1 behavior remain inconclusive. Exceptional path-search behavior after ELOOP/ENOTDIR is also inconclusive. Static executables and standalone DSO entry modes are not modeled. OS ABI identifiers outside System V/GNU and nonzero ABI revisions are not verified.

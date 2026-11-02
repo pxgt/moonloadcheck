@@ -5,6 +5,8 @@ import {
 
 import {
   "moonbitlang/x/fs",
+  "moonbitlang/core/json",
+  "moonbitlang/core/encoding/utf8",
 } for "test"
 
 import {

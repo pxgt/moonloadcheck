@@ -9,18 +9,18 @@ record yet. Results are reproduced by the CI workflow; limits remain in
 
 | ID | Status | Current evidence and remaining work |
 | --- | --- | --- |
-| E01 | Partial | [Runtime reader][runtime], [COPY][copy] exercise PIE/ET_EXEC/DSO; comprehensive readelf field-by-field assertions remain. |
+| E01 | Covered | [Readelf comparisons][readelf] check all exposed runtime object fields across 120 PIE/ET_EXEC/DSO inputs. |
 | E02 | Covered | [Linkage reader][reader], runtime and actual loader fixtures on x86-64/AArch64. |
 | E03 | Covered | Runtime/linkage readers compare ordinary and stripped fixtures. |
 | E04 | Covered | Runtime/linkage readers use sectionless fixtures on both architectures. |
-| E05 | Partial | [Symbol][symbols] and [hash-order][fallback] cases cover GNU/SysV/both; explicit final-entry boundary cases need expansion. |
-| E06 | Partial | [Input boundaries][inputs] cover dynamic/string truncation and bad version addresses; more version-table truncation positions remain. |
+| E05 | Covered | GNU/SysV/both fixtures plus exact mapped table ends, final-symbol assertions, truncated final words and a missing GNU terminator. |
+| E06 | Covered | Dynamic/string truncation and [exact table ends][readelf] reject incomplete Verneed/Verdef/Versym records. Errors identify the relevant virtual address, file offset or string-table offset. |
 | E07 | Partial | Bad version offsets/symbol indices and [budgets][budgets]; exhaustive range/overflow and allocation stress remain. |
 | E08 | Covered | Input boundaries reject unterminated names and non-advancing/self-loop version chains on both architectures. |
-| E09 | Partial | [Path bytes][paths] are tested; non-UTF-8 dynamic symbol names need a dedicated fixture. |
+| E09 | Covered | [Raw symbol fixtures][edgecases] distinguish two byte names with identical lossy displays; loader outcome, lookup hex and saved reports agree. Path bytes remain separately tested. |
 | E10 | Covered | Readelf-verified ET_REL/ELF32/big-endian objects return Unsupported; non-ELF/truncated headers return Malformed. |
-| E11 | Partial | [U2][linkage] uses actual references and used/unused exports; isolated unreferenced undefined dynsym entry remains. |
-| E12 | Partial | Real corpus exercises relative relocations; targeted unknown and symbol-free relocation mutations remain. |
+| E11 | Covered | An isolated strong undefined dynsym without active relocations executes successfully and creates no symbol requirement. |
+| E12 | Covered | Unknown symbol-bearing and symbol-free types retain MLC008/unknown; NONE/RELATIVE do not generate external lookups. Metadata mutants are never executed. |
 | P01 | Covered | CLI verifiers compare exact saved reports across Windows JS/Linux native. |
 | P02 | Covered | [Path tests][paths] and Linux path oracle cover target-root links. |
 | P03 | Covered | Broken links, cycles and hop limits in path tests. |
@@ -50,16 +50,16 @@ record yet. Results are reproduced by the CI workflow; limits remain in
 | S02 | Covered | Weak-reference U2 cases and weak-missing COPY execution. |
 | S03 | Covered | Missing version nodes and wrong-version exports, including COPY. |
 | S04 | Covered | Reader verifies equal local indices with different names; U2 rejects mismatch. |
-| S05 | Partial | Name/hash matching implemented and real cross-runtime cases exercised; forced unequal-index/same-name case remains. |
+| S05 | Covered | Same EDGE_1 name/hash with provider index forced to 17 and a different consumer-local index passes all four loader contexts. |
 | S06 | Covered | Symbol fixtures exercise oldest/default/explicit nondefault versions. |
 | S07 | Covered | U2 detached symbol reference still checks the declared version node. |
 | S08 | Covered | Weak version-node and weak symbol fixtures treated separately. |
-| S09 | Partial | Hidden provider tested; isolated LOCAL/INTERNAL definitions need explicit assertions. |
+| S09 | Covered | LOCAL/INTERNAL/HIDDEN first candidates remain hash-visible but cannot satisfy the external reference; the selected second provider returns its distinct value. |
 | S10 | Covered | Weak/strong order, main interposition and COPY/ordinary provider separation. |
 | S11 | Covered | Eight hash-order/version fallback executions against the exact locked loaders. |
 | S12 | Partial | 38 COPY executions plus two GOT controls; GNU_UNIQUE, broader protected/SYMBOLIC/TLS combinations remain unknown. |
-| S13 | Partial | Real libc IFUNC references parsed; dedicated IFUNC existence/behavior boundary fixture remains. |
-| S14 | Partial | Lazy phase is reported and references checked; explicit deferred failure/call timing fixture remains. |
+| S13 | Covered | Dedicated IFUNC definitions pass existence checks with both correct and wrong application results; resolver behavior remains outside the result. |
+| S14 | Covered | One unchanged lazy executable passes without calling, fails on first call or LD_BIND_NOW; static failure retains startup-or-first-call phase. |
 | S15 | Partial | Actual GLIBC_2.38 mismatch in hello/jq; focused GLIBCXX missing-version case remains. |
 | D01 | Covered | [Impact tests][impact] identify removed used export. |
 | D02 | Covered | Stable U3 consumer passes after removal of an unused export. |
@@ -83,9 +83,9 @@ record yet. Results are reproduced by the CI workflow; limits remain in
 | C11 | Partial | Clean CI reconstructs recipes; separate human-facing README walkthrough remains. |
 | C12 | Covered | All five planned faults trigger dedicated assertions after a passing control; two COPY faults remain separately checked. |
 
-Priorities after this increment: finish the remaining parser/symbol cases and
-broader unusual bindings, expand stress beyond the dependency-step cap, and review
-API/report freeze. C09 belongs to the authorized release stage and cannot be replaced by a
+Priorities after this increment: expand malformed-input/resource stress, profile
+field and token/path/cache cases, special bindings and a focused GLIBCXX case;
+review API/report freeze and the user walkthrough. C09 belongs to the authorized release stage and cannot be replaced by a
 source-workspace test. Completion of this map is not completion of all its rows.
 
 [runtime]: ../internal/elf_adapter/runtime_test.mbt
@@ -108,3 +108,5 @@ source-workspace test. Completion of this map is not completion of all its rows.
 [pathgraph]: ../analysis/paths_test.mbt
 [contracts]: ../analysis/acceptance_test.mbt
 [limits]: ../analysis/limits_test.mbt
+[readelf]: ../internal/elf_adapter/readelf_test.mbt
+[edgecases]: ../analysis/linkage_edges_test.mbt

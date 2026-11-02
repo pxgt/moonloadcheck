@@ -85,6 +85,8 @@ python3 tools/corpus/build_copy.py
 python3 tools/corpus/build_paths.py
 python3 tools/corpus/build_inputs.py
 python3 tools/corpus/build_limits.py
+python3 tools/corpus/build_linkage_edges.py
+python3 tools/corpus/build_parser_edges.py
 moon check --target js,native --deny-warn
 moon build --target js,native
 moon test --target js,native

@@ -58,7 +58,9 @@ fn file_range(
       }
     }
   }
-  raise @model.ElfError::Malformed("dynamic string address is not file backed")
+  raise @model.ElfError::Malformed(
+    "ELF virtual range is not file backed: address=\{address}, size=\{length}",
+  )
 }
 
 ///|
@@ -98,7 +100,12 @@ fn read_name(
   if budget.cache.get(offset) is Some(value) {
     return value
   }
-  let view = strings.get_raw(bounded(offset, strings.data.length()))
+  let view = strings.get_raw(bounded(offset, strings.data.length())) catch {
+    _ =>
+      raise @model.ElfError::Malformed(
+        "invalid dynamic string: offset=\{offset}, table_size=\{strings.data.length()}",
+      )
+  }
   guard view.length() <= 65536 && budget.bytes + view.length() <= 8388608 else {
     raise @model.ElfError::ResourceLimit("dynamic names exceed string budget")
   }
@@ -167,7 +174,9 @@ fn read_frame(data : Bytes) -> Frame raise {
         dynamic = true
         let bytes = elf.segment_data(segment)
         guard bytes.length() % 16 == 0 else {
-          raise @model.ElfError::Malformed("partial dynamic entry")
+          raise @model.ElfError::Malformed(
+            "partial dynamic entry: file_offset=\{segment.p_offset}, size=\{bytes.length()}",
+          )
         }
         guard bytes.length() / 16 <= 65536 else {
           raise @model.ElfError::ResourceLimit("too many dynamic entries")
@@ -204,7 +213,9 @@ fn read_frame(data : Bytes) -> Frame raise {
           }
         }
         guard terminated else {
-          raise @model.ElfError::Malformed("unterminated dynamic segment")
+          raise @model.ElfError::Malformed(
+            "unterminated dynamic segment: file_offset=\{segment.p_offset}, size=\{bytes.length()}",
+          )
         }
       }
     }

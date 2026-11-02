@@ -131,3 +131,21 @@ Remaining work includes the partial ELF/symbol rows, broader unusual binding
 combinations, stress beyond the dependency-step cap, API/report review and a
 fresh user-facing walkthrough. This increment does not complete all M3 or
 authorize release/registration.
+
+## 2026-11-02 Symbol lookup and exact parser boundaries
+
+- Added 60 deployment snapshots across both pinned runtimes and architectures, with 56 actual executions. Raw non-UTF-8 names match by bytes, including a failure where two different byte names have the same lossy display. An unused strong undefined dynsym creates no requirement; a deliberately remapped provider version index still matches by name/hash.
+- LOCAL/INTERNAL/HIDDEN first candidates remain visible in the runtime hash but are excluded from external lookup. Actual return values confirm selection of the second provider. The controlled byte edits and their noncanonical table layout are documented.
+- A single lazy executable succeeds without calling its missing symbol, fails on first call, and fails with LD_BIND_NOW. Static checks retain fail and startup-or-first-call phase. IFUNC existence passes for implementations returning both correct and wrong application values, with resolver results explicitly excluded from the report's checked scope.
+- Unknown symbol-bearing and symbol-free relocation inputs retain uncertainty only in the affected checks; NONE and ordinary RELATIVE records create no external lookup. These metadata variants are never executed.
+- Added 120 readelf object-field comparisons and 36 non-executed table-boundary inputs. Twelve intact tables at an exact PT_LOAD end remain readable, including the final hashed symbol; 24 truncation/termination variants are rejected. Verneed/Verdef headers, auxiliaries, Versym, dynsym and both hash formats are covered.
+- Improved malformed-input diagnostics with the requested virtual range, PT_DYNAMIC file offset or dynamic-string offset/size. Focused tests verify the positions; public signatures and error categories remain unchanged.
+- Windows JS and pinned Linux native each pass 74 MoonBit tests and 267 CLI checks (86 existing + 24 corpus + 40 COPY + 57 path/limit + 60 linkage edges). Same-snapshot JSON reports match exactly across the two hosts; preserved vendor hashes and public interfaces remain unchanged.
+
+See [LINKAGE_BOUNDARIES.md](LINKAGE_BOUNDARIES.md) for commands, exact observations
+and limits. The full recipe now records 276 loader outcomes, plus two self-host
+executions and seven filesystem cases. The evidence map has 64 covered, eight
+partial and one open row. Remaining work concerns broader malformed/resource
+stress, target-profile field distinctions, token/path/cache cases, special
+bindings, a GLIBCXX case and the user walkthrough. API/report freeze and release
+acceptance remain pending.

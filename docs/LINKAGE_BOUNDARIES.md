@@ -25,6 +25,8 @@ snapshots contain deliberately changed relocation metadata and are never run.
 | Same lazy executable with LD_BIND_NOW=1 | Failure before the call is reached | Same missing-reference evidence; execution timing differs |
 
 The lazy checks use the same executable and library bytes for all three runs.
+When sudo is needed for chroot, explicit loader switches are assigned with env
+after sudo; otherwise its environment filtering would erase LD_BIND_NOW.
 The snapshot analyzer does not consume invocation arguments or general process
 environment variables. Its conservative check covers all declared dynamic
 references, including potentially deferred ones.

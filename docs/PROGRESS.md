@@ -141,6 +141,7 @@ authorize release/registration.
 - Added 120 readelf object-field comparisons and 36 non-executed table-boundary inputs. Twelve intact tables at an exact PT_LOAD end remain readable, including the final hashed symbol; 24 truncation/termination variants are rejected. Verneed/Verdef headers, auxiliaries, Versym, dynsym and both hash formats are covered.
 - Improved malformed-input diagnostics with the requested virtual range, PT_DYNAMIC file offset or dynamic-string offset/size. Focused tests verify the positions; public signatures and error categories remain unchanged.
 - Windows JS and pinned Linux native each pass 74 MoonBit tests and 267 CLI checks (86 existing + 24 corpus + 40 COPY + 57 path/limit + 60 linkage edges). Same-snapshot JSON reports match exactly across the two hosts; preserved vendor hashes and public interfaces remain unchanged.
+- The first clean-runner attempt exposed sudo filtering LD_BIND_NOW before the target loader started. The oracle now assigns explicit loader switches after sudo. Local sudo invocations reproduce the original unexpected success and the corrected missing-symbol failure on both pinned x86-64 runtimes; expected loader outcomes are unchanged.
 
 See [LINKAGE_BOUNDARIES.md](LINKAGE_BOUNDARIES.md) for commands, exact observations
 and limits. The full recipe now records 276 loader outcomes, plus two self-host

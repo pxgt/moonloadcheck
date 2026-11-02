@@ -18,6 +18,14 @@ CASES = ["baseline-pie", "baseline-exec", "raw-name", "raw-mismatch", "unused-un
 NOT_EXECUTED = {"unknown-symbol", "unknown-free", "relative-none"}
 
 
+def target_environment(command, values):
+    # sudo clears LD_* before chroot starts. Assign the explicit target switches
+    # after that boundary instead of relying on the invoker's environment.
+    if values and command[0] == "sudo":
+        return ["sudo", "env", *[key + "=" + value for key, value in values.items()], *command[1:]]
+    return command
+
+
 def layout(data):
     tags, offset = tables(data)
     syms, strings, hashpos = offset(tags[6]), offset(tags[5]), offset(tags[4])
@@ -195,7 +203,7 @@ def build():
                             runs += [(["call"], {}, 127), ([], {"LD_BIND_NOW": "1"}, 127)]
                         for args, extra, expected in runs:
                             environment = {"PATH": os.environ["PATH"], "LC_ALL": "C", **extra}
-                            command = loader_command(root, arch, interpreter, ["/runtime"]) + ["/app", *args]
+                            command = target_environment(loader_command(root, arch, interpreter, ["/runtime"]) + ["/app", *args], extra)
                             result = subprocess.run(command, capture_output=True, timeout=30, env=environment)
                             assert result.returncode == expected, (arch, suite, case, args, extra, result.returncode, result.stderr)
                             if expected == 127:

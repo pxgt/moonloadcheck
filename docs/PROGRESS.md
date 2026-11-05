@@ -166,3 +166,11 @@ resource/malformed stress, S12 unusual bindings, S15 GLIBCXX evidence, C11 user
 walkthrough, and C09 the published-package consumer. API/report review and
 release acceptance remain pending; there is no Mooncakes release or contest
 submission in this increment.
+
+Cloud verification initially stalled before project tests while downloading
+cross-compiler packages from azure.archive.ubuntu.com. The first run spent ten
+minutes transferring packages and retrying a 9 MB archive; a fresh runner also
+stalled at installation. CI now keeps the runner's signed official Ubuntu
+archive/security fallback mirrors, bounds acquisition retries/inactivity and
+limits the compiler-install step to six minutes. Pinned reference runtime
+versions/hashes and all project test expectations are unchanged.

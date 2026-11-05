@@ -111,6 +111,9 @@ pub fn load(
   for token in [profile.lib_token_hex, profile.platform_token_hex] {
     if token is Some(hex) {
       let bytes = decode_hex(hex)
+      guard !bytes.is_empty() else {
+        raise InvalidSnapshot("dynamic token substitution must not be empty")
+      }
       ignore(parts(bytes))
     }
   }

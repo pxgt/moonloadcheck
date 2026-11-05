@@ -132,7 +132,8 @@ fn path_list(
   let paths = []
   let mut start = 0
   for i = 0; i <= value.length(); i = i + 1 {
-    if i == value.length() || value[i] == b':' || value[i] == b';' {
+    // DT_RPATH/DT_RUNPATH use ':' only. A semicolon is a filename byte.
+    if i == value.length() || value[i] == b':' {
       paths.push(expand(value[start:i].to_owned(), origin, profile))
       guard paths.length() <= 1024 else {
         raise UnmodeledPath("search list exceeds 1024 entries")

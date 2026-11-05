@@ -21,6 +21,13 @@ They are not guessed from the analysis host. The v2 controlled profile can use
 `cache_mode: "glibc-cache-v1"` to read the indexed `/etc/ld.so.cache`; missing
 cache means a known empty cache. The v1 profile retains disabled cache use.
 
+Required arrays use `[]` for a known empty list; omission or null is invalid,
+not a request for host defaults. `library_path_hex` contains already-separated
+raw components. An empty component denotes cwd. Optional token `""` is invalid:
+supported profiles require nonempty measured substitutions. Omission represents
+an unknown fact and null is invalid. See the complete
+[empty/missing field table and evidence](ENVIRONMENT_BOUNDARIES.md#empty-versus-missing-facts).
+
 Paths and symlink targets use canonical lowercase hex encodings of raw filename
 bytes. Entry kinds are:
 

@@ -57,6 +57,10 @@ The public facade offers read_elf, read_linkage, load_snapshot, check_dependenci
 
 The ELF parser from moonbit-community/elf 0.0.1 is preserved as a hash-locked dependency with its license. New runtime-table readers and deployment analysis are separate original implementation; this is a new project. See [references and provenance](THIRD_PARTY.md).
 
+[Environment boundary evidence](docs/ENVIRONMENT_BOUNDARIES.md) covers competing
+ORIGIN contexts, all token spellings, literal semicolons in RPATH/RUNPATH,
+conditional cache records, and the distinction between empty and missing facts.
+
 Windows JS development uses compiler 0.10.15. CI and Linux native use the isolated, hash-pinned archive containing moon 0.1.20261020 / compiler 0.10.16+b1a0e846e. It does not upgrade other projects' toolchains.
 
 ## License

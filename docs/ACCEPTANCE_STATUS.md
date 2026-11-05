@@ -29,7 +29,7 @@ record yet. Results are reproduced by the CI workflow; limits remain in
 | P06 | Covered | Manifest tests reject tampering; missing-blob CLI case and callback-error digest diagnostics are checked across hosts. |
 | P07 | Covered | [Graph cases][pathgraph] distinguish equal-byte files from hardlinked aliases using actual constructor counts. |
 | P08 | Covered | Real host-only decoy cannot repair the captured target; deliberate host-fallback mutation is caught. |
-| P09 | Partial | [Dependency][dependencies]/token tests distinguish unsupported/absent facts; full empty-versus-unknown field table remains. |
+| P09 | Covered | [Environment facts](ENVIRONMENT_BOUNDARIES.md) exercise all required fields missing/null, explicit empty/default values, optional tokens used/unused, and rejected empty tokens versus valid cwd elements through 50 API/CLI variants. |
 | P10 | Covered | Declared cwd/relative paths in unit tests; real empty library-path element selects cwd library. |
 | R01 | Covered | U1 dependency closure, parent edges and real execution. |
 | R02 | Covered | U1 indirect missing-library chain plus direct-missing path/graph execution and edge checks. |
@@ -37,14 +37,14 @@ record yet. Results are reproduced by the CI workflow; limits remain in
 | R04 | Covered | Absolute and relative slash-containing DT_NEEDED bypass directory search in both fixed environments. |
 | R05 | Covered | U1 inherited RPATH versus direct-only RUNPATH, both fixes. |
 | R06 | Covered | Competing RPATH/library-path/RUNPATH providers return distinguishable values; selected paths match. |
-| R07 | Partial | DSO load-path/symlink ORIGIN tested; more main-versus-DSO competition cases remain. |
-| R08 | Partial | [Tokens][tokens] measure LIB/PLATFORM and missing facts; all braced spellings need explicit cases. |
+| R07 | Covered | [Origin competition](ENVIRONMENT_BOUNDARIES.md) separates DSO RUNPATH, inherited ancestor RPATH and main environment paths with different-value decoys; earlier symlink/load-path cases remain. |
+| R08 | Covered | All eight plain/braced token combinations execute on both architectures and pinned runtimes with measured LIB/PLATFORM facts; absent facts remain unknown when used. |
 | R09 | Covered | [Cache tests][cache] verify candidate order, disabled cache and stale first match. |
 | R10 | Covered | NODEFLIB cache/default filtering compared with both architecture loaders. |
 | R11 | Covered | Foreign architecture, directory/PIE and short corrupt first candidates compared; corrupt evidence stops search. |
 | R12 | Covered | Different path aliases with identical bytes/SONAME map separately unless file identity is shared; constructor counts verify it. |
 | R13 | Covered | Cycle retains its back edge and terminates; diamond maps its leaf once, both checked against actual execution. |
-| R14 | Partial | Conditional cache records retain unknown; more real hwcap/OS-condition cases remain. |
+| R14 | Covered | Real Jammy loaders accept legacy TLS/old OS conditions and skip a future OS condition; all eligible conditional records retain unknown. Foreign-architecture and later irrelevant records do not obstruct an ordinary exact match. |
 | R15 | Covered | [Acceptance contracts][contracts] check secure, preload, audit, hwcaps, loader-family and rule-revision exclusions. |
 | S01 | Covered | U2 referenced strong exports, absent definitions, offsets and scope. |
 | S02 | Covered | Weak-reference U2 cases and weak-missing COPY execution. |

@@ -10,6 +10,13 @@ These controlled revisions assume LD_DYNAMIC_WEAK is unset, retaining ordinary f
 
 Dependency checks cover the interpreter, architecture, ordered DT_NEEDED closure, alias/SONAME reuse, file identity, direct paths, inherited RPATH, library path, direct-only RUNPATH and defaults. ORIGIN uses the declaring object's load pathname. Missing/wrong-machine candidates continue search; directory and executable candidates stop that dependency search. Corrupt ELF evidence is input_error. Every edge records ordered candidate evidence.
 
+RPATH/RUNPATH split only on colon; semicolons remain literal directory bytes.
+An empty entire RPATH/RUNPATH is disabled, while empty colon components denote
+cwd. Empty token substitutions are invalid in these profiles. Environment
+paths are explicit components, with ORIGIN anchored to the main object.
+[Independent environment cases](ENVIRONMENT_BOUNDARIES.md) cover competing
+origins, all braced token spellings, empty/missing facts and conditional caches.
+
 LIB and PLATFORM require explicit lib_token_hex/platform_token_hex values. Missing values are unknown when those tokens are needed. Our fixtures measure them using the actual target loader's --list-diagnostics. The analyzer never substitutes its host's architecture or directory names.
 
 Version 1 requires disabled cache use. Version 2 additionally accepts cache_mode=glibc-cache-v1 for little-endian glibc cache 1.1 (including a compatible old/new wrapper). Lookup retains record order, architecture flags and numeric name comparison. A selected stale path does not trigger a search of the next cache record; search proceeds to defaults. NODEFLIB filters a selected cache path in a default directory and suppresses defaults. A matching record needing nonzero OS-version/hwcap conditions produces unknown. Cache tests use disposable project-owned chroots and do not change the host cache.

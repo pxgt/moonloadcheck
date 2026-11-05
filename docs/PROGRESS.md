@@ -150,3 +150,19 @@ partial and one open row. Remaining work concerns broader malformed/resource
 stress, target-profile field distinctions, token/path/cache cases, special
 bindings, a GLIBCXX case and the user walkthrough. API/report freeze and release
 acceptance remain pending.
+
+## 2026-11-05 Environment facts and path separators
+
+- Reproduced and fixed a false pass: RPATH/RUNPATH semicolons are literal filename bytes, not separators. With the literal provider removed, the previous analyzer selected a different usable directory while every pinned loader failed. Positive and negative cases now verify the exact selected path or failure on all four architecture/runtime contexts.
+- Added 78 actual loader outcomes: 32 plain/braced token combinations with measured target values, 12 main/DSO/ancestor ORIGIN competitions, eight empty/colon RUNPATH cases, 16 semicolon cases and 10 Jammy cache-condition cases. Conditional TLS/OS records retain inconclusive even when the actual loader has enough information to choose; irrelevant records do not block an ordinary match.
+- Added 50 non-executed profile variants through both the public API and CLI. Required missing/null fields are invalid; explicit empty lists are known empty. Optional tokens can be omitted as unknown, which matters only when used. Empty token values remain invalid in this profile, now with an explicit InvalidSnapshot reason. No previously invalid token value was admitted as a new target fact.
+- Windows JS and pinned Linux native each pass 80 MoonBit tests and all 128 new CLI checks. Same-snapshot reports match exactly across hosts. Strict checking, first-party formatting, generated public interfaces, Python syntax and preserved upstream hashes are verified. The new cases are included in the full CI recipe alongside the existing 267 CLI checks per backend.
+
+See [ENVIRONMENT_BOUNDARIES.md](ENVIRONMENT_BOUNDARIES.md) for commands and exact
+scope. The full reference recipe now has 354 loader outcomes (276 previous +
+78 new), plus two self-host executions and seven filesystem cases. The 73-row
+map has 68 covered, four partial and one open row. Remaining work is E07
+resource/malformed stress, S12 unusual bindings, S15 GLIBCXX evidence, C11 user
+walkthrough, and C09 the published-package consumer. API/report review and
+release acceptance remain pending; there is no Mooncakes release or contest
+submission in this increment.

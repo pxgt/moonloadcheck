@@ -190,3 +190,19 @@ The 73-row map has 71 covered, one partial (C11 walkthrough) and one open (C09
 published consumer). Covered resource cases are finite regression evidence,
 not a universal memory/time bound. API/report review and the user walkthrough
 remain next; no Mooncakes release or contest submission occurred.
+
+## 2026-11-06 API/report contract and fresh README walkthrough
+
+- Reviewed the seven facade functions, public data packages, raised errors versus findings, CLI grammar and saved-report compatibility. Added the missing SnapshotError facade alias; pinned interface generation shows this is the only public signature-file change. No existing function or type was removed.
+- Fixed the CLI accepting arbitrary leading arguments. It now removes only the backend's executable prefix, requires the documented argument sequence and supports --help. Command error envelopes retain concrete reasons, JSON field information, read paths or blob digests, plus an additive error_kind field. Unknown-command output no longer loses its usage text through generic Error interpolation.
+- The report reader checks schema before current fields, rejects empty/duplicate finding IDs and invalid finding statuses, and rejects aggregate verdicts inconsistent with their findings. A checked-in synthetic schema-2 serialization sample preserves missing COPY optional fields and decimal UInt64 offsets. Unknown optional fields are tolerated without claiming lossless roundtripping or authentication.
+- Corrected JSON text limit descriptions and diagnostics: manifest/report/entry-list limits count UTF-16 code units, while ELF/blob limits count bytes. The implementation thresholds are unchanged.
+- Rebuilt the README around an explicit Ubuntu 22.04 setup, local pinned compiler, three failure/fix workflows, offline explanation, standalone library use, complete-test prerequisites and troubleshooting. Its verifier extracts and runs the actual marked command blocks, not a separate hand-maintained command list.
+- A fresh source export with no .tools, .mooncakes, _build or generated fixtures passed all 10 README blocks, eight CLI outcomes and the standalone native consumer. This was a fresh project directory on the existing WSL Ubuntu host with documented OS prerequisites, not a claim of a newly installed OS. Moon's dependency download could use the local version cache; independent fresh-runner CI repeats the workflow.
+- Windows JS passes all 89 MoonBit tests. Pinned native passes the three new report tests. Each backend passes 28 new CLI contract cases and 86 existing CLI cases; the 86 saved reports compare exactly across Windows JS/Linux native. Python syntax, Bash/YAML, locked source hashes, pinned interfaces and formatting pass. Full dual-backend regression remains in the CI workflow.
+
+The [API contract](API_CONTRACT.md) records source/schema compatibility and
+explicit trust boundaries. The 73-case map now has 72 covered rows and one open
+row, C09: consuming the published Mooncakes package. Publication packaging,
+release authorization and unresolved November rule details remain separate
+release work. No package was published and no registration was submitted.

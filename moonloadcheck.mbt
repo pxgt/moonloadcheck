@@ -8,6 +8,7 @@ pub using @snapshot {
   type Profile,
   type Manifest,
   type ManifestEntry,
+  type SnapshotError,
 }
 
 ///|

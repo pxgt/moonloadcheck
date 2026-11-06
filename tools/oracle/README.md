@@ -86,6 +86,7 @@ moon check --target js,native --deny-warn
 moon build --target js,native
 moon test --target js,native
 python3 tools/verify_cli.py --js _build/js/debug/build/cmd/main/main.js --native _build/native/debug/build/cmd/main/main.exe
+python3 tools/verify_cli_contract.py --js _build/js/debug/build/cmd/main/main.js --native _build/native/debug/build/cmd/main/main.exe
 python3 tools/corpus/verify.py --js _build/js/debug/build/cmd/main/main.js --native _build/native/debug/build/cmd/main/main.exe
 python3 tools/corpus/self_host.py --js _build/js/debug/build/cmd/main/main.js --native _build/native/debug/build/cmd/main/main.exe
 python3 tools/corpus/verify_copy.py --js _build/js/debug/build/cmd/main/main.js --native _build/native/debug/build/cmd/main/main.exe
@@ -96,7 +97,7 @@ python3 tools/corpus/verify_linkage_edges.py --js _build/js/debug/build/cmd/main
 python3 tools/corpus/verify_environment_edges.py --js _build/js/debug/build/cmd/main/main.js --native _build/native/debug/build/cmd/main/main.exe
 python3 tools/corpus/verify_maturity.py --js _build/js/debug/build/cmd/main/main.js --native _build/native/debug/build/cmd/main/main.exe --measure
 python3 tools/verify_acceptance_mutations.py
-python3 tools/verify_consumer.py
+python3 tools/verify_consumer.py --target js,native
 python3 tools/check_vendor.py
 ```
 

@@ -59,6 +59,7 @@ jobs:
           moon test --target js,native
           python3 tools/check_vendor.py
           python3 tools/verify_cli.py --js _build/js/debug/build/cmd/main/main.js --native _build/native/debug/build/cmd/main/main.exe
+          python3 tools/verify_cli_contract.py --js _build/js/debug/build/cmd/main/main.js --native _build/native/debug/build/cmd/main/main.exe
           python3 tools/corpus/verify.py --js _build/js/debug/build/cmd/main/main.js --native _build/native/debug/build/cmd/main/main.exe
           python3 tools/corpus/self_host.py --js _build/js/debug/build/cmd/main/main.js --native _build/native/debug/build/cmd/main/main.exe
           python3 tools/corpus/verify_copy.py --js _build/js/debug/build/cmd/main/main.js --native _build/native/debug/build/cmd/main/main.exe
@@ -69,9 +70,25 @@ jobs:
           python3 tools/corpus/verify_environment_edges.py --js _build/js/debug/build/cmd/main/main.js --native _build/native/debug/build/cmd/main/main.exe
           python3 tools/corpus/verify_maturity.py --js _build/js/debug/build/cmd/main/main.js --native _build/native/debug/build/cmd/main/main.exe --measure
           python3 tools/verify_acceptance_mutations.py
-          python3 tools/verify_consumer.py
+          python3 tools/verify_consumer.py --target js,native
       - name: Verify public interfaces and first-party formatting
         run: |
           moon info
           moon fmt --check . analysis snapshot model internal/cache internal/elf_adapter experiments/parser_probe experiments/segment_probe cmd/main cmd/probe
           git diff --exit-code
+  walkthrough:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5, Node 24
+      - name: Install documented prerequisites
+        timeout-minutes: 6
+        run: |
+          if [ -f /etc/apt/apt-mirrors.txt ]; then
+            sudo sed -i '/azure\.archive\.ubuntu\.com/d' /etc/apt/apt-mirrors.txt
+          fi
+          apt_options=(-o Acquire::Retries=1 -o Acquire::http::Timeout=20 -o Acquire::https::Timeout=20)
+          sudo apt-get "${apt_options[@]}" update
+          sudo apt-get "${apt_options[@]}" install -y python3 git build-essential gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu
+      - name: Execute README from a fresh checkout
+        run: python3 tools/verify_walkthrough.py --require-clean

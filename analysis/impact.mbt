@@ -172,25 +172,52 @@ pub(all) suberror ReportError {
 }
 
 ///|
+priv struct ReportHeader {
+  schema_version : Int32
+} derive(@json.FromJson)
+
+///|
 pub fn read_report(json : String) -> Report raise {
   guard json.length() <= 67108864 else {
-    raise ReportError("report exceeds 64 MiB")
+    raise ReportError("report exceeds 67108864 UTF-16 code units")
   }
-  let report : Report = @json.from_json(@json.parse(json[:]))
-  guard report.schema_version == 2 else {
+  let value = @json.parse(json[:])
+  let header : ReportHeader = @json.from_json(value)
+  guard header.schema_version == 2 else {
     raise ReportError("unsupported report schema")
   }
+  let report : Report = @json.from_json(value)
   guard ["pass_static", "fail", "inconclusive", "input_error"].contains(
     report.status,
   ) else {
     raise ReportError("invalid report status")
   }
   let ids : Map[String, Bool] = Map([])
+  let mut severity = 0
   for finding in report.findings {
+    guard !finding.id.is_empty() else { raise ReportError("empty finding id") }
     guard ids.get(finding.id) is None else {
       raise ReportError("duplicate finding id")
     }
     ids[finding.id] = true
+    let level = match finding.status {
+      "unknown" => 1
+      "fail" => 2
+      "input_error" => 3
+      _ => raise ReportError("invalid finding status")
+    }
+    if level > severity {
+      severity = level
+    }
+  }
+  let expected = match severity {
+    0 => "pass_static"
+    1 => "inconclusive"
+    2 => "fail"
+    _ => "input_error"
+  }
+  guard report.status == expected else {
+    raise ReportError("report status conflicts with its findings")
   }
   report
 }

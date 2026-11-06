@@ -57,4 +57,6 @@ pub using @snapshot {type Resolved}
 
 pub using @snapshot {type Snapshot}
 
+pub using @snapshot {type SnapshotError}
+
 // Traits

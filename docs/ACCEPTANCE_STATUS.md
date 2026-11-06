@@ -80,11 +80,11 @@ record yet. Results are reproduced by the CI workflow; limits remain in
 | C08 | Covered | Repeated original/changed-rule/original snapshot checks retain stable results; full comparisons recompute both views. |
 | C09 | Open | Standalone local-source consumer passes; published Mooncakes version validation awaits release. |
 | C10 | Covered | JS/native suites plus exact Windows/Linux snapshot report comparison. |
-| C11 | Partial | Clean CI reconstructs recipes; separate human-facing README walkthrough remains. |
+| C11 | Covered | [README](../README.md) installation, U1/U2/U3, offline explain and standalone consumer pass from an empty source directory. `tools/verify_walkthrough.py --require-clean` executes its actual command blocks; a separate fresh CI job repeats them. Full test/reference CI remains separate. |
 | C12 | Covered | All five planned faults trigger dedicated assertions after a passing control; two COPY faults remain separately checked. |
 
-Priorities after this increment: review API/report freeze and complete the user
-walkthrough. C09 belongs to the authorized release stage and cannot be replaced
+The [API/report review](API_CONTRACT.md) and documented walkthrough are complete
+under the stated setup. C09 belongs to the authorized release stage and cannot be replaced
 by a source-workspace test. Covered rows retain their stated limits; completion
 of the evidence map is not completion of all its rows or official acceptance.
 

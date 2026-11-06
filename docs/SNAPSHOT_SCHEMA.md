@@ -62,7 +62,9 @@ The output must be outside the input root. Existing blobs with conflicting
 content are rejected. No reference system binary is checked into this repo;
 sample snapshots are generated locally by recorded recipes.
 
-Schema 1 is experimental until the first release. A future format change will
+Schema 1 is reviewed for the planned first release; publication is pending. The
+manifest text limit is 4,194,304 decoded UTF-16 code units, not a UTF-8 byte cap.
+A future incompatible format change will
 use an explicit schema revision rather than silently changing path or identity
 semantics. The manifest digest in a report hashes the exact input JSON bytes;
 formatting a manifest therefore changes its evidence identifier.

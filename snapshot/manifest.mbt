@@ -76,7 +76,12 @@ pub fn sha256(data : Bytes) -> String {
 
 ///|
 fn decode_hex(value : String) -> Bytes raise {
-  let bytes = @hex.decode(value[:])
+  let bytes = @hex.decode(value[:]) catch {
+    _ =>
+      raise InvalidSnapshot(
+        "hex strings must contain pairs of hexadecimal digits",
+      )
+  }
   guard @hex.encode(bytes[:]) == value else {
     raise InvalidSnapshot("hex strings must be lowercase and canonical")
   }
@@ -98,7 +103,7 @@ pub fn load(
   read_blob : (String) -> Bytes raise,
 ) -> Snapshot raise {
   guard manifest_json.length() <= 4194304 else {
-    raise SnapshotLimit("manifest exceeds 4 MiB")
+    raise SnapshotLimit("manifest exceeds 4194304 UTF-16 code units")
   }
   let manifest : Manifest = @json.from_json(@json.parse(manifest_json[:]))
   guard manifest.schema_version == 1 else {

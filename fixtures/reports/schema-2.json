@@ -1,0 +1,35 @@
+{
+  "schema_version": 2,
+  "tool_version": "0.1.0-dev",
+  "rule_revision": "serialization-contract-example",
+  "snapshot_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "entry": {"display": "/app", "hex": "2f617070"},
+  "checked_scope": ["symbol-availability"],
+  "not_checked": ["synthetic saved-report contract; no execution evidence"],
+  "status": "fail",
+  "objects": [],
+  "edges": [],
+  "symbol_scope": [],
+  "version_checks": [],
+  "symbol_checks": [{
+    "consumer": {"display": "/app", "hex": "2f617070"},
+    "symbol": {"display": "api", "hex": "617069"},
+    "lookup_policy": "copy-source-excluding-executable",
+    "weak": false,
+    "status": "fail",
+    "phase": "startup",
+    "reference_offsets": ["18446744073709551615"],
+    "relocation_types": [5]
+  }],
+  "findings": [{
+    "id": "serialization-fixture-id",
+    "code": "MLC005",
+    "status": "fail",
+    "subject": {"display": "/app", "hex": "2f617070"},
+    "requirement": {"display": "api", "hex": "617069"},
+    "dependency_chain": [],
+    "explanation": "Synthetic saved failure for reader compatibility tests.",
+    "suggested_action": "Inspect the named requirement.",
+    "reference_offsets": ["18446744073709551615"]
+  }]
+}

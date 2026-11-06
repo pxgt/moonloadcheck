@@ -4,13 +4,14 @@ This is a local source dependency check, not evidence of a Mooncakes release.
 """
 from pathlib import Path
 import json
+import argparse
 import subprocess
 import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def verify():
+def verify(backend="native"):
     target = Path(tempfile.mkdtemp(prefix="moonloadcheck-consumer-"))
     (target / "moon.mod").write_text('name = "validation/consumer"\nimport { "Xpeng/moonloadcheck@0.1.0", }\n')
     (target / "moon.pkg").write_text('import { "Xpeng/moonloadcheck", } for "test"\n')
@@ -25,13 +26,20 @@ test "external facade never needs internal parser types" {
     @moonloadcheck.ElfError::Malformed(_) => ()
     _ => fail("incorrect public error")
   } noraise { _ => fail("bad ELF accepted") }
+  try @moonloadcheck.load_snapshot(" ".repeat(4194305), _ => b"") catch {
+    @moonloadcheck.SnapshotError::SnapshotLimit(message) =>
+      assert_true(message.contains("4194304"))
+    _ => fail("snapshot limit error is not exposed by the facade")
+  } noraise { _ => fail("oversized manifest accepted") }
 }
 ''')
     # Workspace resolution uses the local member without publishing or editing it.
     (target / "moon.work").write_text("members = " + json.dumps([".", str(ROOT)]) + "\n")
-    subprocess.run(["moon", "test", "--package", "validation/consumer", "--target", "native", "--deny-warn"], cwd=target, check=True)
+    subprocess.run(["moon", "test", "--package", "validation/consumer", "--target", backend, "--deny-warn"], cwd=target, check=True)
     print("Standalone public consumer passed:", target)
 
 
 if __name__ == "__main__":
-    verify()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--target", choices=["native", "js", "js,native"], default="native")
+    verify(parser.parse_args().target)

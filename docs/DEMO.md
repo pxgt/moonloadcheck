@@ -55,8 +55,10 @@ unlisted applications and runtime dlopen callers.
 
 Use README's saved-report and `explain` commands to show the finding ID, raw-byte
 identity, explanation and suggested action without reopening a snapshot. Then
-show the independent archive-consumer result from
-`artifacts/archive/result.json` and its matching CI step.
+show the independent registry-consumer result from
+`artifacts/registry/js-native/result.json` in CI, or the local `js`/`native`
+subdirectories, and its matching CI step. Point to the registry source and
+the 182 installed files matching the published checksum.
 
 State the four outcomes: static pass, proven failure, inconclusive, and invalid
 input. Show [scope](SUPPORTED_PROFILE.md), [evidence map](ACCEPTANCE_STATUS.md)
@@ -69,7 +71,7 @@ claim. Successful real libstdc++ executions can still be statically inconclusive
 - Final source commit and CI URL; no guessed publication date or package URL.
 - README command outputs under `artifacts/walkthrough`, actual reference
   `oracle.json` records and the full corpus verification results.
-- Candidate ZIP digest and archive-consumer record. Explicitly distinguish it
-  from the still-required published-registry consumer.
+- Published ZIP digest, source tag and registry-consumer record from the
+  [release record](RELEASE_0.1.0.md). Keep local candidate checks separately.
 - A screen recording, if requested by the final rules, showing actual commands
   and expected exits. This runbook does not claim a recording already exists.

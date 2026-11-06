@@ -2,7 +2,7 @@
 
 MoonLoadCheck is a MoonBit library and CLI for offline Linux binary deployment analysis. It explains dependency selection, checks symbol/version requirements against a captured target, and identifies explicit consumers affected by shared-library changes.
 
-**Status: development version, not yet published to Mooncakes.** U1 dependency checks, U2 symbol/version checks and U3 consumer comparisons work under controlled glibc profiles. Real hello, jq and zstd binaries are checked against pinned Ubuntu Jammy and Noble runtime roots on x86-64 and AArch64. A static pass covers the declared checks; it does not certify general Linux or full C++ ABI compatibility. See the [acceptance evidence](docs/ACCEPTANCE_STATUS.md) and [API contract](docs/API_CONTRACT.md).
+**Published: [Xpeng/moonloadcheck 0.1.0](https://mooncakes.io/docs/Xpeng/moonloadcheck@0.1.0).** U1 dependency checks, U2 symbol/version checks and U3 consumer comparisons work under controlled glibc profiles. Real hello, jq and zstd binaries are checked against pinned Ubuntu Jammy and Noble runtime roots on x86-64 and AArch64. A static pass covers the declared checks; it does not certify general Linux or full C++ ABI compatibility. See the [acceptance evidence](docs/ACCEPTANCE_STATUS.md), [API contract](docs/API_CONTRACT.md) and [release record](docs/RELEASE_0.1.0.md).
 
 The initial target is ELF64 little-endian x86-64 and AArch64. Analysis verifies snapshot content and never executes analyzed files or falls back to host libraries. Independent reference tests execute our own fixtures and hash-verified Ubuntu packages in disposable project-owned roots.
 
@@ -125,6 +125,10 @@ python3 tools/verify_consumer.py
 ```
 
 That test uses only the public facade from a separate temporary Moon workspace.
+The [published-release consumer](docs/RELEASE_0.1.0.md) instead resolves
+`"Xpeng/moonloadcheck@0.1.0"` through the registry with no workspace override,
+tests all seven facade functions and checks the installed bytes against the
+published archive. It also runs in CI.
 The [candidate release checklist](docs/RELEASE_CHECKLIST.md) additionally audits
 the actual packaged ZIP and builds a consumer against its extracted contents.
 The [reviewer demo](docs/DEMO.md) provides a short evidence-led presentation.

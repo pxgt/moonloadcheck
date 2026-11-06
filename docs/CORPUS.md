@@ -123,7 +123,8 @@ support or type/layout ABI compatibility. Additional COPY and GNU_UNIQUE/protect
 combinations remain outside the validated model. Later increments add finite
 [malformed/resource and special-binding evidence](MATURITY_BOUNDARIES.md), but
 do not establish a universal worst-case performance bound. The current
-[acceptance map](ACCEPTANCE_STATUS.md) tracks the remaining release-stage row.
+[acceptance map](ACCEPTANCE_STATUS.md) tracks all internal evidence, including
+the published-release consumer.
 AArch64 self-hosting
 of the MoonBit CLI has not been validated. No Mooncakes release or registration
 is implied by these tests.

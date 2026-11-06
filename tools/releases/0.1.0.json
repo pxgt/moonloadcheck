@@ -1,0 +1,15 @@
+{
+  "module": "Xpeng/moonloadcheck",
+  "version": "0.1.0",
+  "source_commit": "eb1393d8f15b7ecf4ba68c15b629955c00334fdd",
+  "source_ci": "https://github.com/pxgt/moonloadcheck/actions/runs/42256299828",
+  "archive_url": "https://download.mooncakes.io/user/Xpeng/moonloadcheck/0.1.0.zip",
+  "archive_sha256": "ef23c9f42b99cd81feb5f1107fbc6fbefc034c68698abb2a1f3f41d5e3eae69a",
+  "archive_bytes": 300999,
+  "archive_files": 182,
+  "registry_created_at": "2026-11-06T17:08:48.410838+00:00",
+  "license": "Apache-2.0",
+  "repository": "https://github.com/pxgt/moonloadcheck",
+  "reviewed_archive_sha256": "338d2f6592049623b35dd20d1c154163b4281ff479ab6ecd9e6403274ac19c47",
+  "reviewed_file_payloads_identical": true
+}

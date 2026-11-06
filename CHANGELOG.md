@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.1.0 — unreleased candidate
+## 0.1.0 — 2026-11-07
 
 - Offline Linux dependency selection, symbol/version availability and explicit
   consumer impact comparison through a MoonBit library and CLI.
@@ -16,7 +16,11 @@
 - Fresh README execution, package-content audit and isolated ZIP consumption.
   Package metadata and new reports both identify version 0.1.0.
 
-No Mooncakes release or release tag has been created for this candidate.
+Published as [Xpeng/moonloadcheck@0.1.0](https://mooncakes.io/docs/Xpeng/moonloadcheck@0.1.0).
+Tag `v0.1.0` identifies the reviewed source commit; the
+[release record](docs/RELEASE_0.1.0.md) retains the actual registry checksum and
+independent consumer results. The immutable archive contains the prepublication
+documentation from that commit; publication records were added afterward.
 Support boundaries and finite resource guarantees are documented in
 [SUPPORTED_PROFILE.md](docs/SUPPORTED_PROFILE.md); full C++ ABI, arbitrary loader
 versions, application behavior and runtime dlopen remain outside the result.

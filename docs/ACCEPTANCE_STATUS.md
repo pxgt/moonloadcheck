@@ -78,15 +78,15 @@ record yet. Results are reproduced by the CI workflow; limits remain in
 | C06 | Covered | Offline explain, unsupported schema, old additive-field compatibility and duplicate-ID rejection. |
 | C07 | Covered | Parser budgets plus [real 16,384-step exhaustion][limits] retain earlier failure and explicit unknown; large CLI JSON stays complete. |
 | C08 | Covered | Repeated original/changed-rule/original snapshot checks retain stable results; full comparisons recompute both views. |
-| C09 | Open | Standalone local-source consumer passes. The [candidate gate](RELEASE_CHECKLIST.md) also tests the actual packaged ZIP in isolation; neither local workflow replaces published Mooncakes version validation, which awaits release. |
+| C09 | Covered | [Published 0.1.0 consumer](RELEASE_0.1.0.md) resolves the actual registry dependency without moon.work or local overrides. Three tests cover all seven facade functions and exported errors on Windows JS and pinned Linux native; all 182 installed files match the pinned published ZIP. Fresh CI repeats both backends. |
 | C10 | Covered | JS/native suites plus exact Windows/Linux snapshot report comparison. |
 | C11 | Covered | [README](../README.md) installation, U1/U2/U3, offline explain and standalone consumer pass from an empty source directory. `tools/verify_walkthrough.py --require-clean` executes its actual command blocks; a separate fresh CI job repeats them. Full test/reference CI remains separate. |
 | C12 | Covered | All five planned faults trigger dedicated assertions after a passing control; two COPY faults remain separately checked. |
 
-The [API/report review](API_CONTRACT.md) and documented walkthrough are complete
-under the stated setup. C09 belongs to the authorized release stage and cannot be replaced
-by a source-workspace test. Covered rows retain their stated limits; completion
-of the evidence map is not completion of all its rows or official acceptance.
+All 73 internal rows are now Covered under their stated setup, including the
+[API/report review](API_CONTRACT.md), walkthrough and actual published consumer.
+Covered rows retain their finite evidence and support limits. This is the
+project's quality map, not official contest acceptance or universal correctness.
 
 [runtime]: ../internal/elf_adapter/runtime_test.mbt
 [reader]: ../internal/elf_adapter/linkage_test.mbt

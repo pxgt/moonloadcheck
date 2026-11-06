@@ -1,7 +1,8 @@
-# 0.1.0 candidate verification and release sequence
+# Candidate verification and release sequence
 
-Status: **unpublished candidate**. A local ZIP, successful CI, or a `0.1.0`
-version string is not evidence that a Mooncakes release exists.
+Version 0.1.0 is now published; see its [release record](RELEASE_0.1.0.md).
+This checklist also describes preparation for later versions. A local ZIP,
+successful CI or a version string alone is not evidence of registry publication.
 
 ## Candidate gate
 
@@ -58,9 +59,10 @@ There is no report schema or public signature change.
 | C09 | A new consumer resolves the published version without a local workspace override |
 | Submission | Confirmed November rules, entrant-authored material and actual submission receipt |
 
-The first three can be prepared locally. The registry and C09 rows remain open
-until publication happens. Do not change them to complete based on source or ZIP
-workspace tests. November registration and support questions are tracked in the
+The first three can be prepared locally. Registry and C09 require actual
+publication and registry-only consumption; these are recorded for 0.1.0.
+Do not use source or ZIP workspace tests to close them for a future version.
+November registration and support questions are tracked in the
 private planning workspace; project release readiness is not contest approval.
 
 ## Execution order after the candidate is approved for release

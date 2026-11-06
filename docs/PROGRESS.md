@@ -240,3 +240,34 @@ The internal map remains 72 Covered / 1 Open: C09 still requires resolving and
 testing a real published Mooncakes version without any workspace override.
 There is no release tag, Mooncakes publication or contest submission in this
 increment. Formal contest-rule questions remain in the planning workspace.
+
+## 2026-11-07 Mooncakes publication and independent registry consumers
+
+- Published Xpeng/moonloadcheck 0.1.0 from the previously approved source
+  eb1393d8f15b7ecf4ba68c15b629955c00334fdd. The normal publishing command checked
+  both source and extracted payload and returned 200 OK; live registry metadata
+  confirms the exact version and checksum. The annotated v0.1.0 tag points to
+  that source commit and is pushed without moving an existing tag.
+- Downloaded the public ZIP and matched all 182 file payloads against the
+  reviewed candidate. Its SHA-256 is
+  ef23c9f42b99cd81feb5f1107fbc6fbefc034c68698abb2a1f3f41d5e3eae69a,
+  also reported by registry metadata. No generated binary corpus is distributed.
+- New temporary consumers declare the ordinary versioned registry dependency,
+  with no moon.work, ancestor workspace or local source override. Dependency
+  graphs explicitly identify registry source and version 0.1.0. Windows JS and
+  pinned Linux native each pass three tests covering all seven facade functions
+  and exported errors; every installed package file matches the published ZIP.
+  The initial run on each host downloaded the version; later reruns may use
+  Moon's version cache without introducing any local source substitution.
+- Added the release lock, reusable registry verifier and a fresh CI step for
+  both backends. The verifier compares the resolved graph and installed bytes,
+  so a local source-workspace success cannot satisfy it. Registry-download and
+  metadata-query retries retain TLS verification and checksum enforcement.
+- Recorded publication details, source/tag, checksum, reproduction commands
+  and the distinction between the immutable release and subsequent main-branch
+  documentation. The archive's prepublication text is historical; the published
+  payload and release tag were not changed to rewrite it.
+
+See [RELEASE_0.1.0.md](RELEASE_0.1.0.md). C09 is now Covered and all 73 internal
+quality rows have evidence under their declared limits. This does not establish
+official contest acceptance. No registration or organizer message was sent.

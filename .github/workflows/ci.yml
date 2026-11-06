@@ -97,3 +97,7 @@ jobs:
           export PATH="$PWD/.tools/moon-0.10.16/bin:$PATH"
           moon package --frozen
           python3 tools/verify_archive.py --target js,native
+      - name: Consume the published Mooncakes release
+        run: |
+          export PATH="$PWD/.tools/moon-0.10.16/bin:$PATH"
+          python3 tools/verify_registry.py --target js,native

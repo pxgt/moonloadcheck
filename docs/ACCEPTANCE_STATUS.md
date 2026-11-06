@@ -78,7 +78,7 @@ record yet. Results are reproduced by the CI workflow; limits remain in
 | C06 | Covered | Offline explain, unsupported schema, old additive-field compatibility and duplicate-ID rejection. |
 | C07 | Covered | Parser budgets plus [real 16,384-step exhaustion][limits] retain earlier failure and explicit unknown; large CLI JSON stays complete. |
 | C08 | Covered | Repeated original/changed-rule/original snapshot checks retain stable results; full comparisons recompute both views. |
-| C09 | Open | Standalone local-source consumer passes; published Mooncakes version validation awaits release. |
+| C09 | Open | Standalone local-source consumer passes. The [candidate gate](RELEASE_CHECKLIST.md) also tests the actual packaged ZIP in isolation; neither local workflow replaces published Mooncakes version validation, which awaits release. |
 | C10 | Covered | JS/native suites plus exact Windows/Linux snapshot report comparison. |
 | C11 | Covered | [README](../README.md) installation, U1/U2/U3, offline explain and standalone consumer pass from an empty source directory. `tools/verify_walkthrough.py --require-clean` executes its actual command blocks; a separate fresh CI job repeats them. Full test/reference CI remains separate. |
 | C12 | Covered | All five planned faults trigger dedicated assertions after a passing control; two COPY faults remain separately checked. |

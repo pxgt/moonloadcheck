@@ -1,0 +1,54 @@
+///|
+fn target(folder : String) -> @moonloadcheck.Snapshot raise {
+  @moonloadcheck.load_snapshot(
+    @fs.read_file_to_string(folder + "/manifest.json"),
+    digest => @fs.read_file_to_bytes(folder + "/blobs/" + digest),
+  )
+}
+
+///|
+test "archive consumer reads ELF and checks the captured deployment" {
+  let before = target("before")
+  let resolved = before.resolve(b"/opt/demo/app")
+  guard resolved.entry is @moonloadcheck.Entry::File(id) else {
+    fail("program is not a file")
+  }
+  let bytes = before.content(id).unwrap()
+  assert_eq(@moonloadcheck.read_elf(bytes).machine, 62)
+  assert_eq(@moonloadcheck.read_linkage(bytes).object.machine, 62)
+  assert_eq(@moonloadcheck.check_dependencies(before, b"/opt/demo/app").exit_code(), 0)
+  let report = @moonloadcheck.check_compatibility(before, b"/opt/demo/app")
+  assert_eq(report.exit_code(), 0)
+  assert_eq(report.tool_version, "__VERSION__")
+}
+
+///|
+test "archive consumer compares explicit users and explains saved evidence" {
+  let before = target("before")
+  let after = target("after")
+  let report = @moonloadcheck.check_compatibility(after, b"/opt/demo/app")
+  assert_eq(report.exit_code(), 1)
+  let saved = @moonloadcheck.read_report(report.to_json().stringify())
+  assert_eq(saved.explain(report.findings[0].id).to_json().stringify(),
+    report.findings[0].to_json().stringify())
+  let impact = @moonloadcheck.compare(before, after, [b"/opt/demo/app", b"/opt/demo/stable-app"])
+  assert_eq(impact.exit_code(), 1)
+  let app = impact.entries[0]
+  let stable = impact.entries[1]
+  assert_false(app.application_changed)
+  assert_eq(app.changes[0].classification, "introduced")
+  assert_eq(stable.after.exit_code(), 0)
+  assert_true(stable.changes.is_empty())
+}
+
+///|
+test "archive consumer catches exported error types" {
+  try @moonloadcheck.read_linkage(b"bad ELF") catch {
+    @moonloadcheck.ElfError::Malformed(_) => ()
+    _ => fail("wrong ELF error")
+  } noraise { _ => fail("invalid ELF accepted") }
+  try @moonloadcheck.load_snapshot(" ".repeat(4194305), _ => b"") catch {
+    @moonloadcheck.SnapshotError::SnapshotLimit(_) => ()
+    _ => fail("wrong snapshot error")
+  } noraise { _ => fail("oversized manifest accepted") }
+}

@@ -120,7 +120,10 @@ it does not update apt sources. Normal tests must use the checked-in lock.
 The corpus supports controlled startup conclusions. It does not establish
 complete application functionality, kernel/CPU compatibility, full distro
 support or type/layout ABI compatibility. Additional COPY and GNU_UNIQUE/protected/SYMBOLIC
-combinations, more malformed-input and stress cases, worst-case performance
-budgets, and the full planned acceptance matrix remain open. AArch64 self-hosting
+combinations remain outside the validated model. Later increments add finite
+[malformed/resource and special-binding evidence](MATURITY_BOUNDARIES.md), but
+do not establish a universal worst-case performance bound. The current
+[acceptance map](ACCEPTANCE_STATUS.md) tracks the remaining release-stage row.
+AArch64 self-hosting
 of the MoonBit CLI has not been validated. No Mooncakes release or registration
 is implied by these tests.

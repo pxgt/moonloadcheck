@@ -92,3 +92,8 @@ jobs:
           sudo apt-get "${apt_options[@]}" install -y python3 git build-essential gcc-aarch64-linux-gnu binutils-aarch64-linux-gnu
       - name: Execute README from a fresh checkout
         run: python3 tools/verify_walkthrough.py --require-clean
+      - name: Audit and consume the packaged archive
+        run: |
+          export PATH="$PWD/.tools/moon-0.10.16/bin:$PATH"
+          moon package --frozen
+          python3 tools/verify_archive.py --target js,native

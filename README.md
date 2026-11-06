@@ -125,6 +125,9 @@ python3 tools/verify_consumer.py
 ```
 
 That test uses only the public facade from a separate temporary Moon workspace.
+The [candidate release checklist](docs/RELEASE_CHECKLIST.md) additionally audits
+the actual packaged ZIP and builds a consumer against its extracted contents.
+The [reviewer demo](docs/DEMO.md) provides a short evidence-led presentation.
 For the full test suite, first run **all** fixture recipes and then the test
 commands in [Rebuilding reference cases](tools/oracle/README.md). The quickstart
 above generates the three user workflows; the full suite also requires the

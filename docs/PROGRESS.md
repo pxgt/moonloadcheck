@@ -206,3 +206,37 @@ explicit trust boundaries. The 73-case map now has 72 covered rows and one open
 row, C09: consuming the published Mooncakes package. Publication packaging,
 release authorization and unresolved November rule details remain separate
 release work. No package was published and no registration was submitted.
+
+## 2026-11-07 Actual archive consumers and release evidence
+
+- Added an archive gate that audits the output of `moon package --frozen`,
+  including module metadata, current source bytes, licenses and all 18 locked
+  vendor files. It rejects excluded build/download/generated inputs, path
+  escapes, case-colliding names and symlinks before extraction.
+- Each isolated workspace contains the extracted package and a new consumer;
+  the original source repository is not a workspace member. Explicit U3
+  snapshots are copied as test inputs outside the package. Three consumer
+  tests exercise the seven public facade functions and exported errors.
+- The extracted CLI is built independently and runs seven cases per backend:
+  compatibility pass/fail, dependency-only pass, selective diff, saved-report
+  explain, help and an argument error. The verifier distinguishes a successful
+  explain command from the failed finding that it successfully returns.
+- The initial consumer exposed a real version mismatch: package metadata said
+  0.1.0 while analysis reports said 0.1.0-dev. Reports now match 0.1.0; no public
+  interface or schema changed. The frozen old-report compatibility fixture
+  intentionally retains its historical tool version.
+- The same 182-entry local ZIP passed all three consumer tests and seven CLI
+  checks on both Windows JS and pinned Linux native. License/source hashes,
+  Python/YAML syntax, local documentation links and pinned check/info/fmt pass.
+  The CI walkthrough job now rebuilds and verifies the committed candidate on
+  both backends, comparing its report JSON exactly. Local ZIP hashes identify
+  individual builds; byte-identical ZIP reproduction is not claimed.
+- Added an unreleased changelog, a candidate/release checklist and a 6–8 minute
+  reviewer demonstration. Updated the corpus's historical remaining-work text
+  to point to the current boundary evidence and acceptance map.
+
+This closes the local packaging/provenance preparation, not publication.
+The internal map remains 72 Covered / 1 Open: C09 still requires resolving and
+testing a real published Mooncakes version without any workspace override.
+There is no release tag, Mooncakes publication or contest submission in this
+increment. Formal contest-rule questions remain in the planning workspace.

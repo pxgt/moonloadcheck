@@ -22,6 +22,9 @@ python3 tools/corpus/build_linkage_edges.py
 python3 tools/corpus/build_parser_edges.py
 python3 tools/corpus/build_environment_edges.py
 python3 tools/corpus/build_profile_facts.py
+python3 tools/corpus/build_glibcxx.py
+python3 tools/corpus/build_bindings.py
+python3 tools/corpus/build_stress.py
 ```
 
 The bootstrap downloads two hash-pinned Ubuntu packages into the ignored
@@ -91,6 +94,7 @@ python3 tools/verify_copy_mutations.py
 python3 tools/corpus/verify_paths.py --js _build/js/debug/build/cmd/main/main.js --native _build/native/debug/build/cmd/main/main.exe
 python3 tools/corpus/verify_linkage_edges.py --js _build/js/debug/build/cmd/main/main.js --native _build/native/debug/build/cmd/main/main.exe
 python3 tools/corpus/verify_environment_edges.py --js _build/js/debug/build/cmd/main/main.js --native _build/native/debug/build/cmd/main/main.exe
+python3 tools/corpus/verify_maturity.py --js _build/js/debug/build/cmd/main/main.js --native _build/native/debug/build/cmd/main/main.exe --measure
 python3 tools/verify_acceptance_mutations.py
 python3 tools/verify_consumer.py
 python3 tools/check_vendor.py

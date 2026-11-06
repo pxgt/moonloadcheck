@@ -283,13 +283,12 @@ fn check_linkage(
           1024
         },
       )
-      let tls = kinds.any(kind => {
-        if node.object.machine == 62 {
-          [16, 17, 18, 36].contains(kind)
-        } else {
-          [1028, 1029, 1030, 1031].contains(kind)
-        }
-      })
+      let tls_kinds = if node.object.machine == 62 {
+        [16, 17, 18, 36]
+      } else {
+        [1028, 1029, 1030, 1031]
+      }
+      let tls = kinds.any(kind => tls_kinds.contains(kind))
       let phase = if linkage.bind_now ||
         refs.any(reference => reference.table != "JMPREL") {
         "startup"
@@ -299,6 +298,8 @@ fn check_linkage(
       let mut unknown = !kinds.all(kind => {
           supported_reference(node.object.machine, kind)
         }) ||
+        tls != (symbol.kind == 6) ||
+        (tls && kinds.any(kind => !tls_kinds.contains(kind))) ||
         (
           copy &&
           (
@@ -355,9 +356,9 @@ fn check_linkage(
               continue
             }
             let provided = linkages[provider].symbols[pair.1]
-            if tls && provided.kind != 6 {
-              continue
-            }
+            // glibc matches the name/version before relocation-specific TLS
+            // handling. A wrong-type first match cannot be skipped in favor
+            // of a later, convenient definition.
             let version = versions[provider].get(provided.version_index)
             if desired is Some(required) &&
               !linkages[provider].has_versions &&
@@ -408,7 +409,8 @@ fn check_linkage(
       if selected is Some((provider, symbol_index)) &&
         (
           linkages[provider].symbols[symbol_index].binding == 10 ||
-          linkages[provider].symbols[symbol_index].visibility == 3
+          linkages[provider].symbols[symbol_index].visibility == 3 ||
+          tls != (linkages[provider].symbols[symbol_index].kind == 6)
         ) {
         unknown = true
       }
@@ -487,7 +489,7 @@ fn check_linkage(
           if size_mismatch {
             "COPY source and destination sizes differ. The loader may copy only the smaller size and continue; application data compatibility is not established."
           } else if unknown {
-            "This reference uses GNU_UNIQUE, protected/SYMBOLIC binding or a relocation combination outside the validated model."
+            "This reference uses GNU_UNIQUE, protected/SYMBOLIC binding, a TLS type mismatch or a relocation combination outside the validated model."
           } else if rejected_version_table is Some(_) {
             "glibc rejects this versioned lookup against the named provider because that provider has no VERSYM table."
           } else {

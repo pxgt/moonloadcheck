@@ -174,3 +174,19 @@ stalled at installation. CI now keeps the runner's signed official Ubuntu
 archive/security fallback mirrors, bounds acquisition retries/inactivity and
 limits the compiler-install step to six minutes. Pinned reference runtime
 versions/hashes and all project test expectations are unchanged.
+
+## 2026-11-06 Special bindings, GLIBCXX and resource boundaries
+
+- Reproduced and fixed a false pass when a TLS reference encounters an ordinary definition before a valid TLS definition. All four pinned architecture/runtime contexts bind the first provider and then fault. The analyzer now retains that provider and reports unknown for TLS type mismatches or mixed reference classes. Ordinary interposition/TLS still pass and a missing TLS definition still fails.
+- Added 32 real binding observations, including GNU_UNIQUE, protected and SYMBOLIC controls that retain explicit unknown. Deliberately inconsistent type fixtures are original project inputs, with timeouts and core dumps disabled; their binding traces establish provider selection independently of static analysis.
+- Added 12 real GLIBCXX probes using the already locked libstdc++ packages. Keeping consumers, loader and other runtime libraries unchanged, a library-only downgrade loses GLIBCXX_3.4.32. A version-node mutation still fails despite retaining 3.4.33 and the old name bytes. The unaffected consumer continues to run. Successful executions retain unvalidated C++ binding findings, so this is exact version evidence rather than a complete C++ ABI claim.
+- Added 68 non-executed parser inputs covering wide offsets, sizes, indices and actual production header/dynamic/relocation caps. A zero-file-size PT_LOAD exposed an unchecked UInt64 virtual-memory overflow; it now returns Malformed. Allowed counts parse and excess counts return ResourceLimit, including 500,000/500,001 relocation records without lowering the production cap.
+- Windows JS and pinned Linux native each pass 86 MoonBit tests and 112 new CLI checks; same-snapshot reports match exactly across hosts. Eight local native stress measurements stay below 0.98 seconds and 45,472 KiB peak RSS on these fixed inputs. CI also measures the JS backend. Strict checking, pinned generated interfaces/formatting, Python/Bash/YAML checks and preserved upstream hashes pass; public interfaces are unchanged.
+
+See [MATURITY_BOUNDARIES.md](MATURITY_BOUNDARIES.md) for commands, references and
+scope. The complete reference recipe now has 398 loader observations (354
+previous + 44 new), plus two self-host executions and seven filesystem cases.
+The 73-row map has 71 covered, one partial (C11 walkthrough) and one open (C09
+published consumer). Covered resource cases are finite regression evidence,
+not a universal memory/time bound. API/report review and the user walkthrough
+remain next; no Mooncakes release or contest submission occurred.

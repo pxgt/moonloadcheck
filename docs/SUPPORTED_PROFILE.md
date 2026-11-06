@@ -49,6 +49,12 @@ COPY source lookup is supported for one RELA reference at a main executable's or
 
 GNU_UNIQUE, protected/DT_SYMBOLIC combinations and COPY cases outside those conditions retain explicit unknown findings. Known symbol-free relative/TLS/IRELATIVE relocations require no external symbol lookup; unknown kinds stay unknown. Symbol existence does not validate relocation values, TLS layout or IFUNC execution. Architecture-specific reference behavior follows the fixed release's [x86-64](https://github.com/bminor/glibc/blob/glibc-2.35/sysdeps/x86_64/dl-machine.h) and [AArch64](https://github.com/bminor/glibc/blob/glibc-2.35/sysdeps/aarch64/dl-machine.h) loader references.
 
+TLS type mismatches preserve the first name/version match and remain unknown;
+they do not skip to a later matching-type definition. [Binding/runtime evidence](MATURITY_BOUNDARIES.md)
+includes actual TLS collisions, excluded bindings and precise GLIBCXX version
+failures. Successful real libstdc++ probes still retain unknown findings for
+their unvalidated bindings.
+
 CPU/kernel feature requirements, permissions/ACLs, runtime dlopen, application behavior and C/C++ type/layout ABI remain outside the result. AArch64 tests run under pinned QEMU with cross-toolchain files or the locked Ubuntu runtime files. The two corpus environments contain complete startup library sets for their test programs, not full operating-system images. They do not establish compatibility with arbitrary distribution images, later patched loaders or hardware.
 
 ## Results and bounds
@@ -57,4 +63,13 @@ pass_static / exit 0 means no problem in the declared checks; fail / 1 proves a 
 
 Limits include 128 MiB per ELF/blob, 256 MiB unique snapshot content, 4 MiB manifest, 20,000 namespace entries, 4,096 program headers, 65,536 dynamic entries, 2,048 loaded objects and 16,384 dependency/search steps. A cache is bounded to 16 MiB / 100,000 records. Dynamic tables are bounded to 100,000 symbols and 500,000 relocation records per object; a scope has a 200,000-symbol / 1,000,000-reference budget and a 1,000,000-step lookup budget. A dynamic string is bounded to 64 KiB, with 8 MiB of distinct string-offset data per object; repeated offsets share storage. Version-definition auxiliary traversal is bounded to 65,536 steps. Configured count/name limits return ResourceLimit separately from malformed file ranges. A comparison accepts 1..64 distinct explicit consumers. Limit failures cannot return pass_static.
 
-These are implementation caps, not completed stress acceptance. A process-level [resource baseline](COPY.md#resource-baseline-and-fault-injection) exercises four representative commands three times per backend, with 60-second/512-MiB regression ceilings. It does not establish behavior at every parser limit. CLI file reads happen before decoded-size checks; callers handling untrusted very large files should bound the read callback before allocation. CLI entry arguments use UTF-8; the API supports byte-valued paths. Text paths are JSON-quoted.
+Finite [range/count stress cases](MATURITY_BOUNDARIES.md) exercise actual header,
+dynamic-entry and relocation caps, including 500,000/500,001 references. Selected
+processes have checked 60-second/512-MiB ceilings. The separate
+[resource baseline](COPY.md#resource-baseline-and-fault-injection) repeats four
+representative commands three times per backend. Neither establishes a worst-case
+bound at every parser limit. CLI file reads happen before decoded-size checks;
+callers handling untrusted very large files should bound the read callback before
+allocation. Virtual-range arithmetic is validated, but kernel mapping feasibility
+is outside these checks. CLI entry arguments use UTF-8; the API supports byte-valued
+paths. Text paths are JSON-quoted.

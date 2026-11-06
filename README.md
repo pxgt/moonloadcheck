@@ -61,6 +61,9 @@ The ELF parser from moonbit-community/elf 0.0.1 is preserved as a hash-locked de
 ORIGIN contexts, all token spellings, literal semicolons in RPATH/RUNPATH,
 conditional cache records, and the distinction between empty and missing facts.
 
+[Binding and resource evidence](docs/MATURITY_BOUNDARIES.md) adds real TLS type
+collisions, GLIBCXX runtime version failures and production-count boundary tests.
+
 Windows JS development uses compiler 0.10.15. CI and Linux native use the isolated, hash-pinned archive containing moon 0.1.20261020 / compiler 0.10.16+b1a0e846e. It does not upgrade other projects' toolchains.
 
 ## License

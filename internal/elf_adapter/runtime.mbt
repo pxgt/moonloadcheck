@@ -145,6 +145,11 @@ fn read_frame(data : Bytes) -> Frame raise {
     for i = 0; i < segments.len(); i = i + 1 {
       let segment = segments.get(i)
       if segment.p_type == @elf.PT_LOAD {
+        guard segment.p_memsz <= 0xffffffffffffffffUL - segment.p_vaddr else {
+          raise @model.ElfError::Malformed(
+            "PT_LOAD virtual memory range overflows",
+          )
+        }
         guard segment.p_filesz <= segment.p_memsz else {
           raise @model.ElfError::Malformed(
             "PT_LOAD file size exceeds memory size",

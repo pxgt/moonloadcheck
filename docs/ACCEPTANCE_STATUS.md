@@ -15,7 +15,7 @@ record yet. Results are reproduced by the CI workflow; limits remain in
 | E04 | Covered | Runtime/linkage readers use sectionless fixtures on both architectures. |
 | E05 | Covered | GNU/SysV/both fixtures plus exact mapped table ends, final-symbol assertions, truncated final words and a missing GNU terminator. |
 | E06 | Covered | Dynamic/string truncation and [exact table ends][readelf] reject incomplete Verneed/Verdef/Versym records. Errors identify the relevant virtual address, file offset or string-table offset. |
-| E07 | Partial | Bad version offsets/symbol indices and [budgets][budgets]; exhaustive range/overflow and allocation stress remain. |
+| E07 | Covered | [68 range/count inputs](MATURITY_BOUNDARIES.md) include UInt64 virtual-range overflow, wide file/table offsets, indices and real header/dynamic/relocation cap boundaries. API/CLI classifications and bounded process measurements are checked; this is finite evidence, not an exhaustive worst-case proof. |
 | E08 | Covered | Input boundaries reject unterminated names and non-advancing/self-loop version chains on both architectures. |
 | E09 | Covered | [Raw symbol fixtures][edgecases] distinguish two byte names with identical lossy displays; loader outcome, lookup hex and saved reports agree. Path bytes remain separately tested. |
 | E10 | Covered | Readelf-verified ET_REL/ELF32/big-endian objects return Unsupported; non-ELF/truncated headers return Malformed. |
@@ -57,10 +57,10 @@ record yet. Results are reproduced by the CI workflow; limits remain in
 | S09 | Covered | LOCAL/INTERNAL/HIDDEN first candidates remain hash-visible but cannot satisfy the external reference; the selected second provider returns its distinct value. |
 | S10 | Covered | Weak/strong order, main interposition and COPY/ordinary provider separation. |
 | S11 | Covered | Eight hash-order/version fallback executions against the exact locked loaders. |
-| S12 | Partial | 38 COPY executions plus two GOT controls; GNU_UNIQUE, broader protected/SYMBOLIC/TLS combinations remain unknown. |
+| S12 | Covered | Existing COPY/GOT controls plus [32 special-binding executions](MATURITY_BOUNDARIES.md): ordinary TLS/interposition pass, missing TLS fails, GNU_UNIQUE/protected/SYMBOLIC remain unknown. Type-collision traces preserve the first provider and cannot pass by skipping it. |
 | S13 | Covered | Dedicated IFUNC definitions pass existence checks with both correct and wrong application results; resolver behavior remains outside the result. |
 | S14 | Covered | One unchanged lazy executable passes without calling, fails on first call or LD_BIND_NOW; static failure retains startup-or-first-call phase. |
-| S15 | Partial | Actual GLIBC_2.38 mismatch in hello/jq; focused GLIBCXX missing-version case remains. |
+| S15 | Covered | Actual GLIBC_2.38 failures plus [12 GLIBCXX runtime probes](MATURITY_BOUNDARIES.md) isolate a missing 3.4.32 requirement, retain an unaffected consumer, and reject an intermediate-node hole despite a higher node and surviving name bytes. Unvalidated C++ bindings remain unknown. |
 | D01 | Covered | [Impact tests][impact] identify removed used export. |
 | D02 | Covered | Stable U3 consumer passes after removal of an unused export. |
 | D03 | Covered | [Corpus downgrade][corpus] reports newly introduced version requirements with unchanged applications. |
@@ -83,10 +83,10 @@ record yet. Results are reproduced by the CI workflow; limits remain in
 | C11 | Partial | Clean CI reconstructs recipes; separate human-facing README walkthrough remains. |
 | C12 | Covered | All five planned faults trigger dedicated assertions after a passing control; two COPY faults remain separately checked. |
 
-Priorities after this increment: expand malformed-input/resource stress, profile
-field and token/path/cache cases, special bindings and a focused GLIBCXX case;
-review API/report freeze and the user walkthrough. C09 belongs to the authorized release stage and cannot be replaced by a
-source-workspace test. Completion of this map is not completion of all its rows.
+Priorities after this increment: review API/report freeze and complete the user
+walkthrough. C09 belongs to the authorized release stage and cannot be replaced
+by a source-workspace test. Covered rows retain their stated limits; completion
+of the evidence map is not completion of all its rows or official acceptance.
 
 [runtime]: ../internal/elf_adapter/runtime_test.mbt
 [reader]: ../internal/elf_adapter/linkage_test.mbt

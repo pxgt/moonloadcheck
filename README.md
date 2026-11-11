@@ -6,6 +6,12 @@ MoonLoadCheck is a MoonBit library and CLI for offline Linux binary deployment a
 
 The initial target is ELF64 little-endian x86-64 and AArch64. Analysis verifies snapshot content and never executes analyzed files or falls back to host libraries. Independent reference tests execute our own fixtures and hash-verified Ubuntu packages in disposable project-owned roots.
 
+**Checking your own application:** the [deployment onboarding guide](docs/INTEGRATION.md)
+provides readable target configuration, a capture-and-check command, CI exit
+handling, and an independent MoonBit native/FFI sensor-report application with
+failure/fix verification. These source-repository additions follow 0.1.0;
+they are not included in the immutable 0.1.0 registry archive.
+
 ## Build from a fresh checkout
 
 The reproducible quickstart uses **Ubuntu 22.04 x86-64**, including that WSL

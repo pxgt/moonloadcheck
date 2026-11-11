@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased
+
+- Add readable deployment configuration and a capture/check CI adapter that
+  preserves the MoonBit analyzer's pass/fail/inconclusive/input-error semantics.
+- Add an independent MoonBit native/FFI sensor-report application and
+  deployment verification for missing libraries, symbol versions and repairs.
+- Document project onboarding, output provenance, controlled target facts and
+  CI integration; correct an obsolete prepublication snapshot-schema note.
+
+These changes are source-repository additions. The 0.1.0 registry archive and
+tag are unchanged; no new registry version is implied.
+
 ## 0.1.0 — 2026-11-07
 
 - Offline Linux dependency selection, symbol/version availability and explicit

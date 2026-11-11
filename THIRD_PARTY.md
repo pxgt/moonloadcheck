@@ -21,3 +21,18 @@ The GLIBCXX negative control edits version-definition metadata in a local copy
 of a locked libstdc++ binary. That modified binary is also ignored and is never
 published by this workflow. The C ABI probes, metadata-editing recipes and
 analysis implementation are original project code; no GCC source is copied.
+
+## Independent application integration example
+
+`examples/sensor_report` is original Apache-2.0 MoonBit and C source, including
+its two ELF version maps. It has its own module and license, imports only
+MoonBit core packages and does not import MoonLoadCheck. It is an example, not
+an external adopter. `SENSOR_1.0`/`SENSOR_2.0` are our example library's versions.
+
+The integration verifier builds a separate temporary copy and stages its
+generated binaries with the existing locked Ubuntu runtime files. All such
+binaries, generated snapshots, reports and reduced execution roots stay under
+ignored `fixtures/generated`, `artifacts` or `_build` directories. The reduced
+roots are test inputs, not redistribution bundles. No runtime binary is added
+to source, a release asset or a CI upload. Any later redistribution needs its
+own source/notice/license review as described above.

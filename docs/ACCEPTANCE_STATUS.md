@@ -88,6 +88,20 @@ All 73 internal rows are now Covered under their stated setup, including the
 Covered rows retain their finite evidence and support limits. This is the
 project's quality map, not official contest acceptance or universal correctness.
 
+## Post-0.1.0 project onboarding
+
+The [independent native/FFI application workflow](INTEGRATION.md) adds 26
+deployment-gate checks, five actual x86-64 application/loader cases across
+locked Jammy/Noble roots, four before/after comparisons and two saved-finding
+explanations. The application has two business-input/FFI test groups and is
+built outside the analyzer's module without importing it. Both analysis
+backends agree; the application digest is unchanged between failure and repair.
+The verifier also observes a business-input failure after a static pass.
+
+These are additional integration checks, not extra rows retroactively counted
+in the original 73-case matrix. They do not claim AArch64 application execution,
+unrestricted target profiles, external adoption or official acceptance.
+
 [runtime]: ../internal/elf_adapter/runtime_test.mbt
 [reader]: ../internal/elf_adapter/linkage_test.mbt
 [malformed]: ../internal/elf_adapter/linkage_wbtest.mbt

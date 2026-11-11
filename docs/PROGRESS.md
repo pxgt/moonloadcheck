@@ -271,3 +271,29 @@ increment. Formal contest-rule questions remain in the planning workspace.
 See [RELEASE_0.1.0.md](RELEASE_0.1.0.md). C09 is now Covered and all 73 internal
 quality rows have evidence under their declared limits. This does not establish
 official contest acceptance. No registration or organizer message was sent.
+
+## 2026-11-11 Independent project onboarding
+
+- Added a readable UTF-8 deployment configuration and capture/check adapter.
+  Relative roots resolve against the configuration file; target facts remain
+  explicit, and all compatibility decisions stay in the MoonBit CLI. Unknown
+  fields, missing facts, duplicate keys, inconsistent analyzer output and
+  reused output directories cannot silently pass a CI gate.
+- Added an original temperature-summary application in its own MoonBit module.
+  It imports core packages only and calls our separately versioned C
+  calibration library. The verifier copies its source outside the repository,
+  builds/tests it there and checks the generated interface and formatting.
+  This is an independent example, not a claim of third-party adoption.
+- The same executable is checked and actually run in good, missing-library,
+  legacy-library, restored-library and Noble deployments. Both CLI backends
+  agree with the five loader outcomes (0, 127, 1, 0, 0), including the precise
+  SENSOR_2.0 requirement. The normal application returns three samples with
+  minimum 19750, maximum 24750 and mean 22250 milli-Celsius.
+- Added 26 gate checks including inconclusive/input-error and configuration
+  cases, four introduced/resolved comparisons, two saved-report explanations
+  and an application-input error after a static pass. Integrated the verifier
+  into CI and documented the reusable workflow in INTEGRATION.md.
+- Original application/C sources and their license are distributed; compiled
+  inputs, runtime roots and snapshots remain ignored. The locked ELF vendor
+  files and public analyzer APIs are unchanged. These are unreleased source
+  additions; the 0.1.0 package and tag retain their published contents.

@@ -1,0 +1,1 @@
+SENSOR_1.0 { global: sensor_calibrate; local: *; };

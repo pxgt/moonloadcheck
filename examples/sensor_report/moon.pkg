@@ -1,0 +1,14 @@
+import {
+  "moonbitlang/core/env",
+  "moonbitlang/core/string",
+}
+
+pkgtype(kind: "executable")
+
+options(
+  link: {
+    "native": {
+      "cc-link-flags": "-L_build/ffi -lsensorcal -Wl,-rpath,$ORIGIN/../lib",
+    },
+  },
+)

@@ -71,8 +71,9 @@ jobs:
           python3 tools/corpus/verify_maturity.py --js _build/js/debug/build/cmd/main/main.js --native _build/native/debug/build/cmd/main/main.exe --measure
           python3 tools/verify_acceptance_mutations.py
           python3 tools/verify_consumer.py --target js,native
-      - name: Verify independent native FFI deployment onboarding
+      - name: Verify target identities and independent x86-64/AArch64 FFI deployments
         run: |
+          python3 tools/verify_targets.py
           python3 tools/verify_deployment.py --native _build/native/debug/build/cmd/main/main.exe --js _build/js/debug/build/cmd/main/main.js
       - name: Verify public interfaces and first-party formatting
         run: |

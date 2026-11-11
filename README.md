@@ -9,7 +9,9 @@ The initial target is ELF64 little-endian x86-64 and AArch64. Analysis verifies 
 **Checking your own application:** the [deployment onboarding guide](docs/INTEGRATION.md)
 provides readable target configuration, a capture-and-check command, CI exit
 handling, and an independent MoonBit native/FFI sensor-report application with
-failure/fix verification. These source-repository additions follow 0.1.0;
+failure/fix verification across four fixed Jammy/Noble target identities.
+The application executes natively on x86-64 and under pinned QEMU on AArch64.
+These source-repository additions follow 0.1.0;
 they are not included in the immutable 0.1.0 registry archive.
 
 ## Build from a fresh checkout

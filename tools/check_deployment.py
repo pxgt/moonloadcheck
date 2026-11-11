@@ -16,6 +16,7 @@ from capture_snapshot import capture
 
 STATUSES = {0: "pass_static", 1: "fail", 2: "inconclusive", 3: "input_error"}
 MAX_JSON = 4 * 1024 * 1024
+TARGET_CATALOG = Path(__file__).resolve().with_name("targets.json")
 
 
 def unique_object(pairs):
@@ -87,7 +88,9 @@ def convert_profile(value):
 
 def load_config(path):
     config = read_json(path)
-    fields(config, ["schema_version", "root", "entries", "scope", "profile"])
+    fields(config, ["schema_version", "root", "entries", "scope"], ["profile", "target"])
+    if ("profile" in config) == ("target" in config):
+        raise ValueError("supply exactly one of profile or target")
     if type(config["schema_version"]) is not int or config["schema_version"] != 1:
         raise ValueError("configuration schema_version must be 1")
     root = (path.parent / string(config["root"], "root")).resolve(strict=True)
@@ -100,7 +103,27 @@ def load_config(path):
         string(entry, "entry", absolute=True)
     if config["scope"] not in ["dependencies", "compatibility"]:
         raise ValueError("scope must be dependencies or compatibility")
-    return config, root, entries, convert_profile(config["profile"])
+    profile = expand_target(config["target"]) if "target" in config else config["profile"]
+    return config, root, entries, convert_profile(profile)
+
+
+def expand_target(target):
+    # Select a reviewed identity explicitly, never infer one from the host or
+    # from the staged loader. Search/environment facts remain caller supplied.
+    required = ["id", "cwd", "default_dirs", "library_path", "cache_mode", "hwcaps_policy",
+                "secure_execution", "preload", "audit"]
+    fields(target, required, ["lib_token", "platform_token"], "target")
+    name = string(target["id"], "target.id")
+    catalog = read_json(TARGET_CATALOG)
+    fields(catalog, ["schema_version", "corpus_lock_sha256", "targets"], label="target catalog")
+    if type(catalog["schema_version"]) is not int or catalog["schema_version"] != 1 or not isinstance(catalog["targets"], dict):
+        raise ValueError("invalid target catalog schema")
+    if name not in catalog["targets"]:
+        raise ValueError("unknown target identity: " + name)
+    fields(catalog["targets"][name], ["suite", "architecture", "package", "identity"], label="target catalog entry")
+    identity = catalog["targets"][name]["identity"]
+    fields(identity, ["rule_revision", "loader_family", "machine", "loader_path", "loader_sha256"], label="target identity")
+    return dict(identity, **{key: value for key, value in target.items() if key != "id"})
 
 
 def write_json(path, value):
@@ -120,6 +143,8 @@ def run(config_path, out, command):
     out.mkdir(parents=True, exist_ok=False)
     summary = dict(schema_version=1, kind="deployment_check", status="input_error", exit_code=3,
                    scope=config["scope"], reports=[], output=str(out))
+    if "target" in config:
+        summary["target_id"] = config["target"]["id"]
     try:
         write_json(out / "profile.json", profile)
         capture(root, profile, out / "snapshot")

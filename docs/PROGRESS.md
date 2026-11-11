@@ -297,3 +297,34 @@ official contest acceptance. No registration or organizer message was sent.
   inputs, runtime roots and snapshots remain ignored. The locked ELF vendor
   files and public analyzer APIs are unchanged. These are unreleased source
   additions; the 0.1.0 package and tag retain their published contents.
+
+## 2026-11-11 Target identities and AArch64 application execution
+
+- Added four explicit target identity presets for the locked Jammy/Noble
+  x86-64/AArch64 loaders. Catalog entries bind package provenance, ELF machine,
+  rule revision and loader digest; CI verifies them against the corpus lock
+  and extracted files. Search/environment facts are still explicit. Unknown
+  presets, missing facts, identity overrides, ambiguous configurations and
+  actual loader mismatches fail closed; raw-profile support is preserved.
+- The independent sensor application now cross-builds with the existing pinned
+  Moon toolchain and `MOON_CC=aarch64-linux-gnu-gcc`, including its runtime C
+  and our versioned calibration library. Separate temporary modules prevent
+  mixing architecture outputs. ELF machine values are checked as 62 and 183.
+- Executed both builds against both locked runtime sets, with good, missing,
+  old-version, restored and wrong-architecture library cases. All 20 outcomes
+  agree with native/JS analysis; each group has static exits 0/1/1/0/1 and real
+  loader exits 0/127/1/0/127. Program identity is constant within each
+  architecture, including across the two runtime suites.
+- The expanded verifier passes 77 gates, 16 diffs, eight explanations and eight
+  preset/raw equivalence checks (included in the gates), plus 16 application
+  business executions. These replace the earlier integration totals; they
+  are not added again to the original 73-row internal acceptance map.
+- AArch64 instructions run under QEMU 6.2.0 from the existing hash-locked
+  Ubuntu package, with real target loaders in chroots. This is not physical
+  ARM hardware, an ARM kernel or device validation. The result records compiler
+  targets/versions, program and loader digests, catalog digest and QEMU digest.
+  Analysis itself remains on the x86-64 host using native and JS CLIs.
+- No analyzer API or vendored source was changed. The new public payload is
+  original code, metadata, recipes and documentation. Generated application,
+  QEMU/runtime binaries and snapshots stay ignored; no CI artifact upload was
+  added. These remain unreleased source additions after immutable 0.1.0.

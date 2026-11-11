@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Add four explicit Jammy/Noble x86-64/AArch64 target identities, verified
+  against locked runtime sources; retain caller-supplied environment facts.
+- Cross-build and actually execute the independent MoonBit native/FFI app on
+  AArch64 under pinned QEMU, alongside x86-64, with missing/version/architecture
+  failures, repairs, report comparisons and business-output checks.
+
 - Add readable deployment configuration and a capture/check CI adapter that
   preserves the MoonBit analyzer's pass/fail/inconclusive/input-error semantics.
 - Add an independent MoonBit native/FFI sensor-report application and

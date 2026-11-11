@@ -64,6 +64,55 @@ or `compatibility`. At most 128 distinct absolute entry paths are accepted.
 Configuration and individual JSON reports are limited to 4 MiB by this adapter;
 larger reports can be produced and consumed through the CLI directly.
 
+## Select a verified target identity
+
+Instead of `profile`, you can supply `target`. Exactly one is required. The
+catalog fixes the loader's identity; search and environment facts still have
+to be supplied explicitly:
+
+```json
+{
+  "schema_version": 1,
+  "root": "./stage",
+  "entries": ["/opt/sensor-report/bin/sensor-report"],
+  "scope": "compatibility",
+  "target": {
+    "id": "ubuntu-jammy-arm64",
+    "cwd": "/",
+    "default_dirs": [],
+    "library_path": ["/runtime"],
+    "cache_mode": "disabled",
+    "hwcaps_policy": "none",
+    "secure_execution": false,
+    "preload": [],
+    "audit": []
+  }
+}
+```
+
+| Target ID | Architecture | Exact Ubuntu libc6 package |
+| --- | --- | --- |
+| `ubuntu-jammy-amd64` | x86-64 | 2.35-0ubuntu3 |
+| `ubuntu-jammy-arm64` | AArch64 | 2.35-0ubuntu3 |
+| `ubuntu-noble-amd64` | x86-64 | 2.39-0ubuntu8 |
+| `ubuntu-noble-arm64` | AArch64 | 2.39-0ubuntu8 |
+
+These are historical regression identities, not recommended OS versions or
+aliases for all patched Jammy/Noble systems. [targets.json](../tools/targets.json)
+records the exact package hash, loader hash/path, ELF machine and rule revision;
+the [corpus lock](../tools/corpus/ubuntu.lock.json) supplies source/download
+provenance. After extracting the locked roots, `python3 tools/verify_targets.py`
+checks the catalog against the lock and actual loaders. `--write` is only for
+an intentional, reviewed catalog update, never routine CI verification.
+
+The helper does not detect the host or learn an expected digest from the staged
+loader. A preset cannot override its identity fields. Unknown IDs, omitted
+facts or simultaneous `profile`/`target` are input errors. Selecting the wrong
+fixed loader also fails instead of silently changing the profile. Use raw
+`profile` for other explicitly established facts; unsupported rules remain
+inconclusive. A known loader identity does not certify the rest of a root, its
+runtime libraries, CPU, kernel or loader environment.
+
 ## Capture and check
 
 ```sh
@@ -83,7 +132,8 @@ never overwrites an earlier run. It prints a JSON summary and writes:
 - `snapshot/`: captured inputs, for private local analysis;
 - `report-000.json`, etc.: unchanged MoonBit reports, in entry order;
 - `report-000.stderr`, etc.: analyzer diagnostics;
-- `summary.json`: each entry's result and the aggregate CI verdict.
+- `summary.json`: each entry's result and the aggregate CI verdict, plus
+  `target_id` when a preset is selected.
 
 Configuration failures before creating the output directory only print the
 error summary. Capture/process/protocol errors after creation also leave an
@@ -135,6 +185,7 @@ From a checkout with the README prerequisites and pinned compiler in PATH:
 ```sh
 python3 tools/oracle/bootstrap_reference.py
 python3 tools/corpus/build_roots.py
+python3 tools/verify_targets.py
 moon build --target native,js
 python3 tools/verify_deployment.py \
   --native _build/native/debug/build/cmd/main/main.exe \
@@ -147,18 +198,31 @@ helper itself does not require privilege. Downloaded files are pinned by the
 existing Ubuntu corpus lock, extracted only to ignored directories, and are not
 included in the repository or Mooncakes package.
 
-The verifier records its run directory in `artifacts/deployment/result.json`.
-That directory contains readable configs and reports for `good`,
-`missing-library`, `old-library`, `fixed`, and `noble`. The executable digest
-stays identical. Its real `SENSOR_2.0` requirement fails against `SENSOR_1.0`;
-restoring the current library fixes it. Both CLI backends must agree with actual
-loader outcomes and application output. `diff` records introduced/resolved
-failures; `explain` reproduces the saved version finding. Additional checks cover
-unknown target profiles, loader digest mismatch, mixed entry errors, invalid
-configuration and output-directory reuse. A valid deployment with invalid
-business input still exits 2 from the application, illustrating the static
-check's boundary.
+The verifier builds separate x86-64 and AArch64 copies, including each target's
+MoonBit runtime and original C library. It records compiler targets/versions,
+ELF machine values, program/loader/catalog hashes and QEMU identity in
+`artifacts/deployment/result.json`. The run directory holds configs and reports
+under `<architecture>/<suite>/<case>`.
 
-Only x86-64 native application execution is claimed here. Existing AArch64
-analyzer corpus coverage is separate; AArch64 execution of this application is
-future work.
+Each architecture runs against both fixed Jammy and Noble runtime sets. Each
+combination exercises `good`, `missing-library`, `old-library`, `fixed` and
+`wrong-architecture`: 20 actual loader/application cases. Within an architecture
+the executable digest stays identical. Its real `SENSOR_2.0` requirement fails
+against `SENSOR_1.0`; restoring the current library fixes it. A library built
+for the other architecture is rejected. Both analysis backends agree with
+actual loading outcomes and the successful application's exact JSON values.
+
+The complete verifier covers 77 deployment gates, 16 before/after comparisons,
+eight saved-finding explanations and eight preset/raw-profile equivalence
+checks (included in the gates). Sixteen separately executed business checks
+cover malformed/out-of-range input and boundary/1000-reading batches on all
+four targets. These distinguish application rejection from deployment failure.
+Negative configuration checks retain unknown profiles, digest mismatch, mixed
+entry errors, invalid/ambiguous preset selection and output-directory reuse.
+
+x86-64 applications execute natively; **AArch64 applications actually execute
+under the pinned QEMU user-mode emulator** with the target's real loader and
+libraries in a controlled chroot. This is not physical ARM hardware or a full
+ARM kernel/OS test. The analyzer CLI itself still runs on the x86-64 host
+(native and JS). CPU features, kernel behavior, runtime `dlopen`, device I/O
+and general C ABI layout remain outside the static claim.

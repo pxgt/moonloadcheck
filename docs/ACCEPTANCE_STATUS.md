@@ -90,17 +90,21 @@ project's quality map, not official contest acceptance or universal correctness.
 
 ## Post-0.1.0 project onboarding
 
-The [independent native/FFI application workflow](INTEGRATION.md) adds 26
-deployment-gate checks, five actual x86-64 application/loader cases across
-locked Jammy/Noble roots, four before/after comparisons and two saved-finding
-explanations. The application has two business-input/FFI test groups and is
-built outside the analyzer's module without importing it. Both analysis
-backends agree; the application digest is unchanged between failure and repair.
-The verifier also observes a business-input failure after a static pass.
+The [independent native/FFI application workflow](INTEGRATION.md) now checks
+four explicit target identities: locked Jammy/Noble on x86-64/AArch64. It runs
+77 deployment gates, 20 actual application/loader cases, 16 before/after
+comparisons and eight saved-finding explanations. Eight preset/raw-profile
+comparisons are included in the gates. The app is built in separate external
+modules per architecture without importing MoonLoadCheck. Both analysis
+backends agree; each architecture's executable digest is unchanged between
+failure and repair. Two host MoonBit test groups and 16 business executions
+cover FFI output, input rejection and boundaries. AArch64 application execution
+uses pinned QEMU user-mode with real target loaders/libraries, not physical ARM
+hardware. Wrong-architecture libraries and wrong target identities are rejected.
 
 These are additional integration checks, not extra rows retroactively counted
-in the original 73-case matrix. They do not claim AArch64 application execution,
-unrestricted target profiles, external adoption or official acceptance.
+in the original 73-case matrix. They do not claim unrestricted target profiles,
+physical ARM/kernel validation, external adoption or official acceptance.
 
 [runtime]: ../internal/elf_adapter/runtime_test.mbt
 [reader]: ../internal/elf_adapter/linkage_test.mbt

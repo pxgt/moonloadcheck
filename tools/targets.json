@@ -1,0 +1,70 @@
+{
+  "corpus_lock_sha256": "0bc2b1ee75f8ec7506e77c81180b2b165a4020f2f72b43dd8a4179a9bb846736",
+  "schema_version": 1,
+  "targets": {
+    "ubuntu-jammy-amd64": {
+      "architecture": "amd64",
+      "identity": {
+        "loader_family": "glibc",
+        "loader_path": "/lib64/ld-linux-x86-64.so.2",
+        "loader_sha256": "b30a5d834a1c820db8eda3a6bafbc5d1b0e51d29de47579ada264f69c18003dd",
+        "machine": 62,
+        "rule_revision": "glibc-2.35-controlled-v2"
+      },
+      "package": {
+        "name": "libc6",
+        "sha256": "ea9a27e0ebdd0cfc9c750d94f8074f3a35d1f97dcc77ae04c370fb498a6b6db2",
+        "version": "2.35-0ubuntu3"
+      },
+      "suite": "jammy"
+    },
+    "ubuntu-jammy-arm64": {
+      "architecture": "arm64",
+      "identity": {
+        "loader_family": "glibc",
+        "loader_path": "/lib/ld-linux-aarch64.so.1",
+        "loader_sha256": "68a35077a50da30312b60706db5ba027c892c3be4cf42f3fd167ac241e8c01a9",
+        "machine": 183,
+        "rule_revision": "glibc-2.35-controlled-v2"
+      },
+      "package": {
+        "name": "libc6",
+        "sha256": "b1206b51690a810efc701e1d311e0ac5fd9a9f0f8e216585362512d805d261af",
+        "version": "2.35-0ubuntu3"
+      },
+      "suite": "jammy"
+    },
+    "ubuntu-noble-amd64": {
+      "architecture": "amd64",
+      "identity": {
+        "loader_family": "glibc",
+        "loader_path": "/lib64/ld-linux-x86-64.so.2",
+        "loader_sha256": "1d7133d7b9f94465978b2ae8d21ca3751c8dfaaecaa2d462aeaf1ec50e5c3a90",
+        "machine": 62,
+        "rule_revision": "ubuntu-noble-2.39-0ubuntu8-v1"
+      },
+      "package": {
+        "name": "libc6",
+        "sha256": "af36c7ac770770fe3d3c10e85d6bc538e76e57570ba7db7d397fb9f654783ef3",
+        "version": "2.39-0ubuntu8"
+      },
+      "suite": "noble"
+    },
+    "ubuntu-noble-arm64": {
+      "architecture": "arm64",
+      "identity": {
+        "loader_family": "glibc",
+        "loader_path": "/lib/ld-linux-aarch64.so.1",
+        "loader_sha256": "bd29514c1b45cc29b152011dd7c504e00dce240c19e4dd120196053873af9180",
+        "machine": 183,
+        "rule_revision": "ubuntu-noble-2.39-0ubuntu8-v1"
+      },
+      "package": {
+        "name": "libc6",
+        "sha256": "04d7cb73e608b41713b63ef915577f7f5d75e95b1b33174e82e05687fdb6cfaf",
+        "version": "2.39-0ubuntu8"
+      },
+      "suite": "noble"
+    }
+  }
+}

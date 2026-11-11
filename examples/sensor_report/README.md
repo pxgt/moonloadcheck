@@ -37,6 +37,30 @@ has calibrated minimum and maximum 100250. Business-input rejection is distinct
 from a deployment incompatibility: a static pass does not validate application
 inputs or behavior.
 
+## Cross-build and execute AArch64
+
+Use a separate copy of this module for each architecture. Install the documented
+`gcc-aarch64-linux-gnu` prerequisites, then run in the ARM copy:
+
+```sh
+python3 build.py --arch arm64
+```
+
+The build script selects `aarch64-linux-gnu-gcc` through `MOON_CC`. The pinned
+Moon toolchain generates C and recompiles its runtime for that compiler, along
+with the app's C shared library. `_build/build.json` records the compiler target
+and version; the verifier checks ELF machine 183. `--arch amd64` is the default.
+Both modes use the same output paths, so keep architecture builds separate.
+
+The AArch64 executable requires an ARM loader and libraries. Do not run it as
+a host x86-64 executable or link it against host libraries. From the parent
+repository, follow [the integration reproduction commands](../../docs/INTEGRATION.md#reproduce-the-independent-nativeffi-application)
+to execute both builds against the locked target runtimes. The verifier uses
+pinned QEMU user-mode plus chroot for AArch64, and native execution for x86-64.
+It runs actual application instructions and checks JSON output, input errors,
+boundary values and 1000-reading batches on both Jammy and Noble.
+This is not physical ARM hardware or kernel/device validation.
+
 ## Deployment layout
 
 ```text
@@ -52,6 +76,7 @@ our own sources. They are not versions of any third-party API.
 The [integration verifier](../../tools/verify_deployment.py) builds a copy of
 this module in a separate temporary directory, deploys the same executable to
 locked Jammy/Noble runtime roots, and compares MoonLoadCheck with actual loader
-executions. It demonstrates a good deployment, omitted library, older library,
-and restored library. See [project onboarding](../../docs/INTEGRATION.md) for
+executions on x86-64 and AArch64. It demonstrates a good deployment, omitted
+library, older library, restored library and a library for the wrong architecture.
+See [project onboarding](../../docs/INTEGRATION.md) for
 the reusable workflow, configuration and report locations.

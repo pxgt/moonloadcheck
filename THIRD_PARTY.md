@@ -36,3 +36,12 @@ ignored `fixtures/generated`, `artifacts` or `_build` directories. The reduced
 roots are test inputs, not redistribution bundles. No runtime binary is added
 to source, a release asset or a CI upload. Any later redistribution needs its
 own source/notice/license review as described above.
+
+Cross-builds use the existing pinned MoonBit toolchain's runtime C sources as
+local compiler inputs; they are not copied into this repository. AArch64
+reference execution uses the hash-pinned QEMU package from
+`tools/oracle/bootstrap_reference.py`. The verifier temporarily installs QEMU
+only in ignored execution roots, after snapshot capture, and removes it even
+when execution fails. `tools/targets.json` contains original catalog metadata
+(package and loader identities), not binary payloads or an OS distribution.
+This stage adds no third-party copied source or binary distribution.

@@ -17,6 +17,10 @@ moon build --target native,js
 
 ## Describe the target
 
+For read-only readiness checks, multiple targets and the additional pinned
+amd64 Jammy update, see [preflight and matrices](DEPLOYMENT_MATRIX.md).
+Those features are current source additions after published 0.2.0.
+
 Capture a quiescent staged root containing the application, its loader and
 runtime libraries. Relative `root` paths resolve against the configuration
 file's directory, not the shell's working directory. This UTF-8 configuration

@@ -19,6 +19,11 @@ they are not included in the immutable 0.1.0 registry archive. See the
 shows how to turn saved check/diff JSON into an offline, script-free page or a
 concise CI summary. Both retain the recorded verdict and uncertainty.
 
+**New in source (0.3.0-dev):** [target preflight and deployment matrices](docs/DEPLOYMENT_MATRIX.md)
+check missing environment facts, combine multiple targets/applications into one
+offline report, and demonstrate an external zstd source-build integration with
+an additional pinned Jammy runtime. These additions are not in published 0.2.0.
+
 ## Build from a fresh checkout
 
 The reproducible quickstart uses **Ubuntu 22.04 x86-64**, including that WSL

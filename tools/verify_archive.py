@@ -163,6 +163,16 @@ def verify_cli(extracted, consumer, backend, version, output):
         page = invoke(label + "-html", ["report", "--input", source, "--format", "html"], 1, html_page=True)
         expected = [after] if label == "saved-check" else [r for e in diff["entries"] for r in [e["before"], e["after"]]]
         assert Page(page).evidence == expected
+    # New source candidates exercise the matrix command too. Immutable 0.2.0
+    # registry CLI verification keeps its original command surface.
+    if (extracted / "internal/presentation/matrix.mbt").is_file():
+        source = consumer / "matrix.json"
+        source.write_text(json.dumps(dict(schema_version=1, kind="deployment_matrix", targets=[
+            dict(id="candidate", config_sha256="a" * 64, entries=["/opt/demo/app"], reports=[after])])), encoding="utf-8")
+        brief = invoke("matrix-summary", ["matrix-report", "--input", source, "--format", "summary"], 1)
+        assert brief["check_count"] == 1 and brief["status"] == "fail"
+        page = invoke("matrix-html", ["matrix-report", "--input", source, "--format", "html"], 1, html_page=True)
+        assert Page(page).evidence == [after]
     return checks
 
 

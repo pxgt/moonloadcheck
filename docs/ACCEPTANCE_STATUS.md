@@ -147,3 +147,28 @@ contest acceptance. Rendered files and snapshots remain local.
 [limits]: ../analysis/limits_test.mbt
 [readelf]: ../internal/elf_adapter/readelf_test.mbt
 [edgecases]: ../analysis/linkage_edges_test.mbt
+
+
+## Unreleased pre-acceptance expansion (0.3.0-dev)
+
+[Preflight and deployment matrices](DEPLOYMENT_MATRIX.md) add dependency-only
+readiness checks, missing-fact guidance and multiple applications/targets. MoonBit
+validates saved checks and derives the matrix verdict; Python performs bounded
+configuration and capture orchestration. Local verification covers 33 workflow
+and rendering checks across both backends, including malformed evidence and HTML
+escaping. The original acceptance table remains an inventory, not a test count.
+Ten additional Windows JS render checks pass, with external matrix summary and
+HTML text equal to Linux output. Browser inspection covers navigation, expansion
+and hostile text; these local observations do not imply exhaustive UI testing.
+
+The additional exact Jammy amd64 runtime and external zstd 1.5.7/1.4.8 source
+builds pass 24 analyzer checks, 12 independent loader listings, 12 application
+probes and six compression roundtrips. The older library satisfies the modeled
+symbol checks, but the application rejects its version. This measured boundary
+is retained explicitly; a static pass does not certify application behavior.
+
+Only recipes, source and locked metadata are distributed. Local runtime roots,
+upstream source archives, generated binaries and snapshots remain ignored. The
+actual candidate package passes four API consumer tests/backend and 26 CLI checks.
+These additions have not been published; registry evidence above remains for
+0.2.0. This engineering validation is not organizer acceptance.

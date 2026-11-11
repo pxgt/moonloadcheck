@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "zstd": {
+    "url": "https://codeload.github.com/facebook/zstd/tar.gz/refs/tags/v1.5.7",
+    "size": 2451884,
+    "sha256": "37d7284556b20954e56e1ca85b80226768902e2edabd3b649e9e72c0c9012ee3",
+    "project": "facebook/zstd",
+    "version": "1.5.7",
+    "license": "BSD-3-Clause OR GPL-2.0-only",
+    "copyright": "Meta Platforms, Inc. and affiliates",
+    "source_reference": "https://github.com/facebook/zstd/tree/v1.5.7",
+    "distribution": "Recipe only; complete downloaded source and notices stay ignored"
+  },
+  "libc6": {
+    "url": "https://archive.ubuntu.com/ubuntu/pool/main/g/glibc/libc6_2.35-0ubuntu3.15_amd64.deb",
+    "size": 3234380,
+    "sha256": "79e35256227e16a607c154cdeb8d76ff12d20e31de286ea7fd9ad3b96fe0452d",
+    "project": "GNU glibc / Ubuntu libc6",
+    "version": "2.35-0ubuntu3.15",
+    "architecture": "amd64",
+    "source_package": "glibc",
+    "license": "Package-supplied copyright is authoritative; primarily LGPL-2.1-or-later",
+    "distribution": "Local/CI input only; no binary redistribution"
+  },
+  "zstd_legacy": {
+    "url": "https://codeload.github.com/facebook/zstd/tar.gz/refs/tags/v1.4.8",
+    "size": 1816546,
+    "sha256": "f176f0626cb797022fbf257c3c644d71c1c747bb74c32201f9203654da35e9fa",
+    "project": "facebook/zstd",
+    "version": "1.4.8",
+    "license": "BSD-3-Clause OR GPL-2.0-only",
+    "copyright": "Facebook, Inc.",
+    "distribution": "Local/CI source build only; full source and notices retained locally"
+  }
+}

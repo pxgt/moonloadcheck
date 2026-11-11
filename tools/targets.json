@@ -2,6 +2,23 @@
   "corpus_lock_sha256": "0bc2b1ee75f8ec7506e77c81180b2b165a4020f2f72b43dd8a4179a9bb846736",
   "schema_version": 1,
   "targets": {
+    "ubuntu-jammy-2.35-0ubuntu3.15-amd64": {
+      "architecture": "amd64",
+      "identity": {
+        "loader_family": "glibc",
+        "loader_path": "/lib64/ld-linux-x86-64.so.2",
+        "loader_sha256": "41daf7836f7fce21a40ca63a00c5caf21b05a35a76ccc075d86f1716212cdf01",
+        "machine": 62,
+        "rule_revision": "glibc-2.35-controlled-v2"
+      },
+      "package": {
+        "name": "libc6",
+        "sha256": "79e35256227e16a607c154cdeb8d76ff12d20e31de286ea7fd9ad3b96fe0452d",
+        "source_lock_sha256": "5f6a65445a1142fa9eb84b6d34ea1149522c350f6ed773b24ff6b97c213c93e8",
+        "version": "2.35-0ubuntu3.15"
+      },
+      "suite": "jammy-updated"
+    },
     "ubuntu-jammy-amd64": {
       "architecture": "amd64",
       "identity": {

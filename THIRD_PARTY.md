@@ -60,3 +60,16 @@ are original project source. No browser framework, font, icon set or external
 web asset is copied or loaded. Rendered pages contain report metadata and
 decoded JSON, not ELF blobs or runtime snapshots. Generated pages and browser
 validation outputs remain in ignored `artifacts/`; no upload step is added.
+
+## External source-build integration
+
+`tools/external.lock.json` pins unmodified facebook/zstd 1.5.7 and 1.4.8 source
+archives and the additional Ubuntu libc6 2.35-0ubuntu3.15 amd64 package. zstd
+offers BSD-3-Clause/GPL-2.0 alternatives; attribution is to Meta Platforms, Inc.
+and affiliates in 1.5.7, and Facebook, Inc. in 1.4.8. Full downloaded source,
+LICENSE/COPYING and package-supplied copyright remain in ignored local trees.
+Only our original recipe and provenance metadata are distributed; no upstream
+source, patched library, built program or runtime root is added to Git/Mooncakes.
+The example's ordinary program-level version guard is observed, not patched out.
+Any future distribution of these local outputs requires its own component and
+corresponding-source review under the actual chosen licenses.

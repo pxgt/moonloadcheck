@@ -35,6 +35,16 @@ def catalog():
             identity=dict(rule_revision="glibc-2.35-controlled-v2" if suite == "jammy" else "ubuntu-noble-2.39-0ubuntu8-v1",
                 loader_family="glibc", machine=machine, loader_path=interpreter,
                 loader_sha256=hashlib.sha256(data).hexdigest()))
+    extra_lock = ROOT / "tools/external.lock.json"
+    extra = json.loads(extra_lock.read_text())["libc6"]
+    updated_loader = target_file(ROOT / ".tools/expansion/libc6-root", ARCHES["amd64"][1]).read_bytes()
+    assert updated_loader[:6] == b"\x7fELF\x02\x01" and int.from_bytes(updated_loader[18:20], "little") == 62
+    targets["ubuntu-jammy-2.35-0ubuntu3.15-amd64"] = dict(
+        suite="jammy-updated", architecture="amd64",
+        package=dict(name="libc6", version=extra["version"], sha256=extra["sha256"],
+                     source_lock_sha256=hashlib.sha256(extra_lock.read_bytes()).hexdigest()),
+        identity=dict(rule_revision="glibc-2.35-controlled-v2", loader_family="glibc", machine=62,
+                      loader_path=ARCHES["amd64"][1], loader_sha256=hashlib.sha256(updated_loader).hexdigest()))
     return dict(schema_version=1, corpus_lock_sha256=hashlib.sha256(LOCK.read_bytes()).hexdigest(), targets=targets)
 
 
@@ -42,6 +52,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--write", action="store_true")
     args = parser.parse_args()
+    from external_example import prepare_runtime
+    prepare_runtime()
     expected = catalog()
     if args.write:
         CATALOG.write_text(json.dumps(expected, indent=2, sort_keys=True) + "\n", encoding="utf-8")

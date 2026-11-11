@@ -39,6 +39,9 @@ The verifier checks:
   cases per backend: pass, symbol failure, dependency-only pass, selective diff,
   offline explain, help, argument error, and check/diff HTML and summary output.
   Dual-backend reports must agree.
+  Candidates containing the new matrix command additionally verify its summary
+  and HTML from saved check evidence: thirteen cases per backend, 26 total.
+  The immutable 0.2.0 registry gate retains its eleven cases per backend.
 
 `artifacts/archive/result.json` records the ZIP SHA-256, metadata, input manifest
 hashes, backend results and isolated directory. ZIP hashes identify concrete

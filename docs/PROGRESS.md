@@ -389,3 +389,31 @@ official contest acceptance. No registration or organizer message was sent.
   are documentation, metadata and CI only, leaving the release tag fixed.
 - Third-party runtime downloads, generated examples, snapshots and HTML stay
   ignored. No acceptance form was submitted and no organizer was contacted.
+
+
+## Pre-acceptance expansion: 0.3.0-dev
+
+- Added dependency-only preflight, explicit missing-fact guidance and temporary
+  read-only capture. No runtime facts are guessed from the analysis host.
+- Added multiple-target orchestration with frozen configs and bounded evidence;
+  MoonBit validates cells, derives all four verdicts and renders the overview
+  and expandable evidence. Existing report readers and schemas remain intact.
+- Added an exact amd64 Jammy libc6 2.35-0ubuntu3.15 identity and pinned external
+  zstd 1.5.7/1.4.8 source-build recipes, without distributing upstream payloads.
+- Local source suites pass 95 tests per backend. Matrix/preflight verification
+  passes 33 workflow/render checks including multi-application targets, all four
+  outcomes, missing facts, forged/absent evidence, output reuse and hostile text.
+- The external case passes 24 analyzer checks, 12 independent loader listings,
+  12 application probes and six compression roundtrips. Old libzstd satisfies
+  static checks but the application rejects its version: this is explicitly
+  retained as an application-policy boundary, not relabeled a loader failure.
+- Browser inspection confirms table navigation, expanded missing-library
+  evidence, hostile markup rendered as text, and no injected executable elements
+  or horizontal overflow at the observed desktop viewport.
+- Windows JS passes ten additional matrix render checks; the external matrix
+  summary and HTML text match Linux. Local browser/Windows checks supplement CI.
+- The actual 220-entry candidate ZIP passes provenance/content checks and an
+  isolated extracted-package consumer: four API tests/backend and 26 CLI checks,
+  including matrix HTML and summary. This is not registry publication evidence.
+- Source additions are unreleased; 0.2.0 remains the published baseline. Full
+  CI is run before this phase closes.

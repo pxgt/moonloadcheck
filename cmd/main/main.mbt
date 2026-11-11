@@ -44,14 +44,16 @@ fn dispatch(args : Array[String]) -> Int32 raise {
   }
   let start = 0
   if args.length() == 5 &&
-    args[0] == "report" &&
+    ["report", "matrix-report"].contains(args[0]) &&
     args[1] == "--input" &&
     args[3] == "--format" &&
     ["html", "summary"].contains(args[4]) {
-    let (output, code) = @presentation.present(
-      read_text(args[2]),
-      html=args[4] == "html",
-    )
+    let text = read_text(args[2])
+    let (output, code) = if args[0] == "matrix-report" {
+      @presentation.present_matrix(text, html=args[4] == "html")
+    } else {
+      @presentation.present(text, html=args[4] == "html")
+    }
     println(output)
     return code
   }
@@ -153,7 +155,7 @@ fn main {
 
 ///|
 fn usage() -> String {
-  "usage: moonloadcheck check --snapshot DIR --entry PATH --scope dependencies|compatibility --format json|text; diff --before DIR --after DIR --entries JSON_FILE --format json|text; explain --report JSON_FILE --finding ID; report --input JSON_FILE --format html|summary; --help"
+  "usage: moonloadcheck check --snapshot DIR --entry PATH --scope dependencies|compatibility --format json|text; diff --before DIR --after DIR --entries JSON_FILE --format json|text; explain --report JSON_FILE --finding ID; report --input JSON_FILE --format html|summary; matrix-report --input JSON_FILE --format html|summary; --help"
 }
 
 ///|

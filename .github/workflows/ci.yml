@@ -77,6 +77,10 @@ jobs:
           python3 tools/verify_deployment.py --native _build/native/debug/build/cmd/main/main.exe --js _build/js/debug/build/cmd/main/main.js
       - name: Verify offline HTML, diagnostic guidance and CI summaries
         run: python3 tools/verify_reports.py --native _build/native/debug/build/cmd/main/main.exe --js _build/js/debug/build/cmd/main/main.js
+      - name: Verify preflight, deployment matrix and external source builds
+        run: |
+          python3 tools/verify_matrix.py --native _build/native/debug/build/cmd/main/main.exe --js _build/js/debug/build/cmd/main/main.js
+          python3 tools/external_example.py --native _build/native/debug/build/cmd/main/main.exe --js _build/js/debug/build/cmd/main/main.js
       - name: Verify public interfaces and first-party formatting
         run: |
           moon info

@@ -6,6 +6,8 @@ pub fn guidance(String) -> Array[String]
 
 pub fn present(String, html~ : Bool) -> (String, Int32) raise
 
+pub fn present_matrix(String, html~ : Bool) -> (String, Int32) raise
+
 // Errors
 
 // Types and methods

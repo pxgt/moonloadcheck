@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased — 0.3.0-dev
+
+- Read-only dependency preflight identifies missing explicit environment facts.
+- Multi-target deployment orchestration freezes configuration inputs and retains
+  target errors. MoonBit validates nested checks, derives verdicts and renders
+  a local matrix with program identity and expandable evidence.
+- Add a fixed amd64 libc6 2.35-0ubuntu3.15 identity and a reproducible external
+  zstd dynamic-library source build. Record application version-policy rejection
+  independently of static compatibility and loader success.
+- No root facade or existing snapshot/check/comparison schema change. Existing
+  published packages and tags remain immutable.
+
 ## 0.2.0 — 2026-11-11
 
 - Add MoonBit diagnostic guidance and offline HTML/CI-summary rendering for

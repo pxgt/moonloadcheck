@@ -8,7 +8,7 @@ glibc-2.35-controlled-v1, glibc-2.35-controlled-v2 and ubuntu-noble-2.39-0ubuntu
 
 These controlled revisions assume LD_DYNAMIC_WEAK is unset, retaining ordinary first-match weak lookup. The reference invocations construct their environment explicitly. A target using different loader environment switches must not be relabeled as this controlled profile.
 
-The [deployment adapter's four target identities](INTEGRATION.md#select-a-verified-target-identity)
+The [deployment adapter's original four target identities](INTEGRATION.md#select-a-verified-target-identity)
 bind these existing rules to exact Jammy/Noble loaders on x86-64/AArch64. They
 reduce configuration mistakes without expanding loader semantics or implying
 support for every patched release. Caller-supplied environment facts remain
@@ -16,6 +16,11 @@ mandatory, and captured loader bytes must match the selected identity.
 The independent MoonBit native/FFI application is executed against all four
 runtime sets, including missing, older and wrong-architecture libraries plus
 repairs. AArch64 execution uses pinned QEMU user-mode, not physical hardware.
+
+Unreleased 0.3.0-dev adds a fifth, exact amd64 Jammy 2.35-0ubuntu3.15 identity.
+Its [external zstd source-build cases](DEPLOYMENT_MATRIX.md) check the same
+controlled rules against that loader. This does not extend the four-runtime
+MoonBit FFI execution evidence to another AArch64 or physical hardware target.
 
 Dependency checks cover the interpreter, architecture, ordered DT_NEEDED closure, alias/SONAME reuse, file identity, direct paths, inherited RPATH, library path, direct-only RUNPATH and defaults. ORIGIN uses the declaring object's load pathname. Missing/wrong-machine candidates continue search; directory and executable candidates stop that dependency search. Corrupt ELF evidence is input_error. Every edge records ordered candidate evidence.
 

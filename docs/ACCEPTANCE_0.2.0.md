@@ -1,7 +1,7 @@
 # MoonLoadCheck 0.2.0 acceptance evidence guide
 
 This is a technical evidence index, not an organizer's acceptance decision.
-The 0.2.0 candidate consolidates project onboarding, target presets, an
+The published 0.2.0 release consolidates project onboarding, target presets, an
 independent MoonBit native/FFI example, diagnostic guidance and offline reports.
 The 73-item [internal matrix](ACCEPTANCE_STATUS.md) retains the baseline scope;
 it is not a list of official contest requirements.
@@ -46,9 +46,10 @@ downloads locked runtime inputs locally, without uploading generated payloads.
 | Candidate package | `moon package --frozen`; `verify_archive.py --target js,native`: actual payload/provenance audit, four external API tests per backend and 22 CLI checks. |
 | Published package | After publication, `verify_registry.py --version 0.2.0 --target js,native`: exact registry dependency, no workspace override, every installed file compared with the official ZIP, four API tests per backend and 22 CLI checks from a verified registry-source copy. |
 
-The published-package command requires its release lock, which is created only
-after successful publication. The release record will distinguish the source
-commit, final CI, candidate ZIP and actual registry ZIP.
+The published-package command uses the [release lock](../tools/releases/0.2.0.json).
+The [release record](RELEASE_0.2.0.md) distinguishes the source commit, final CI,
+candidate ZIP and actual registry ZIP. The immutable source tag is `v0.2.0`;
+run the post-publication verifier from current main, where the lock is recorded.
 
 For the incremental demonstration, after the full CI setup/build steps:
 

@@ -49,7 +49,7 @@ An incomplete before view cannot establish a new regression, even if the after v
 
 application_changed compares the entry's content digest. snapshot_changed compares exact manifest digests, including application and profile data. It is not an environment-only causal claim. The tool reports compatibility consequences for these explicit consumers, not all installed applications or all possible future dlopen callers.
 
-Post-0.1.0 `analysis.read_impact_report` validates saved comparisons using the
+Version 0.2.0 `analysis.read_impact_report` validates saved comparisons using the
 same classification/aggregation rules, including nested check validation,
 consumer identity/uniqueness, snapshot flags and exact ordered change evidence.
 It does not rerun ELF analysis or authenticate the saved metadata. The

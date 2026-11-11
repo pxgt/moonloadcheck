@@ -1,6 +1,6 @@
 # Candidate verification and release sequence
 
-Version 0.1.0 is now published; see its [release record](RELEASE_0.1.0.md).
+Versions [0.1.0](RELEASE_0.1.0.md) and [0.2.0](RELEASE_0.2.0.md) are published.
 This checklist also describes preparation for later versions. A local ZIP,
 successful CI or a version string alone is not evidence of registry publication.
 
@@ -62,7 +62,7 @@ There is no report schema or public signature change.
 | Submission | Confirmed November rules, entrant-authored material and actual submission receipt |
 
 The first three can be prepared locally. Registry and C09 require actual
-publication and registry-only consumption; these are recorded for 0.1.0.
+publication and registry-only consumption; see each version's release record.
 Do not use source or ZIP workspace tests to close them for a future version.
 November registration and support questions are tracked in the
 private planning workspace; project release readiness is not contest approval.

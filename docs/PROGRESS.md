@@ -373,3 +373,19 @@ official contest acceptance. No registration or organizer message was sent.
 - Prepared the technical acceptance index and version-aware package checks.
   Third-party parser provenance remains hash-locked; no generated runtime,
   ELF fixture or snapshot enters the source distribution.
+
+## P4: published 0.2.0 and independent consumers
+
+- Source commit `6aff458a500a839e47c09f80bb3798307634600f` passed both jobs in
+  [CI 43027907601](https://github.com/pxgt/moonloadcheck/actions/runs/43027907601).
+  Published 0.2.0 on 2026-11-11 at 13:26:54 UTC, then pushed its immutable
+  annotated tag. The official 211-file ZIP matches the reviewed candidate.
+- Registry-only consumers passed on Linux JS/native (four API tests/backend,
+  22 CLI checks) and Windows JS (four API tests, 11 CLI checks). Every installed
+  file matches the official ZIP. New API/HTML/summary checks use the actual
+  resolved package; no local source override is used.
+- Added the exact release lock, public acceptance guide and publication record;
+  CI now retains both 0.1.0 and 0.2.0 registry gates. Post-publication changes
+  are documentation, metadata and CI only, leaving the release tag fixed.
+- Third-party runtime downloads, generated examples, snapshots and HTML stay
+  ignored. No acceptance form was submitted and no organizer was contacted.

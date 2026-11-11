@@ -6,7 +6,7 @@ The generated `.mbti` files are the exact source signatures. The supported publi
 packages are the root facade, `model`, `snapshot` and `analysis`. Internal parser,
 cache, presentation and experiment packages are implementation details.
 
-The 0.2.0 candidate is validated with MoonBit compiler 0.10.16+b1a0e846e
+The 0.2.0 release is validated with MoonBit compiler 0.10.16+b1a0e846e
 (moon 0.1.20261020). Its strict saved-comparison reader uses core JSON duplicate
 key rejection; the older 0.10.15 core lacks that parameter. Use the documented
 pinned compiler for reproducibility. The compiler version is distinct from the
@@ -42,7 +42,7 @@ structs are ordinary caller-owned data, not authenticated or immutable objects.
 Constructing structs or using their derived `FromJson` directly bypasses the
 `read_report` validation. Use `read_report` for saved check reports.
 
-Post-0.1.0 source adds `analysis.read_impact_report` for saved comparisons, plus
+Version 0.2.0 adds `analysis.read_impact_report` for saved comparisons, plus
 derived decoding for Change/ImpactEntry/ImpactReport. The checked reader validates
 nested reports, entry identities, snapshot flags, ordered changes and aggregate
 status using the existing comparison rules. It does not authenticate input or
@@ -93,7 +93,7 @@ separate error envelope described in [REPORT_SCHEMA.md](REPORT_SCHEMA.md), even
 when text output was requested. I/O messages report operation and path without
 depending on platform-specific OS error wording.
 
-Post-0.1.0 `report --input FILE --format html|summary` renders saved evidence and
+Version 0.2.0 `report --input FILE --format html|summary` renders saved evidence and
 retains its 0/1/2/3 verdict. Invalid inputs produce the error envelope/exit 3,
 including when HTML was requested. See [diagnostics](DIAGNOSTICS.md) for the
 smaller presentation bounds and the separate derived summary schema.
@@ -111,5 +111,6 @@ The independent README walkthrough starts without `.tools`, `.mooncakes`,
 `_build` or generated fixtures. It executes the documented blocks verbatim and
 checks U1 failure/fix, unchanged U2 executable, selective U3 impact/restoration,
 saved explanation and a standalone source consumer. Full reference/test CI runs
-separately. Published 0.1.0 consumption is recorded in RELEASE_0.1.0.md and is
-repeated by CI; it does not contain the later presentation additions.
+separately. Published [0.2.0 consumption](RELEASE_0.2.0.md) verifies the new
+saved-comparison API and the installed-source presentation CLI. CI also retains
+the [0.1.0 consumer](RELEASE_0.1.0.md), which has no presentation additions.

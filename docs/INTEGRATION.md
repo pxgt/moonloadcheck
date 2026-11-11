@@ -6,7 +6,7 @@ MoonBit analyzer: all ELF, dependency, symbol and version decisions stay in
 MoonLoadCheck. It does not execute the captured programs, use your host's
 libraries, select a profile automatically or install missing libraries.
 
-The helper is included in the 0.2.0 candidate; it is **not**
+The helper is included in the published 0.2.0 package; it is **not**
 part of the immutable 0.1.0 Mooncakes archive. Build the matching CLI with the
 [documented pinned compiler](../README.md#build-from-a-fresh-checkout):
 

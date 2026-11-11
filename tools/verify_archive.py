@@ -10,6 +10,8 @@ import subprocess
 import tempfile
 import zipfile
 
+from verify_reports import Page
+
 ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -96,26 +98,31 @@ def verify(archive, backend):
     output.mkdir(parents=True, exist_ok=True)
     checks = 0
 
-    def invoke(label, args, expected, help_text=False):
+    def invoke(label, args, expected, help_text=False, html_page=False):
         nonlocal checks
         results = []
         for name, command in commands:
             result = subprocess.run(command + list(map(str, args)), cwd=consumer,
                                     capture_output=True, text=True, timeout=60)
             assert result.returncode == expected and not result.stderr, (label, name, result.returncode, result.stdout, result.stderr)
-            report = result.stdout if help_text else json.loads(result.stdout)
+            report = result.stdout if help_text or html_page else json.loads(result.stdout)
             if help_text:
                 assert report.startswith("usage:")
+            elif html_page:
+                assert report.startswith("<!doctype html>")
+                Page(report)
             elif "tool_version" in report:
                 assert report["tool_version"] == version
             # explain succeeds when it returns a finding, even when that finding
             # describes a failure. Its status is not the command's verdict.
-            if not help_text and label != "explain" and "status" in report:
+            if not help_text and not html_page and label != "explain" and "status" in report:
                 assert report["status"] == ["pass_static", "fail", "inconclusive", "input_error"][expected]
             results.append(report)
             checks += 1
         assert all(r == results[0] for r in results), label
-        if not help_text:
+        if html_page:
+            (output / (label + ".html")).write_text(results[0], encoding="utf-8")
+        elif not help_text:
             (output / (label + ".json")).write_text(json.dumps(results[0], indent=2) + "\n")
         return results[0]
 
@@ -136,6 +143,14 @@ def verify(archive, backend):
     invoke("help", ["--help"], 0, help_text=True)
     error = invoke("invalid", ["invalid-command"], 3)
     assert error["error_kind"] == "arguments"
+    for label, value in [("saved-check", after), ("saved-comparison", diff)]:
+        source = consumer / (label + ".json")
+        source.write_text(json.dumps(value), encoding="utf-8")
+        brief = invoke(label + "-summary", ["report", "--input", source, "--format", "summary"], 1)
+        assert brief["status"] == "fail" and brief["exit_code"] == 1
+        page = invoke(label + "-html", ["report", "--input", source, "--format", "html"], 1, html_page=True)
+        expected = [after] if label == "saved-check" else [r for e in diff["entries"] for r in [e["before"], e["after"]]]
+        assert Page(page).evidence == expected
     record.update(backends=backend.split(","), consumer_tests_per_backend=3, cli_checks=checks,
                   original_workspace_member=False, published_registry_consumer=False,
                   isolated_root=str(work))

@@ -75,10 +75,12 @@ jobs:
         run: |
           python3 tools/verify_targets.py
           python3 tools/verify_deployment.py --native _build/native/debug/build/cmd/main/main.exe --js _build/js/debug/build/cmd/main/main.js
+      - name: Verify offline HTML, diagnostic guidance and CI summaries
+        run: python3 tools/verify_reports.py --native _build/native/debug/build/cmd/main/main.exe --js _build/js/debug/build/cmd/main/main.js
       - name: Verify public interfaces and first-party formatting
         run: |
           moon info
-          moon fmt --check . analysis snapshot model internal/cache internal/elf_adapter experiments/parser_probe experiments/segment_probe cmd/main cmd/probe
+          moon fmt --check . analysis snapshot model internal/cache internal/elf_adapter internal/presentation experiments/parser_probe experiments/segment_probe cmd/main cmd/probe
           git diff --exit-code
   walkthrough:
     runs-on: ubuntu-22.04

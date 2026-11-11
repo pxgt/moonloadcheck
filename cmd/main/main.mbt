@@ -20,6 +20,9 @@ fn show(report : @analysis.Report) -> Unit {
       )
     }
     println("  action: \{finding.suggested_action}")
+    for step in @presentation.guidance(finding.code) {
+      println("  guide: \{step}")
+    }
   }
   for edge in report.edges {
     println(
@@ -40,6 +43,18 @@ fn dispatch(args : Array[String]) -> Int32 raise {
     return 0
   }
   let start = 0
+  if args.length() == 5 &&
+    args[0] == "report" &&
+    args[1] == "--input" &&
+    args[3] == "--format" &&
+    ["html", "summary"].contains(args[4]) {
+    let (output, code) = @presentation.present(
+      read_text(args[2]),
+      html=args[4] == "html",
+    )
+    println(output)
+    return code
+  }
   if args.length() == 9 &&
     args[start] == "check" &&
     args[start + 1] == "--snapshot" &&
@@ -138,7 +153,7 @@ fn main {
 
 ///|
 fn usage() -> String {
-  "usage: moonloadcheck check --snapshot DIR --entry PATH --scope dependencies|compatibility --format json|text; diff --before DIR --after DIR --entries JSON_FILE --format json|text; explain --report JSON_FILE --finding ID; --help"
+  "usage: moonloadcheck check --snapshot DIR --entry PATH --scope dependencies|compatibility --format json|text; diff --before DIR --after DIR --entries JSON_FILE --format json|text; explain --report JSON_FILE --finding ID; report --input JSON_FILE --format html|summary; --help"
 }
 
 ///|
@@ -210,6 +225,8 @@ fn describe_error(error : Error) -> (String, String) {
       ("json", @json.ParseError::InvalidIdentEscape(pos).to_string())
     @json.ParseError::DepthLimitExceeded =>
       ("json", "JSON nesting depth limit exceeded")
+    @json.ParseError::DuplicateKey(pos, key) =>
+      ("json", @json.ParseError::DuplicateKey(pos, key).to_string())
     _ => ("other", error.to_string())
   }
 }

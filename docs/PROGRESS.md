@@ -328,3 +328,33 @@ official contest acceptance. No registration or organizer message was sent.
   original code, metadata, recipes and documentation. Generated application,
   QEMU/runtime binaries and snapshots stay ignored; no CI artifact upload was
   added. These remain unreleased source additions after immutable 0.1.0.
+
+## 2026-11-11 Diagnostic guidance and offline HTML
+
+- Added MoonBit guidance for MLC001–MLC009, including investigation, repair
+  options and confirmation steps. Unfamiliar codes retain their saved severity.
+  Text output includes this guidance; existing JSON findings and explain remain
+  unchanged. General advice stays distinct from the saved suggested action.
+- Added `report --input FILE --format html|summary`. It reads saved check,
+  comparison and command-error evidence without accessing snapshots or target
+  programs. HTML and concise JSON summaries preserve the source's 0/1/2/3 exit
+  code. Invalid/ambiguous inputs return an error envelope instead of a page.
+- Added `analysis.read_impact_report` with shared classification/aggregation
+  rules, nested-report validation, consumer uniqueness and exact ordered change
+  checks. This detects contradictory saved evidence; it is not authentication
+  or a recomputation of application-change metadata from binaries. Root facade
+  functions and existing analysis verdict semantics remain unchanged.
+- HTML shows scope/uncertainty, dependency chains and search order, selected
+  objects, symbol/version evidence, decimal offsets and before/after impacts.
+  It uses escaped text, static CSS, generated fragment links and no JavaScript
+  or network assets. Raw byte hex remains visible alongside lossy display text.
+- Hostile-string tests caught first-occurrence-only replacement during initial
+  implementation; switching to verified `String.replace_all` fixed repeated
+  delimiters. Tests now inspect the generated structure and decoded evidence,
+  including script/event/URL payloads and full UInt64 strings. Local suites pass
+  95 tests per backend; 226 presentation CLI checks cover 42 valid and 13 invalid
+  documents plus argument errors. Native and JS pages/summaries are identical.
+- Browser checks confirmed dependency expansion, multi-consumer navigation,
+  hostile text without injected executable elements and a narrow viewport
+  without page overflow. Generated examples remain ignored. The diagnostic
+  guide documents saved-data trust, output limits and verdict-preserving CI use.

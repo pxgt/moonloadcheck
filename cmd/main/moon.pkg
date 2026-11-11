@@ -1,6 +1,7 @@
 import {
   "Xpeng/moonloadcheck/analysis",
   "Xpeng/moonloadcheck/snapshot",
+  "Xpeng/moonloadcheck/internal/presentation",
   "moonbitlang/core/env",
   "moonbitlang/core/encoding/utf8",
   "moonbitlang/core/encoding/hex",

@@ -14,6 +14,10 @@ The application executes natively on x86-64 and under pinned QEMU on AArch64.
 These source-repository additions follow 0.1.0;
 they are not included in the immutable 0.1.0 registry archive.
 
+**Reading the result:** the [diagnostic and local HTML guide](docs/DIAGNOSTICS.md)
+shows how to turn saved check/diff JSON into an offline, script-free page or a
+concise CI summary. Both retain the recorded verdict and uncertainty.
+
 ## Build from a fresh checkout
 
 The reproducible quickstart uses **Ubuntu 22.04 x86-64**, including that WSL

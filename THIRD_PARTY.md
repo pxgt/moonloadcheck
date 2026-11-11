@@ -45,3 +45,11 @@ only in ignored execution roots, after snapshot capture, and removes it even
 when execution fails. `tools/targets.json` contains original catalog metadata
 (package and loader identities), not binary payloads or an OS distribution.
 This stage adds no third-party copied source or binary distribution.
+
+## Offline presentation
+
+The MoonBit HTML renderer, inline CSS, diagnostic text and hostile-input tests
+are original project source. No browser framework, font, icon set or external
+web asset is copied or loaded. Rendered pages contain report metadata and
+decoded JSON, not ELF blobs or runtime snapshots. Generated pages and browser
+validation outputs remain in ignored `artifacts/`; no upload step is added.

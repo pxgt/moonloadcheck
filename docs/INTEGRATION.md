@@ -152,6 +152,12 @@ For multiple entries, input errors dominate, then confirmed failures, then
 inconclusive, then pass. Reports retain individual statuses and uncertainty.
 Never use `|| true` or `continue-on-error` to turn a failed gate into success.
 
+For a local visual report, pass a numbered `report-000.json` to the
+[MoonBit HTML renderer](DIAGNOSTICS.md). Saved `diff --format json` output is
+also accepted. The deployment helper's aggregate `summary.json` is a different
+schema and is not a renderer input. Rendered HTML/CI summaries preserve the
+saved verdict and do not rerun analysis.
+
 ## Add the check to an existing CI job
 
 After your normal build/staging step has created `stage/` and a verified

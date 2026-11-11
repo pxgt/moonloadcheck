@@ -13,6 +13,8 @@ pub fn check_dependencies(@snapshot.Snapshot, Bytes) -> Report
 
 pub fn compare(@snapshot.Snapshot, @snapshot.Snapshot, Array[Bytes]) -> ImpactReport raise
 
+pub fn read_impact_report(String) -> ImpactReport raise
+
 pub fn read_report(String) -> Report raise
 
 // Errors
@@ -41,7 +43,8 @@ pub(all) struct Change {
   finding_id : String
   before : Finding?
   after : Finding?
-} derive(ToJson)
+} derive(ToJson, @json.FromJson)
+pub fn Change::from_json(Json, @json.JsonPath) -> Self raise @json.JsonDecodeError
 pub fn Change::to_json(Self) -> Json
 
 pub(all) struct DependencyEdge {
@@ -76,15 +79,17 @@ pub(all) struct ImpactEntry {
   before : Report
   after : Report
   changes : Array[Change]
-} derive(ToJson)
+} derive(ToJson, @json.FromJson)
+pub fn ImpactEntry::from_json(Json, @json.JsonPath) -> Self raise @json.JsonDecodeError
 pub fn ImpactEntry::to_json(Self) -> Json
 
 pub(all) struct ImpactReport {
   schema_version : Int32
   status : String
   entries : Array[ImpactEntry]
-} derive(ToJson)
+} derive(ToJson, @json.FromJson)
 pub fn ImpactReport::exit_code(Self) -> Int32
+pub fn ImpactReport::from_json(Json, @json.JsonPath) -> Self raise @json.JsonDecodeError
 pub fn ImpactReport::to_json(Self) -> Json
 
 pub(all) struct LoadedObject {

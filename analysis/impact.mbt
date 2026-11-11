@@ -4,10 +4,13 @@ pub(all) struct Change {
   finding_id : String
   before : Finding?
   after : Finding?
-} derive(ToJson)
+} derive(ToJson, @json.FromJson)
 
 ///|
 pub extend Change with ToJson::{to_json}
+
+///|
+pub extend Change with @json.FromJson::{from_json}
 
 ///|
 pub(all) struct ImpactEntry {
@@ -17,20 +20,26 @@ pub(all) struct ImpactEntry {
   before : Report
   after : Report
   changes : Array[Change]
-} derive(ToJson)
+} derive(ToJson, @json.FromJson)
 
 ///|
 pub extend ImpactEntry with ToJson::{to_json}
+
+///|
+pub extend ImpactEntry with @json.FromJson::{from_json}
 
 ///|
 pub(all) struct ImpactReport {
   schema_version : Int32
   status : String
   entries : Array[ImpactEntry]
-} derive(ToJson)
+} derive(ToJson, @json.FromJson)
 
 ///|
 pub extend ImpactReport with ToJson::{to_json}
+
+///|
+pub extend ImpactReport with @json.FromJson::{from_json}
 
 ///|
 pub fn ImpactReport::exit_code(self : ImpactReport) -> Int32 {
@@ -131,16 +140,7 @@ pub fn compare(
     let earlier = check_compatibility(before, entry)
     let later = check_compatibility(after, entry)
     let changes = compare_findings(earlier, later)
-    let level = if earlier.status == "input_error" ||
-      later.status == "input_error" {
-      3
-    } else if later.status == "fail" {
-      2
-    } else if incomplete(earlier) || incomplete(later) {
-      1
-    } else {
-      0
-    }
+    let level = comparison_level(earlier, later)
     if level > severity {
       severity = level
     }
@@ -187,6 +187,15 @@ pub fn read_report(json : String) -> Report raise {
     raise ReportError("unsupported report schema")
   }
   let report : Report = @json.from_json(value)
+  validate_report(report)
+  report
+}
+
+///|
+fn validate_report(report : Report) -> Unit raise ReportError {
+  guard report.schema_version == 2 else {
+    raise ReportError("unsupported report schema")
+  }
   guard ["pass_static", "fail", "inconclusive", "input_error"].contains(
     report.status,
   ) else {
@@ -218,6 +227,73 @@ pub fn read_report(json : String) -> Report raise {
   }
   guard report.status == expected else {
     raise ReportError("report status conflicts with its findings")
+  }
+}
+
+///|
+fn comparison_level(before : Report, after : Report) -> Int32 {
+  if before.status == "input_error" || after.status == "input_error" {
+    3
+  } else if after.status == "fail" {
+    2
+  } else if incomplete(before) || incomplete(after) {
+    1
+  } else {
+    0
+  }
+}
+
+///|
+/// Read saved comparison evidence. Validate nested verdicts, consumer identities
+/// and classifications using the same rules as compare, without loading ELF.
+/// This does not authenticate input or recompute application_changed from blobs.
+pub fn read_impact_report(text : String) -> ImpactReport raise {
+  guard text.length() <= 67108864 else {
+    raise ReportError("report exceeds 67108864 UTF-16 code units")
+  }
+  let value = @json.parse(text[:], reject_duplicate_keys=true)
+  let header : ReportHeader = @json.from_json(value)
+  guard header.schema_version == 2 else {
+    raise ReportError("unsupported report schema")
+  }
+  let report : ImpactReport = @json.from_json(value)
+  guard !report.entries.is_empty() && report.entries.length() <= 64 else {
+    raise ReportError("provide 1..64 saved consumers")
+  }
+  let seen : Map[String, Bool] = Map([])
+  let mut severity = 0
+  for entry in report.entries {
+    validate_report(entry.before)
+    validate_report(entry.after)
+    guard !entry.entry.hex.is_empty() && seen.get(entry.entry.hex) is None else {
+      raise ReportError("empty or duplicate saved consumer")
+    }
+    seen[entry.entry.hex] = true
+    guard entry.entry.to_json() == entry.before.entry.to_json() &&
+      entry.entry.to_json() == entry.after.entry.to_json() else {
+      raise ReportError("saved consumer does not match its reports")
+    }
+    guard entry.snapshot_changed ==
+      (entry.before.snapshot_sha256 != entry.after.snapshot_sha256) else {
+      raise ReportError("snapshot_changed conflicts with saved digests")
+    }
+    let expected = compare_findings(entry.before, entry.after)
+    guard Json(entry.changes) == Json(expected) else {
+      raise ReportError("saved changes conflict with nested findings")
+    }
+    let level = comparison_level(entry.before, entry.after)
+    if level > severity {
+      severity = level
+    }
+  }
+  let expected = match severity {
+    0 => "pass_static"
+    1 => "inconclusive"
+    2 => "fail"
+    _ => "input_error"
+  }
+  guard report.status == expected else {
+    raise ReportError("comparison status conflicts with nested reports")
   }
   report
 }

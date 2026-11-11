@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Add MoonBit diagnostic guidance and offline HTML/CI-summary rendering for
+  saved check, comparison and command-error evidence, preserving verdict exits.
+- Validate saved comparisons with the existing classification rules; reject
+  contradictory nested evidence, forged changes and duplicate consumers.
+- Escape report text, retain raw byte/UInt64 evidence and provide script-free
+  expandable dependency, symbol/version and before/after views.
+
 - Add four explicit Jammy/Noble x86-64/AArch64 target identities, verified
   against locked runtime sources; retain caller-supplied environment facts.
 - Cross-build and actually execute the independent MoonBit native/FFI app on

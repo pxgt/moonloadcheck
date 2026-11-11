@@ -1,9 +1,10 @@
 # 0.1 API and report contract review
 
-This is the reviewed contract for the planned 0.1 release, still unpublished.
+This records the 0.1 contract and explicitly identified later source additions.
+The immutable 0.1.0 release is documented in [the release record](RELEASE_0.1.0.md).
 The generated `.mbti` files are the exact source signatures. The supported public
 packages are the root facade, `model`, `snapshot` and `analysis`. Internal parser,
-cache and experiment packages are implementation details.
+cache, presentation and experiment packages are implementation details.
 
 ## Public entry points
 
@@ -34,6 +35,13 @@ above JavaScript's exact numeric range. Returned report arrays and public
 structs are ordinary caller-owned data, not authenticated or immutable objects.
 Constructing structs or using their derived `FromJson` directly bypasses the
 `read_report` validation. Use `read_report` for saved check reports.
+
+Post-0.1.0 source adds `analysis.read_impact_report` for saved comparisons, plus
+derived decoding for Change/ImpactEntry/ImpactReport. The checked reader validates
+nested reports, entry identities, snapshot flags, ordered changes and aggregate
+status using the existing comparison rules. It does not authenticate input or
+recompute application-change metadata from blobs. Direct derived decoding skips
+these semantic checks. The root facade's seven functions remain unchanged.
 
 The snapshot loader validates indexed digests and file identities before
 analysis. Its callback receives a validated digest, never a target pathname.
@@ -79,6 +87,11 @@ separate error envelope described in [REPORT_SCHEMA.md](REPORT_SCHEMA.md), even
 when text output was requested. I/O messages report operation and path without
 depending on platform-specific OS error wording.
 
+Post-0.1.0 `report --input FILE --format html|summary` renders saved evidence and
+retains its 0/1/2/3 verdict. Invalid inputs produce the error envelope/exit 3,
+including when HTML was requested. See [diagnostics](DIAGNOSTICS.md) for the
+smaller presentation bounds and the separate derived summary schema.
+
 ## Review and evidence
 
 This review covers all seven facade operations, their publicly exposed data
@@ -92,4 +105,5 @@ The independent README walkthrough starts without `.tools`, `.mooncakes`,
 `_build` or generated fixtures. It executes the documented blocks verbatim and
 checks U1 failure/fix, unchanged U2 executable, selective U3 impact/restoration,
 saved explanation and a standalone source consumer. Full reference/test CI runs
-separately. Published-package consumption remains a release-stage check.
+separately. Published 0.1.0 consumption is recorded in RELEASE_0.1.0.md and is
+repeated by CI; it does not contain the later presentation additions.

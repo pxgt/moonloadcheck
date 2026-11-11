@@ -1,0 +1,15 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "Xpeng/moonloadcheck/internal/presentation"
+
+// Values
+pub fn guidance(String) -> Array[String]
+
+pub fn present(String, html~ : Bool) -> (String, Int32) raise
+
+// Errors
+
+// Types and methods
+
+// Type aliases
+
+// Traits

@@ -106,6 +106,25 @@ These are additional integration checks, not extra rows retroactively counted
 in the original 73-case matrix. They do not claim unrestricted target profiles,
 physical ARM/kernel validation, external adoption or official acceptance.
 
+## Post-0.1.0 diagnostic presentation
+
+The [offline report and diagnostic guide](DIAGNOSTICS.md) adds a MoonBit
+renderer, same-verdict CI summaries and a validated saved-comparison reader.
+Six additional MoonBit test groups bring the local native/JS suites to 95 each.
+The presentation verifier checks 42 valid and 13 invalid inputs plus argument
+errors in 226 CLI invocations across both backends. Inputs include the complete
+20-case independent deployment matrix, multi-consumer comparisons, all four
+statuses, unknown baselines, hostile strings, UInt64 text, legacy optional
+fields and forged comparison evidence. The guide covers all nine current codes
+and preserves unfamiliar codes' severity.
+
+Browser checks exercise dependency expansion, consumer navigation, hostile
+markup displayed as text and a 390-pixel viewport without document overflow.
+Six pages are also rendered by Windows JS and match Linux native/JS bytes.
+These finite checks supplement the original acceptance map; they do not add
+new loader semantics, certify saved-report authenticity or establish official
+contest acceptance. Rendered files and snapshots remain local.
+
 [runtime]: ../internal/elf_adapter/runtime_test.mbt
 [reader]: ../internal/elf_adapter/linkage_test.mbt
 [malformed]: ../internal/elf_adapter/linkage_wbtest.mbt

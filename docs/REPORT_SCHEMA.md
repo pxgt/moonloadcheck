@@ -1,6 +1,6 @@
 # Development report schema 2
 
-Schema 2 adds version/symbol checks, stable finding identifiers and comparisons. It does not silently reinterpret a schema-1 dependency report. Snapshot schema remains 1. The planned 0.1 [compatibility policy](API_CONTRACT.md) is reviewed; publication remains pending.
+Schema 2 adds version/symbol checks, stable finding identifiers and comparisons. It does not silently reinterpret a schema-1 dependency report. Snapshot schema remains 1. See the [compatibility policy](API_CONTRACT.md) and [published 0.1.0 record](RELEASE_0.1.0.md); later source additions are identified separately.
 
 ## Check
 
@@ -48,6 +48,13 @@ The diff command reads two complete snapshots and a JSON array of explicit entry
 An incomplete before view cannot establish a new regression, even if the after view fails. Earlier input_error keeps the aggregate input_error. Otherwise current failures dominate unknowns; a resolved old failure alone does not make the current result fail.
 
 application_changed compares the entry's content digest. snapshot_changed compares exact manifest digests, including application and profile data. It is not an environment-only causal claim. The tool reports compatibility consequences for these explicit consumers, not all installed applications or all possible future dlopen callers.
+
+Post-0.1.0 `analysis.read_impact_report` validates saved comparisons using the
+same classification/aggregation rules, including nested check validation,
+consumer identity/uniqueness, snapshot flags and exact ordered change evidence.
+It does not rerun ELF analysis or authenticate the saved metadata. The
+[local HTML renderer](DIAGNOSTICS.md) uses this reader and preserves all four
+verdicts. Its concise summary schema is separate from report schema 2.
 
 ## Explain
 

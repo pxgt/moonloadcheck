@@ -1,5 +1,8 @@
 ///|
 test "HTML text escaping preserves markup as text" {
+  for status in ["pass_static", "pass", "resolved"] {
+    assert_true(badge(status).contains("class='badge good'"))
+  }
   assert_eq(
     esc("<script a=\"x\">'&</script>"),
     "&lt;script a=&quot;x&quot;&gt;&#39;&amp;&lt;/script&gt;",

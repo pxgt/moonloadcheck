@@ -29,7 +29,7 @@ fn optional_name(name : @analysis.ByteName?) -> String {
 fn badge(status : String) -> String {
   // Classes are selected from literals; input is never an attribute value.
   let style = match status {
-    "pass_static" | "resolved" => "good"
+    "pass_static" | "pass" | "resolved" => "good"
     "fail" | "introduced" | "input_error" => "bad"
     _ => "warn"
   }

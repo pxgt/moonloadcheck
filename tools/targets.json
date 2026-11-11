@@ -14,7 +14,7 @@
       "package": {
         "name": "libc6",
         "sha256": "79e35256227e16a607c154cdeb8d76ff12d20e31de286ea7fd9ad3b96fe0452d",
-        "source_lock_sha256": "5f6a65445a1142fa9eb84b6d34ea1149522c350f6ed773b24ff6b97c213c93e8",
+        "source_lock_sha256": "ffd4beb1f8309bbdaf6373a857010610f2472a1fa3d085786a6edb82066757b2",
         "version": "2.35-0ubuntu3.15"
       },
       "suite": "jammy-updated"

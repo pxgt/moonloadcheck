@@ -6,6 +6,12 @@ The generated `.mbti` files are the exact source signatures. The supported publi
 packages are the root facade, `model`, `snapshot` and `analysis`. Internal parser,
 cache, presentation and experiment packages are implementation details.
 
+The 0.2.0 candidate is validated with MoonBit compiler 0.10.16+b1a0e846e
+(moon 0.1.20261020). Its strict saved-comparison reader uses core JSON duplicate
+key rejection; the older 0.10.15 core lacks that parameter. Use the documented
+pinned compiler for reproducibility. The compiler version is distinct from the
+module version and the stable report schema.
+
 ## Public entry points
 
 | Facade function | Input and result | Error boundary |

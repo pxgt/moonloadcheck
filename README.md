@@ -11,8 +11,9 @@ provides readable target configuration, a capture-and-check command, CI exit
 handling, and an independent MoonBit native/FFI sensor-report application with
 failure/fix verification across four fixed Jammy/Noble target identities.
 The application executes natively on x86-64 and under pinned QEMU on AArch64.
-These source-repository additions follow 0.1.0;
-they are not included in the immutable 0.1.0 registry archive.
+These additions are included in the **0.2.0 release candidate**;
+they are not included in the immutable 0.1.0 registry archive. See the
+[0.2.0 acceptance guide](docs/ACCEPTANCE_0.2.0.md) for scope and reproduction.
 
 **Reading the result:** the [diagnostic and local HTML guide](docs/DIAGNOSTICS.md)
 shows how to turn saved check/diff JSON into an offline, script-free page or a

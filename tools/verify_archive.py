@@ -78,14 +78,27 @@ def verify(archive, backend):
                                  for v in ["before", "after"]}
     (consumer / "moon.mod").write_text('name = "validation/archive_consumer"\nimport { "Xpeng/moonloadcheck@'
         + version + '", "moonbitlang/x@0.5.5", }\n')
-    (consumer / "moon.pkg").write_text('import { "Xpeng/moonloadcheck", "moonbitlang/x/fs", } for "test"\n')
+    (consumer / "moon.pkg").write_text('import { "Xpeng/moonloadcheck", "Xpeng/moonloadcheck/analysis", "moonbitlang/x/fs", } for "test"\n')
     template = (ROOT / "tools/archive_consumer.mbt.txt").read_text()
     (consumer / "consumer_test.mbt").write_text(template.replace("__VERSION__", version))
+    (consumer / "impact_test.mbt").write_text((ROOT / "tools/impact_consumer.mbt.txt").read_text())
     (consumer / "moon.work").write_text("members = " + json.dumps([".", str(extracted)]) + "\n")
     assert ROOT not in [consumer, extracted] and not extracted.is_relative_to(ROOT)
     print("Archive audited; isolated package/consumer:", work, flush=True)
     subprocess.run(["moon", "test", "--package", "validation/archive_consumer", "--target", backend, "--deny-warn"],
                    cwd=consumer, check=True, timeout=600)
+    output = ROOT / "artifacts/archive"
+    checks = verify_cli(extracted, consumer, backend, version, output)
+    record.update(backends=backend.split(","), consumer_tests_per_backend=4, cli_checks=checks,
+                  original_workspace_member=False, published_registry_consumer=False,
+                  isolated_root=str(work))
+    (output / "result.json").write_text(json.dumps(record, indent=2) + "\n")
+    print(f"Archive consumer: 4 tests/backend and {checks} CLI checks passed; no original workspace member")
+    print(f"Archive SHA-256: {record['archive_sha256']}; version {version}; {record['files']} entries")
+
+
+def verify_cli(extracted, consumer, backend, version, output):
+    """Build and exercise a byte-verified package, independent of its source repo."""
     subprocess.run(["moon", "build", "--target", backend], cwd=extracted, check=True, timeout=600)
     commands = []
     if "js" in backend.split(","):
@@ -94,7 +107,6 @@ def verify(archive, backend):
         commands.append(("native", [str(extracted / "_build/native/debug/build/cmd/main/main.exe")]))
     entries = consumer / "entries.json"
     entries.write_text('["/opt/demo/app","/opt/demo/stable-app"]')
-    output = ROOT / "artifacts/archive"
     output.mkdir(parents=True, exist_ok=True)
     checks = 0
 
@@ -151,17 +163,13 @@ def verify(archive, backend):
         page = invoke(label + "-html", ["report", "--input", source, "--format", "html"], 1, html_page=True)
         expected = [after] if label == "saved-check" else [r for e in diff["entries"] for r in [e["before"], e["after"]]]
         assert Page(page).evidence == expected
-    record.update(backends=backend.split(","), consumer_tests_per_backend=3, cli_checks=checks,
-                  original_workspace_member=False, published_registry_consumer=False,
-                  isolated_root=str(work))
-    (output / "result.json").write_text(json.dumps(record, indent=2) + "\n")
-    print(f"Archive consumer: 3 tests/backend and {checks} CLI checks passed; no original workspace member")
-    print(f"Archive SHA-256: {record['archive_sha256']}; version {version}; {record['files']} entries")
+    return checks
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--archive", type=Path, default=ROOT / "_build/publish/Xpeng-moonloadcheck-0.1.0.zip")
+    version = metadata((ROOT / "moon.mod").read_text())["version"]
+    parser.add_argument("--archive", type=Path, default=ROOT / f"_build/publish/Xpeng-moonloadcheck-{version}.zip")
     parser.add_argument("--target", choices=["js", "native", "js,native"], default="native")
     args = parser.parse_args()
     verify(args.archive, args.target)

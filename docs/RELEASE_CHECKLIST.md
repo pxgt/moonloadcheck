@@ -17,7 +17,7 @@ python3 tools/verify_archive.py --target js,native
 
 This toolchain's `moon package --list` also creates a local ZIP. Neither command
 publishes it. The default candidate is
-`_build/publish/Xpeng-moonloadcheck-0.1.0.zip`.
+`_build/publish/Xpeng-moonloadcheck-<moon.mod version>.zip`.
 
 The verifier checks:
 
@@ -33,10 +33,12 @@ The verifier checks:
   independent consumer. The original project is not a workspace member. Two
   portable snapshots are copied as explicit test inputs, outside the package;
   they are not redistributed in the ZIP.
-- Three consumer tests per backend exercise all seven facade functions and
-  exported errors. The extracted CLI is built independently and runs seven
+- Four consumer tests per backend exercise all seven facade functions,
+  exported errors and the new saved-comparison validator. The extracted CLI is
+  built independently and runs eleven
   cases per backend: pass, symbol failure, dependency-only pass, selective diff,
-  offline explain, help and argument error. Dual-backend reports must agree.
+  offline explain, help, argument error, and check/diff HTML and summary output.
+  Dual-backend reports must agree.
 
 `artifacts/archive/result.json` records the ZIP SHA-256, metadata, input manifest
 hashes, backend results and isolated directory. ZIP hashes identify concrete
@@ -44,7 +46,7 @@ builds; reproducible ZIP bytes across hosts/timestamps are not claimed. Run Pyth
 without `-O`, because the verification assertions must remain enabled.
 
 This gate initially caught an actual mismatch: the package declared `0.1.0`
-while its reports emitted `0.1.0-dev`. Reports now use `0.1.0`; the older synthetic
+while its reports emitted `0.1.0-dev`. New reports match `moon.mod`; the older synthetic
 saved-report sample deliberately retains its old tool version to test decoding.
 There is no report schema or public signature change.
 

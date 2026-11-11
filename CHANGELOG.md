@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.2.0 — release candidate
 
 - Add MoonBit diagnostic guidance and offline HTML/CI-summary rendering for
   saved check, comparison and command-error evidence, preserving verdict exits.
@@ -22,8 +22,13 @@
 - Document project onboarding, output provenance, controlled target facts and
   CI integration; correct an obsolete prepublication snapshot-schema note.
 
-These changes are source-repository additions. The 0.1.0 registry archive and
-tag are unchanged; no new registry version is implied.
+- Add version-specific registry verification, an external saved-comparison API
+  test, and HTML/summary CLI checks built from verified registry source bytes.
+
+Snapshot schema 1, report schema 2 and all seven root facade signatures remain
+unchanged. `analysis.read_impact_report` is additive. The 0.1.0 registry archive
+and tag are unchanged. This entry describes the candidate scope; publication
+and registry-consumer evidence will be recorded after the actual release.
 
 ## 0.1.0 — 2026-11-07
 

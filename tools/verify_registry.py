@@ -12,9 +12,9 @@ import time
 import urllib.error
 import urllib.request
 import zipfile
+from verify_archive import verify_cli
 
 ROOT = Path(__file__).resolve().parents[1]
-LOCK = ROOT / "tools/releases/0.1.0.json"
 
 
 def run_json(args, cwd):
@@ -41,14 +41,17 @@ def download(url):
             time.sleep(attempt + 1)
 
 
-def verify(backend):
+def verify(backend, requested_version="0.1.0"):
     if not __debug__:
         raise RuntimeError("registry verification requires Python assertions; do not use -O")
-    lock = json.loads(LOCK.read_text())
+    assert re.fullmatch(r"\d+\.\d+\.\d+", requested_version)
+    lock = json.loads((ROOT / "tools/releases" / (requested_version + ".json")).read_text())
     module, version = lock["module"], lock["version"]
+    assert version == requested_version
+    extended = lock.get("consumer_profile") == "reports-0.2"
     assert module == "Xpeng/moonloadcheck" and re.fullmatch(r"\d+\.\d+\.\d+", version)
     assert lock["archive_url"] == f"https://download.mooncakes.io/user/{module}/{version}.zip"
-    output = ROOT / "artifacts/registry" / backend.replace(",", "-")
+    output = ROOT / "artifacts/registry" / version / backend.replace(",", "-")
     output.mkdir(parents=True, exist_ok=True)
 
     # Fetch public registry bytes independently. This ZIP is never extracted or
@@ -64,10 +67,13 @@ def verify(backend):
         assert not any((parent / name).exists() for name in ["moon.work", "moon.work.json"]), parent
     (consumer / "moon.mod").write_text('name = "validation/registry_consumer"\nimport { "'
         + module + '@' + version + '", "moonbitlang/x@0.5.5", }\n')
-    (consumer / "moon.pkg").write_text('import { "Xpeng/moonloadcheck", "moonbitlang/x/fs", } for "test"\n')
+    extra = '"Xpeng/moonloadcheck/analysis", ' if extended else ''
+    (consumer / "moon.pkg").write_text('import { "Xpeng/moonloadcheck", ' + extra + '"moonbitlang/x/fs", } for "test"\n')
     template = (ROOT / "tools/archive_consumer.mbt.txt").read_text()
     (consumer / "consumer_test.mbt").write_text(template.replace("__VERSION__", version)
         .replace("archive consumer", "registry consumer"))
+    if extended:
+        (consumer / "impact_test.mbt").write_text((ROOT / "tools/impact_consumer.mbt.txt").read_text())
     for view in ["before", "after"]:
         # Explicit portable input data, not a module source or resolution override.
         shutil.copytree(ROOT / "fixtures/generated/u3/x86_64" / view / "snapshot", consumer / view)
@@ -109,6 +115,15 @@ def verify(backend):
             actual = installed / name
             assert actual.is_file() and not actual.is_symlink(), name
             assert actual.read_bytes() == archive.read(name), "resolved file differs: " + name
+    cli_checks = 0
+    if extended:
+        # Build only a separate copy of the verified registry installation. It
+        # never becomes a workspace override for the consumer's normal import.
+        cli_source = Path(tempfile.mkdtemp(prefix="moonloadcheck-registry-cli-")) / "package"
+        shutil.copytree(installed, cli_source)
+        for parent in [cli_source, *cli_source.parents]:
+            assert not any((parent / n).exists() for n in ["moon.work", "moon.work.json"])
+        cli_checks = verify_cli(cli_source, consumer, backend, version, output)
     after = run_json(["moon", "tree", "--json"], consumer)
     assert after["status"] == "success"
     assert all(after[key] == tree[key] for key in ["root", "modules", "edges"])
@@ -117,17 +132,21 @@ def verify(backend):
         archive_sha256=lock["archive_sha256"], verified_installed_files=len(names),
         dependency_source="registry", workspace_override=False,
         original_repository_dependency=False, backends=backend.split(","),
-        consumer_tests_per_backend=3, isolated_root=str(consumer),
+        consumer_tests_per_backend=4 if extended else 3, cli_checks=cli_checks,
+        cli_source="verified registry installation copy" if extended else None,
+        isolated_root=str(consumer),
         input_manifests={v: hashlib.sha256((consumer / v / "manifest.json").read_bytes()).hexdigest()
                          for v in ["before", "after"]})
     (output / "metadata.json").write_text(json.dumps(metadata, indent=2) + "\n")
     (output / "tree.json").write_text(json.dumps(tree, indent=2) + "\n")
     (output / "result.json").write_text(json.dumps(record, indent=2) + "\n")
-    print(f"Published registry consumer: 3 tests/backend passed ({backend}); {len(names)} resolved files match the pinned registry ZIP")
+    print(f"Published registry consumer: {record['consumer_tests_per_backend']} tests/backend and {cli_checks} CLI checks passed ({backend}); {len(names)} resolved files match the pinned registry ZIP")
     print("Published archive SHA-256:", lock["archive_sha256"])
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--target", choices=["native", "js", "js,native"], default="native")
-    verify(parser.parse_args().target)
+    parser.add_argument("--version", default="0.1.0", help="Exact published version with tools/releases/VERSION.json")
+    args = parser.parse_args()
+    verify(args.target, args.version)

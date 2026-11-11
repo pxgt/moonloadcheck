@@ -1,0 +1,14 @@
+///|
+test "consumer validates saved comparison evidence without a snapshot" {
+  let impact = @moonloadcheck.compare(target("before"), target("after"),
+    [b"/opt/demo/app", b"/opt/demo/stable-app"])
+  let serialized = impact.to_json().stringify()
+  let restored = @analysis.read_impact_report(serialized)
+  assert_eq(restored.to_json().stringify(), serialized)
+  assert_eq(restored.entries[0].changes[0].classification, "introduced")
+  assert_eq(restored.entries[1].after.exit_code(), 0)
+  try @analysis.read_impact_report(serialized.replace_all(old="introduced", new="resolved")) catch {
+    @analysis.ReportError::ReportError(_) => ()
+    _ => fail("unexpected comparison error")
+  } noraise { _ => fail("forged comparison was accepted") }
+}

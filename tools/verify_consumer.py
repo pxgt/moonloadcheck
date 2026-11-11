@@ -7,13 +7,15 @@ import json
 import argparse
 import subprocess
 import tempfile
+from verify_archive import metadata
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
 def verify(backend="native"):
     target = Path(tempfile.mkdtemp(prefix="moonloadcheck-consumer-"))
-    (target / "moon.mod").write_text('name = "validation/consumer"\nimport { "Xpeng/moonloadcheck@0.1.0", }\n')
+    version = metadata((ROOT / "moon.mod").read_text())["version"]
+    (target / "moon.mod").write_text('name = "validation/consumer"\nimport { "Xpeng/moonloadcheck@' + version + '", }\n')
     (target / "moon.pkg").write_text('import { "Xpeng/moonloadcheck", } for "test"\n')
     (target / "consumer_test.mbt").write_text('''///|
 test "external facade never needs internal parser types" {

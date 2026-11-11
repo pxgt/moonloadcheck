@@ -56,9 +56,9 @@ unlisted applications and runtime dlopen callers.
 Use README's saved-report and `explain` commands to show the finding ID, raw-byte
 identity, explanation and suggested action without reopening a snapshot. Then
 show the independent registry-consumer result from
-`artifacts/registry/js-native/result.json` in CI, or the local `js`/`native`
-subdirectories, and its matching CI step. Point to the registry source and
-the 182 installed files matching the published checksum.
+`artifacts/registry/<version>/js-native/result.json` in CI, or the local
+`js`/`native` subdirectories, and its matching CI step. Point to the registry
+source, exact version and installed files matching the published checksum.
 
 State the four outcomes: static pass, proven failure, inconclusive, and invalid
 input. Show [scope](SUPPORTED_PROFILE.md), [evidence map](ACCEPTANCE_STATUS.md)

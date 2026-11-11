@@ -11,6 +11,13 @@
 
 The 17 parser source files in `internal/elf_vendor` are copied verbatim from the hash-verified Mooncakes archive, with its LICENSE. They are third-party work, excluded from original-contribution counts. No source from the other reference tools has been copied. New runtime-table adapters and all project analysis code are maintained outside the vendor directory.
 
+Attribution for those copied files belongs to the original authors/contributors
+of `moonbit-community/elf`, not to MoonLoadCheck. The exact 0.0.1 archive contains
+an Apache-2.0 LICENSE and no separate NOTICE or COPYRIGHT file; its license
+appendix does not name an individual copyright holder. We preserve the supplied
+text without inventing a name or year. The copied/modified scope and distributed
+locations are recorded above and in `internal/elf_vendor/UPSTREAM.json`.
+
 ## Real-program test inputs
 
 The [Ubuntu corpus lock](tools/corpus/ubuntu.lock.json) records official archive URLs, source-package names, exact versions, sizes and SHA-256 digests for hello, jq, zstd and their runtime libraries. The lock was derived from signed InRelease files and hash-verified package indexes. The [corpus documentation](docs/CORPUS.md) describes the package and runtime boundaries. These are historical regression inputs, not recommended deployment versions.

@@ -3,8 +3,8 @@
 The `report` command renders saved schema-2 check/comparison JSON or a CLI
 command-error envelope. The renderer and diagnostic guide are implemented in
 MoonBit. It needs no snapshot, target binaries, Python server, network connection
-or browser JavaScript. These are source additions after 0.1.0; build the matching
-CLI with the pinned compiler. They are not in the immutable 0.1.0 registry ZIP.
+or browser JavaScript. These features are included in the 0.2.0 candidate; build
+the matching CLI with the pinned compiler. They are not in the 0.1.0 registry ZIP.
 
 ## Generate a local report
 

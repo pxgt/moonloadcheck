@@ -358,3 +358,18 @@ official contest acceptance. No registration or organizer message was sent.
   hostile text without injected executable elements and a narrow viewport
   without page overflow. Generated examples remain ignored. The diagnostic
   guide documents saved-data trust, output limits and verdict-preserving CI use.
+
+## P4: 0.2.0 release preparation
+
+- Consolidated onboarding, target identities, independent x86-64/AArch64 FFI
+  execution and presentation into the 0.2.0 candidate. Production reports now
+  identify 0.2.0; no snapshot/report schema or root facade signature changed.
+- Local JS/native suites pass 95 tests each. Candidate consumption adds a
+  fourth external API test for saved comparisons and forged-change rejection;
+  all four tests/backend and 22 packaged CLI checks pass.
+- Registry verification now selects an explicit version lock, preserves 0.1.0
+  coverage, and can build the new CLI from byte-verified installed registry
+  source without a workspace override. Its 0.2.0 gate awaits real publication.
+- Prepared the technical acceptance index and version-aware package checks.
+  Third-party parser provenance remains hash-locked; no generated runtime,
+  ELF fixture or snapshot enters the source distribution.

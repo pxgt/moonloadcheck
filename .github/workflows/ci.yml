@@ -15,10 +15,20 @@ jobs:
       - name: Install reference compilers
         timeout-minutes: 6
         run: |
-          # The Azure mirror stalled package transfers on two fresh runners.
-          # Keep the runner's signed Ubuntu archive/security fallbacks.
+          # Probe both existing Ubuntu endpoints: either can stall or fail DNS.
+          # Repository signatures and package checksums remain enforced by APT.
           if [ -f /etc/apt/apt-mirrors.txt ]; then
-            sudo sed -i '/azure\.archive\.ubuntu\.com/d' /etc/apt/apt-mirrors.txt
+            selected_mirror=''
+            for host in archive.ubuntu.com azure.archive.ubuntu.com; do
+              if timeout 8 getent ahosts "$host" >/dev/null &&
+                 curl --fail --silent --show-error --connect-timeout 5 --max-time 15 \
+                   "https://$host/ubuntu/dists/jammy/InRelease" -o /dev/null; then
+                selected_mirror="https://$host/ubuntu"
+                break
+              fi
+            done
+            test -n "$selected_mirror" || { echo 'No reachable signed Ubuntu mirror'; exit 1; }
+            printf '%s\n' "$selected_mirror" | sudo tee /etc/apt/apt-mirrors.txt
           fi
           apt_options=(-o Acquire::Retries=1 -o Acquire::http::Timeout=20 -o Acquire::https::Timeout=20)
           sudo apt-get "${apt_options[@]}" update
@@ -95,7 +105,17 @@ jobs:
         timeout-minutes: 6
         run: |
           if [ -f /etc/apt/apt-mirrors.txt ]; then
-            sudo sed -i '/azure\.archive\.ubuntu\.com/d' /etc/apt/apt-mirrors.txt
+            selected_mirror=''
+            for host in archive.ubuntu.com azure.archive.ubuntu.com; do
+              if timeout 8 getent ahosts "$host" >/dev/null &&
+                 curl --fail --silent --show-error --connect-timeout 5 --max-time 15 \
+                   "https://$host/ubuntu/dists/jammy/InRelease" -o /dev/null; then
+                selected_mirror="https://$host/ubuntu"
+                break
+              fi
+            done
+            test -n "$selected_mirror" || { echo 'No reachable signed Ubuntu mirror'; exit 1; }
+            printf '%s\n' "$selected_mirror" | sudo tee /etc/apt/apt-mirrors.txt
           fi
           apt_options=(-o Acquire::Retries=1 -o Acquire::http::Timeout=20 -o Acquire::https::Timeout=20)
           sudo apt-get "${apt_options[@]}" update

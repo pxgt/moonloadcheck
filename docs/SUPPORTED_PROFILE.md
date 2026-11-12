@@ -17,7 +17,7 @@ The independent MoonBit native/FFI application is executed against all four
 runtime sets, including missing, older and wrong-architecture libraries plus
 repairs. AArch64 execution uses pinned QEMU user-mode, not physical hardware.
 
-Unreleased 0.3.0-dev adds a fifth, exact amd64 Jammy 2.35-0ubuntu3.15 identity.
+The 0.3.0 candidate adds a fifth, exact amd64 Jammy 2.35-0ubuntu3.15 identity.
 Its [external zstd source-build cases](DEPLOYMENT_MATRIX.md) check the same
 controlled rules against that loader. This does not extend the four-runtime
 MoonBit FFI execution evidence to another AArch64 or physical hardware target.

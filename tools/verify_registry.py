@@ -48,7 +48,8 @@ def verify(backend, requested_version="0.1.0"):
     lock = json.loads((ROOT / "tools/releases" / (requested_version + ".json")).read_text())
     module, version = lock["module"], lock["version"]
     assert version == requested_version
-    extended = lock.get("consumer_profile") == "reports-0.2"
+    profile = lock.get("consumer_profile")
+    extended = profile in ["reports-0.2", "matrix-0.3"]
     assert module == "Xpeng/moonloadcheck" and re.fullmatch(r"\d+\.\d+\.\d+", version)
     assert lock["archive_url"] == f"https://download.mooncakes.io/user/{module}/{version}.zip"
     output = ROOT / "artifacts/registry" / version / backend.replace(",", "-")
@@ -124,6 +125,9 @@ def verify(backend, requested_version="0.1.0"):
         for parent in [cli_source, *cli_source.parents]:
             assert not any((parent / n).exists() for n in ["moon.work", "moon.work.json"])
         cli_checks = verify_cli(cli_source, consumer, backend, version, output)
+        if profile == "matrix-0.3":
+            assert (cli_source / "internal/presentation/matrix.mbt").is_file()
+            assert cli_checks == 13 * len(backend.split(","))
     after = run_json(["moon", "tree", "--json"], consumer)
     assert after["status"] == "success"
     assert all(after[key] == tree[key] for key in ["root", "modules", "edges"])

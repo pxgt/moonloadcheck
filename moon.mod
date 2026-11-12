@@ -11,7 +11,7 @@
 
 name = "Xpeng/moonloadcheck"
 
-version = "0.3.0-dev"
+version = "0.3.0"
 
 readme = "README.md"
 

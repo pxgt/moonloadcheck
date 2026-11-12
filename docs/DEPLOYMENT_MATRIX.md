@@ -1,6 +1,6 @@
 # Preflight and multi-target deployment matrices
 
-These are source additions for 0.3.0-dev, not features in the immutable 0.2.0
+These are additions in the 0.3.0 release candidate, not features in the immutable 0.2.0
 package. Build the current CLI with the pinned toolchain in README. The Python
 adapters handle configuration and filesystem I/O; MoonBit retains ELF decisions,
 saved-check validation, matrix verdict aggregation and HTML rendering.

@@ -585,7 +585,7 @@ fn check_with_scope(
 ) -> Report {
   let report : Report = {
     schema_version: 2,
-    tool_version: "0.3.0-dev",
+    tool_version: "0.3.0",
     rule_revision: snapshot.profile().rule_revision,
     snapshot_sha256: snapshot.manifest_digest(),
     entry: name(entry),

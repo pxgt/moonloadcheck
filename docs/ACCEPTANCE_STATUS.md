@@ -149,7 +149,7 @@ contest acceptance. Rendered files and snapshots remain local.
 [edgecases]: ../analysis/linkage_edges_test.mbt
 
 
-## Unreleased pre-acceptance expansion (0.3.0-dev)
+## 0.3.0 candidate expansion
 
 [Preflight and deployment matrices](DEPLOYMENT_MATRIX.md) add dependency-only
 readiness checks, missing-fact guidance and multiple applications/targets. MoonBit

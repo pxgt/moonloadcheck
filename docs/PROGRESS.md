@@ -417,3 +417,20 @@ official contest acceptance. No registration or organizer message was sent.
   including matrix HTML and summary. This is not registry publication evidence.
 - Source additions are unreleased; 0.2.0 remains the published baseline. Full
   CI is run before this phase closes.
+
+## 0.3.0 publication and unified delivery (2026-11-12)
+
+- Froze source `32be7586e1851b435604753c6150c18ec7a9d215`; full CI
+  [43149501150](https://github.com/pxgt/moonloadcheck/actions/runs/43149501150)
+  passed both jobs, including all P5 increments and isolated archive consumers.
+- Published 0.3.0 at 03:47:01 UTC and pushed immutable tag `v0.3.0` for that
+  source. The official 222-file archive matches the reviewed payload exactly;
+  see [release provenance](RELEASE_0.3.0.md).
+- Fresh registry consumers passed four API tests/backend and 26 CLI checks on
+  Linux JS/native, plus four API tests and 13 CLI checks on Windows JS. All
+  installed files match the registry ZIP and no workspace override is used.
+- Current README, acceptance guide and release records now describe 0.3.0.
+  CI retains 0.1.0 and 0.2.0 and adds the matrix-aware 0.3.0 registry gate.
+  Earlier progress entries describe their original stage, not current status.
+- Runtime roots and downloaded/generated third-party payloads remain local.
+  Release completion is separate from official contest acceptance.

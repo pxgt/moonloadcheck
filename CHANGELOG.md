@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.3.0 — release candidate
+## 0.3.0 — 2026-11-12
 
 - Read-only dependency preflight identifies missing explicit environment facts.
 - Multi-target deployment orchestration freezes configuration inputs and retains

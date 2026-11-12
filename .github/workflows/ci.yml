@@ -127,8 +127,9 @@ jobs:
           export PATH="$PWD/.tools/moon-0.10.16/bin:$PATH"
           moon package --frozen
           python3 tools/verify_archive.py --target js,native
-      - name: Consume both immutable Mooncakes releases
+      - name: Consume all three immutable Mooncakes releases
         run: |
           export PATH="$PWD/.tools/moon-0.10.16/bin:$PATH"
           python3 tools/verify_registry.py --version 0.1.0 --target js,native
           python3 tools/verify_registry.py --version 0.2.0 --target js,native
+          python3 tools/verify_registry.py --version 0.3.0 --target js,native

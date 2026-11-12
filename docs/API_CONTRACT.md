@@ -6,7 +6,7 @@ The generated `.mbti` files are the exact source signatures. The supported publi
 packages are the root facade, `model`, `snapshot` and `analysis`. Internal parser,
 cache, presentation and experiment packages are implementation details.
 
-The 0.2.0 release is validated with MoonBit compiler 0.10.16+b1a0e846e
+The 0.2.0 and 0.3.0 releases are validated with MoonBit compiler 0.10.16+b1a0e846e
 (moon 0.1.20261020). Its strict saved-comparison reader uses core JSON duplicate
 key rejection; the older 0.10.15 core lacks that parameter. Use the documented
 pinned compiler for reproducibility. The compiler version is distinct from the
@@ -111,6 +111,7 @@ The independent README walkthrough starts without `.tools`, `.mooncakes`,
 `_build` or generated fixtures. It executes the documented blocks verbatim and
 checks U1 failure/fix, unchanged U2 executable, selective U3 impact/restoration,
 saved explanation and a standalone source consumer. Full reference/test CI runs
-separately. Published [0.2.0 consumption](RELEASE_0.2.0.md) verifies the new
-saved-comparison API and the installed-source presentation CLI. CI also retains
-the [0.1.0 consumer](RELEASE_0.1.0.md), which has no presentation additions.
+separately. Published [0.3.0 consumption](RELEASE_0.3.0.md) verifies the
+saved-comparison API and installed-source presentation/matrix CLI. CI also
+retains [0.2.0](RELEASE_0.2.0.md) and the [0.1.0 consumer](RELEASE_0.1.0.md),
+which has no presentation additions.

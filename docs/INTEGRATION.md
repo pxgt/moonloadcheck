@@ -6,7 +6,7 @@ MoonBit analyzer: all ELF, dependency, symbol and version decisions stay in
 MoonLoadCheck. It does not execute the captured programs, use your host's
 libraries, select a profile automatically or install missing libraries.
 
-The helper is included in the published 0.2.0 package; it is **not**
+The helper is included in 0.2.0 and the current published 0.3.0 package; it is **not**
 part of the immutable 0.1.0 Mooncakes archive. Build the matching CLI with the
 [documented pinned compiler](../README.md#build-from-a-fresh-checkout):
 
@@ -19,7 +19,7 @@ moon build --target native,js
 
 For read-only readiness checks, multiple targets and the additional pinned
 amd64 Jammy update, see [preflight and matrices](DEPLOYMENT_MATRIX.md).
-Those features are current source additions after published 0.2.0.
+Those features are included in published 0.3.0.
 
 Capture a quiescent staged root containing the application, its loader and
 runtime libraries. Relative `root` paths resolve against the configuration

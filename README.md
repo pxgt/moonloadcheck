@@ -2,7 +2,7 @@
 
 MoonLoadCheck is a MoonBit library and CLI for offline Linux binary deployment analysis. It explains dependency selection, checks symbol/version requirements against a captured target, and identifies explicit consumers affected by shared-library changes.
 
-**Published: [Xpeng/moonloadcheck 0.2.0](https://mooncakes.io/docs/Xpeng/moonloadcheck@0.2.0).** U1 dependency checks, U2 symbol/version checks and U3 consumer comparisons work under controlled glibc profiles. Real hello, jq and zstd binaries are checked against pinned Ubuntu Jammy and Noble runtime roots on x86-64 and AArch64. A static pass covers the declared checks; it does not certify general Linux or full C++ ABI compatibility. See the [acceptance evidence](docs/ACCEPTANCE_STATUS.md), [API contract](docs/API_CONTRACT.md) and [release record](docs/RELEASE_0.2.0.md).
+**Published: [Xpeng/moonloadcheck 0.3.0](https://mooncakes.io/docs/Xpeng/moonloadcheck@0.3.0).** U1 dependency checks, U2 symbol/version checks and U3 consumer comparisons work under controlled glibc profiles. Real hello, jq and zstd binaries are checked against pinned Ubuntu Jammy and Noble runtime roots on x86-64 and AArch64. A static pass covers the declared checks; it does not certify general Linux or full C++ ABI compatibility. See the [acceptance evidence](docs/ACCEPTANCE_STATUS.md), [API contract](docs/API_CONTRACT.md) and [release record](docs/RELEASE_0.3.0.md).
 
 The initial target is ELF64 little-endian x86-64 and AArch64. Analysis verifies snapshot content and never executes analyzed files or falls back to host libraries. Independent reference tests execute our own fixtures and hash-verified Ubuntu packages in disposable project-owned roots.
 
@@ -11,20 +11,20 @@ provides readable target configuration, a capture-and-check command, CI exit
 handling, and an independent MoonBit native/FFI sensor-report application with
 failure/fix verification across four fixed Jammy/Noble target identities.
 The application executes natively on x86-64 and under pinned QEMU on AArch64.
-These additions are included in the **published 0.2.0 package**;
+These additions are included in the **published 0.3.0 package** (introduced in 0.2.0);
 they are not included in the immutable 0.1.0 registry archive. See the
-[0.2.0 acceptance guide](docs/ACCEPTANCE_0.2.0.md) for scope and reproduction.
+[0.3.0 acceptance guide](docs/ACCEPTANCE_0.3.0.md) for scope and reproduction.
 
 **Reading the result:** the [diagnostic and local HTML guide](docs/DIAGNOSTICS.md)
 shows how to turn saved check/diff JSON into an offline, script-free page or a
 concise CI summary. Both retain the recorded verdict and uncertainty.
 
-**0.3.0 release candidate:** [target preflight and deployment matrices](docs/DEPLOYMENT_MATRIX.md)
+**New in published 0.3.0:** [target preflight and deployment matrices](docs/DEPLOYMENT_MATRIX.md)
 check missing environment facts, combine multiple targets/applications into one
 offline report, and demonstrate an external zstd source-build integration with
-an additional pinned Jammy runtime. These additions are not in published 0.2.0.
+an additional pinned Jammy runtime. These additions are included in 0.3.0.
 See the [0.3.0 acceptance guide](docs/ACCEPTANCE_0.3.0.md) and
-[release record](docs/RELEASE_0.3.0.md) for the candidate/publication distinction.
+[release record](docs/RELEASE_0.3.0.md) for the exact published source and package.
 
 ## Build from a fresh checkout
 
@@ -145,8 +145,8 @@ python3 tools/verify_consumer.py
 ```
 
 That test uses only the public facade from a separate temporary Moon workspace.
-The [published-release consumer](docs/RELEASE_0.2.0.md) instead resolves
-`"Xpeng/moonloadcheck@0.2.0"` through the registry with no workspace override,
+The [published-release consumer](docs/RELEASE_0.3.0.md) instead resolves
+`"Xpeng/moonloadcheck@0.3.0"` through the registry with no workspace override,
 tests all seven facade functions and checks the installed bytes against the
 published archive. It also runs in CI.
 The [candidate release checklist](docs/RELEASE_CHECKLIST.md) additionally audits

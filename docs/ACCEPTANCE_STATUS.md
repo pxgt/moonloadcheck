@@ -78,7 +78,7 @@ record yet. Results are reproduced by the CI workflow; limits remain in
 | C06 | Covered | Offline explain, unsupported schema, old additive-field compatibility and duplicate-ID rejection. |
 | C07 | Covered | Parser budgets plus [real 16,384-step exhaustion][limits] retain earlier failure and explicit unknown; large CLI JSON stays complete. |
 | C08 | Covered | Repeated original/changed-rule/original snapshot checks retain stable results; full comparisons recompute both views. |
-| C09 | Covered | [Published 0.2.0 consumer](RELEASE_0.2.0.md) resolves the actual registry dependency without moon.work or local overrides. Four tests/backend cover all seven facade functions, exported errors and saved comparisons; Linux JS/native and Windows JS also exercise the installed-source CLI. All 211 installed files match the official ZIP. The [0.1.0 record](RELEASE_0.1.0.md) remains valid and both versions are retained in CI. |
+| C09 | Covered | [Published 0.3.0 consumer](RELEASE_0.3.0.md) resolves the actual registry dependency without moon.work or local overrides. Four tests/backend cover all seven facade functions, exported errors and saved comparisons; Linux JS/native and Windows JS exercise 13 installed-source CLI cases/backend, including matrix summary/HTML. All 222 installed files match the official ZIP. The 0.1.0 and 0.2.0 records remain valid; all three versions are retained in CI. |
 | C10 | Covered | JS/native suites plus exact Windows/Linux snapshot report comparison. |
 | C11 | Covered | [README](../README.md) installation, U1/U2/U3, offline explain and standalone consumer pass from an empty source directory. `tools/verify_walkthrough.py --require-clean` executes its actual command blocks; a separate fresh CI job repeats them. Full test/reference CI remains separate. |
 | C12 | Covered | All five planned faults trigger dedicated assertions after a passing control; two COPY faults remain separately checked. |
@@ -149,7 +149,7 @@ contest acceptance. Rendered files and snapshots remain local.
 [edgecases]: ../analysis/linkage_edges_test.mbt
 
 
-## 0.3.0 candidate expansion
+## Published 0.3.0 expansion
 
 [Preflight and deployment matrices](DEPLOYMENT_MATRIX.md) add dependency-only
 readiness checks, missing-fact guidance and multiple applications/targets. MoonBit
@@ -170,5 +170,7 @@ is retained explicitly; a static pass does not certify application behavior.
 Only recipes, source and locked metadata are distributed. Local runtime roots,
 upstream source archives, generated binaries and snapshots remain ignored. The
 actual candidate package passes four API consumer tests/backend and 26 CLI checks.
-These additions have not been published; registry evidence above remains for
-0.2.0. This engineering validation is not organizer acceptance.
+These additions are included in published 0.3.0. The registry consumer verifies
+the same four API tests/backend and 26 CLI checks on Linux JS/native, plus four
+API tests and 13 CLI checks on Windows JS, with every installed file matched to
+the official ZIP. This engineering validation is not organizer acceptance.

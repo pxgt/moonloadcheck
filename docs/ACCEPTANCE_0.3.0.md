@@ -50,9 +50,10 @@ number of independent test cases. The [73-row map](ACCEPTANCE_STATUS.md) is an
 internal requirements inventory, not an official checklist.
 
 Candidate consumption verifies four API tests per backend and 26 CLI checks.
-After actual publication, the [release record](RELEASE_0.3.0.md) provides the
-registry lock and independent-consumer command. That gate must verify all
-installed files, normal dependency resolution and matrix rendering as well.
+Published 0.3.0 independently passes the same Linux JS/native consumer coverage,
+plus four API tests and 13 CLI checks on Windows JS. Every run verifies all 222
+installed files and normal registry dependency resolution. The
+[release record](RELEASE_0.3.0.md) provides the lock and reproduction command.
 
 ## Delivery and limits
 

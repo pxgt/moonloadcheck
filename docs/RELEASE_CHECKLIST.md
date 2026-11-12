@@ -1,6 +1,7 @@
 # Candidate verification and release sequence
 
-Versions [0.1.0](RELEASE_0.1.0.md) and [0.2.0](RELEASE_0.2.0.md) are published.
+Versions [0.1.0](RELEASE_0.1.0.md), [0.2.0](RELEASE_0.2.0.md) and
+[0.3.0](RELEASE_0.3.0.md) are published.
 This checklist also describes preparation for later versions. A local ZIP,
 successful CI or a version string alone is not evidence of registry publication.
 

@@ -72,6 +72,6 @@ claim. Successful real libstdc++ executions can still be statically inconclusive
 - README command outputs under `artifacts/walkthrough`, actual reference
   `oracle.json` records and the full corpus verification results.
 - Published ZIP digest, source tag and registry-consumer record from the
-  [release record](RELEASE_0.2.0.md). Keep local candidate checks separately.
+  [release record](RELEASE_0.3.0.md). Keep local candidate checks separately.
 - A screen recording, if requested by the final rules, showing actual commands
   and expected exits. This runbook does not claim a recording already exists.
